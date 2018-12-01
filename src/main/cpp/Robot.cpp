@@ -12,7 +12,7 @@
 
 #include "robotmap.h"
 
-class Robot : public frc::IterativeRobot {
+class Robot : public frc::TimedRobot {
  public:
   Robot() {
     m_timer.Start();
