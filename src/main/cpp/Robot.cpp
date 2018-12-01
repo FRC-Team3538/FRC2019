@@ -27,10 +27,10 @@ class Robot : public frc::IterativeRobot {
     // Drive for 2 seconds
     if (m_timer.Get() < 2.0) {
       // Drive forwards half speed
-      IO.driveBase.ArcadeDrive(0.5, 0.0);
+      IO.drivebase.Arcade(0.5, 0.0);
     } else {
       // Stop robot
-      IO.driveBase.ArcadeDrive(0.0, 0.0);
+      IO.drivebase.Stop();
     }
   }
 
@@ -38,15 +38,15 @@ class Robot : public frc::IterativeRobot {
 
   void TeleopPeriodic() override {
     // Drive with arcade style (use right stick)
-    IO.driveBase.ArcadeDrive(m_stick.GetY(), m_stick.GetX());
+    IO.drivebase.Arcade(m_stick.GetY(), m_stick.GetZ());
   }
 
   void TestPeriodic() override {}
 
  private:
-  frc::Joystick m_stick{0};
-  frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
-  frc::Timer m_timer;
+  Joystick m_stick{0};
+  LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
+  Timer m_timer;
 
   robotmap IO;
 };
