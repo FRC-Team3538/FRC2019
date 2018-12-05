@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "PS4Controller.h"
+#include <controller/PS4Controller.h>
 
 #include <HAL/HAL.h>
 
