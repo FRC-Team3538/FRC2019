@@ -5,8 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-//SAME AS PS4Controller.cpp
-#include <controller/PS4Controller.h>
+//needs to be changed to xbox controlls
+#include <controller/XBOXController.h>
 
 #include <HAL/HAL.h>
 
@@ -20,8 +20,8 @@ using namespace frc;
  * @param port The port on the Driver Station that the controller is plugged
  *             into (0-5).
  */
-PS4Controller::PS4Controller(int port) : GenericHID(port) {
-  // HAL_Report(HALUsageReporting::kResourceType_PS4Controller, port);
+XBOXController::XBOXController(int port) : GenericHID(port) {
+  // HAL_Report(HALUsageReporting::kResourceType_XBOXController, port);
   HAL_Report(HALUsageReporting::kResourceType_Joystick, port);
 }
 
@@ -30,7 +30,7 @@ PS4Controller::PS4Controller(int port) : GenericHID(port) {
  *
  * @param hand Side of controller whose value should be returned.
  */
-double PS4Controller::GetX(JoystickHand hand) const {
+double XBOXController::GetX(JoystickHand hand) const {
   if (hand == kLeftHand) {
     return GetRawAxis(0);
   } else {
@@ -43,7 +43,7 @@ double PS4Controller::GetX(JoystickHand hand) const {
  *
  * @param hand Side of controller whose value should be returned.
  */
-double PS4Controller::GetY(JoystickHand hand) const {
+double XBOXController::GetY(JoystickHand hand) const {
   if (hand == kLeftHand) {
     return GetRawAxis(1);
   } else {
@@ -56,7 +56,7 @@ double PS4Controller::GetY(JoystickHand hand) const {
  *
  * @param hand Side of controller whose value should be returned.
  */
-double PS4Controller::GetTriggerAxis(JoystickHand hand) const {
+double XBOXController::GetTriggerAxis(JoystickHand hand) const {
   if (hand == kLeftHand) {
     return GetRawAxis(2);
   } else {
@@ -69,7 +69,7 @@ double PS4Controller::GetTriggerAxis(JoystickHand hand) const {
  *
  * @param hand Side of controller whose value should be returned.
  */
-bool PS4Controller::GetBumper(JoystickHand hand) const {
+bool XBOXController::GetBumper(JoystickHand hand) const {
   if (hand == kLeftHand) {
     return GetRawButton(static_cast<int>(Button::kBumperLeft));
   } else {
@@ -83,7 +83,7 @@ bool PS4Controller::GetBumper(JoystickHand hand) const {
  * @param hand Side of controller whose value should be returned.
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetBumperPressed(JoystickHand hand) {
+bool XBOXController::GetBumperPressed(JoystickHand hand) {
   if (hand == kLeftHand) {
     return GetRawButtonPressed(static_cast<int>(Button::kBumperLeft));
   } else {
@@ -97,7 +97,7 @@ bool PS4Controller::GetBumperPressed(JoystickHand hand) {
  * @param hand Side of controller whose value should be returned.
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetBumperReleased(JoystickHand hand) {
+bool XBOXController::GetBumperReleased(JoystickHand hand) {
   if (hand == kLeftHand) {
     return GetRawButtonReleased(static_cast<int>(Button::kBumperLeft));
   } else {
@@ -111,7 +111,7 @@ bool PS4Controller::GetBumperReleased(JoystickHand hand) {
  * @param hand Side of controller whose value should be returned.
  * @return The state of the button.
  */
-bool PS4Controller::GetStickButton(JoystickHand hand) const {
+bool XBOXController::GetStickButton(JoystickHand hand) const {
   if (hand == kLeftHand) {
     return GetRawButton(static_cast<int>(Button::kStickLeft));
   } else {
@@ -125,7 +125,7 @@ bool PS4Controller::GetStickButton(JoystickHand hand) const {
  * @param hand Side of controller whose value should be returned.
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetStickButtonPressed(JoystickHand hand) {
+bool XBOXController::GetStickButtonPressed(JoystickHand hand) {
   if (hand == kLeftHand) {
     return GetRawButtonPressed(static_cast<int>(Button::kStickLeft));
   } else {
@@ -139,7 +139,7 @@ bool PS4Controller::GetStickButtonPressed(JoystickHand hand) {
  * @param hand Side of controller whose value should be returned.
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetStickButtonReleased(JoystickHand hand) {
+bool XBOXController::GetStickButtonReleased(JoystickHand hand) {
   if (hand == kLeftHand) {
     return GetRawButtonReleased(static_cast<int>(Button::kStickLeft));
   } else {
@@ -152,7 +152,7 @@ bool PS4Controller::GetStickButtonReleased(JoystickHand hand) {
  *
  * @return The state of the button.
  */
-bool PS4Controller::GetCrossButton() const {
+bool XBOXController::GetCrossButton() const {
   return GetRawButton(static_cast<int>(Button::kCross));
 }
 
@@ -161,7 +161,7 @@ bool PS4Controller::GetCrossButton() const {
  *
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetCrossButtonPressed() {
+bool XBOXController::GetCrossButtonPressed() {
   return GetRawButtonPressed(static_cast<int>(Button::kCross));
 }
 
@@ -170,7 +170,7 @@ bool PS4Controller::GetCrossButtonPressed() {
  *
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetCrossButtonReleased() {
+bool XBOXController::GetCrossButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kCross));
 }
 
@@ -179,7 +179,7 @@ bool PS4Controller::GetCrossButtonReleased() {
  *
  * @return The state of the button.
  */
-bool PS4Controller::GetCircleButton() const {
+bool XBOXController::GetCircleButton() const {
   return GetRawButton(static_cast<int>(Button::kCircle));
 }
 
@@ -188,7 +188,7 @@ bool PS4Controller::GetCircleButton() const {
  *
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetCircleButtonPressed() {
+bool XBOXController::GetCircleButtonPressed() {
   return GetRawButtonPressed(static_cast<int>(Button::kCircle));
 }
 
@@ -197,7 +197,7 @@ bool PS4Controller::GetCircleButtonPressed() {
  *
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetCircleButtonReleased() {
+bool XBOXController::GetCircleButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kCircle));
 }
 
@@ -206,7 +206,7 @@ bool PS4Controller::GetCircleButtonReleased() {
  *
  * @return The state of the button.
  */
-bool PS4Controller::GetSquareButton() const {
+bool XBOXController::GetSquareButton() const {
   return GetRawButton(static_cast<int>(Button::kSquare));
 }
 
@@ -215,7 +215,7 @@ bool PS4Controller::GetSquareButton() const {
  *
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetSquareButtonPressed() {
+bool XBOXController::GetSquareButtonPressed() {
   return GetRawButtonPressed(static_cast<int>(Button::kSquare));
 }
 
@@ -224,7 +224,7 @@ bool PS4Controller::GetSquareButtonPressed() {
  *
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetSquareButtonReleased() {
+bool XBOXController::GetSquareButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kSquare));
 }
 
@@ -233,7 +233,7 @@ bool PS4Controller::GetSquareButtonReleased() {
  *
  * @return The state of the button.
  */
-bool PS4Controller::GetTriangleButton() const {
+bool XBOXController::GetTriangleButton() const {
   return GetRawButton(static_cast<int>(Button::kTriangle));
 }
 
@@ -242,7 +242,7 @@ bool PS4Controller::GetTriangleButton() const {
  *
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetTriangleButtonPressed() {
+bool XBOXController::GetTriangleButtonPressed() {
   return GetRawButtonPressed(static_cast<int>(Button::kTriangle));
 }
 
@@ -251,7 +251,7 @@ bool PS4Controller::GetTriangleButtonPressed() {
  *
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetTriangleButtonReleased() {
+bool XBOXController::GetTriangleButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kTriangle));
 }
 
@@ -261,7 +261,7 @@ bool PS4Controller::GetTriangleButtonReleased() {
  * @param hand Side of controller whose value should be returned.
  * @return The state of the button.
  */
-bool PS4Controller::GetScreenShotButton() const {
+bool XBOXController::GetScreenShotButton() const {
   return GetRawButton(static_cast<int>(Button::kScreenShot));
 }
 
@@ -270,7 +270,7 @@ bool PS4Controller::GetScreenShotButton() const {
  *
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetScreenShotButtonPressed() {
+bool XBOXController::GetScreenShotButtonPressed() {
   return GetRawButtonPressed(static_cast<int>(Button::kScreenShot));
 }
 
@@ -279,7 +279,7 @@ bool PS4Controller::GetScreenShotButtonPressed() {
  *
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetScreenShotButtonReleased() {
+bool XBOXController::GetScreenShotButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kScreenShot));
 }
 
@@ -289,7 +289,7 @@ bool PS4Controller::GetScreenShotButtonReleased() {
  * @param hand Side of controller whose value should be returned.
  * @return The state of the button.
  */
-bool PS4Controller::GetOptionsButton() const {
+bool XBOXController::GetOptionsButton() const {
   return GetRawButton(static_cast<int>(Button::kOptions));
 }
 
@@ -298,7 +298,7 @@ bool PS4Controller::GetOptionsButton() const {
  *
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetOptionsButtonPressed() {
+bool XBOXController::GetOptionsButtonPressed() {
   return GetRawButtonPressed(static_cast<int>(Button::kOptions));
 }
 
@@ -307,7 +307,7 @@ bool PS4Controller::GetOptionsButtonPressed() {
  *
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetOptionsButtonReleased() {
+bool XBOXController::GetOptionsButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kOptions));
 }
 
@@ -317,7 +317,7 @@ bool PS4Controller::GetOptionsButtonReleased() {
  * @param hand Side of controller whose value should be returned.
  * @return The state of the button.
  */
-bool PS4Controller::GetPSButton() const {
+bool XBOXController::GetPSButton() const {
   return GetRawButton(static_cast<int>(Button::kPS));
 }
 
@@ -326,7 +326,7 @@ bool PS4Controller::GetPSButton() const {
  *
  * @return Whether the button was pressed since the last check.
  */
-bool PS4Controller::GetPSButtonPressed() {
+bool XBOXController::GetPSButtonPressed() {
   return GetRawButtonPressed(static_cast<int>(Button::kPS));
 }
 
@@ -335,6 +335,6 @@ bool PS4Controller::GetPSButtonPressed() {
  *
  * @return Whether the button was released since the last check.
  */
-bool PS4Controller::GetPSButtonReleased() {
+bool XBOXController::GetPSButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kPS));
 }
