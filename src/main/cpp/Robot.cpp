@@ -6,11 +6,12 @@
 /*----------------------------------------------------------------------------*/
 
 #include <IterativeRobot.h>
-#include <Joystick.h>
 #include <LiveWindow/LiveWindow.h>
 #include <Timer.h>
+#include <SmartDashboard/SmartDashboard.h>
 
 #include "robotmap.h"
+#include "PS4Controller.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -38,13 +39,17 @@ class Robot : public frc::TimedRobot {
 
   void TeleopPeriodic() override {
     // Drive with arcade style (use right stick)
-    IO.drivebase.Arcade(m_stick.GetY(), m_stick.GetZ());
+    IO.drivebase.Arcade(m_stick.GetY(GenericHID::JoystickHand::kLeftHand), m_stick.GetX(GenericHID::JoystickHand::kRightHand));    
+    SmartDashboard::PutBoolean("Cross Button", m_stick.GetCrossButton());
+    SmartDashboard::PutBoolean("Square Button", m_stick.GetSquareButton());
+    SmartDashboard::PutBoolean("Circle Button", m_stick.GetCircleButton());
+    SmartDashboard::PutBoolean("Triangle Button", m_stick.GetTriangleButton());
   }
 
   void TestPeriodic() override {}
 
  private:
-  Joystick m_stick{0};
+  PS4Controller m_stick{0};
   LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
   Timer m_timer;
 

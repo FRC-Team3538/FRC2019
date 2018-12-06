@@ -33,7 +33,7 @@ double PS4Controller::GetX(JoystickHand hand) const {
   if (hand == kLeftHand) {
     return GetRawAxis(0);
   } else {
-    return GetRawAxis(4);
+    return GetRawAxis(2);
   }
 }
 
@@ -57,9 +57,9 @@ double PS4Controller::GetY(JoystickHand hand) const {
  */
 double PS4Controller::GetTriggerAxis(JoystickHand hand) const {
   if (hand == kLeftHand) {
-    return GetRawAxis(2);
-  } else {
     return GetRawAxis(3);
+  } else {
+    return GetRawAxis(4);
   }
 }
 
