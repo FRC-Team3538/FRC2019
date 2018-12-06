@@ -1,6 +1,6 @@
 {
-  "java.configuration.updateBuildConfiguration": "disabled",
-  "java.import.gradle.enabled": false,
+  //"java.configuration.updateBuildConfiguration": "disabled",
+  //"java.import.gradle.enabled": false,
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -12,5 +12,5 @@
     ".project": true
   },
   "wpilib.online": true,
-  "C_Cpp.default.configurationProvider": "vscode-wpilib"
+  "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }
