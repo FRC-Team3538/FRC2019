@@ -3,14 +3,20 @@
 #include <VictorSP.h>
 #include <SpeedControllerGroup.h>
 #include <Solenoid.h>
+#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
+
+using namespace ctre::phoenix::motorcontrol::can;
 
 class Intake
 {
   private:
     // Hardware setup
-    VictorSP motor1{10};
-    VictorSP motor2{11};
-    SpeedControllerGroup motors{motor1, motor2};
+    VictorSP motorA1PWM {6};
+    VictorSP motorA2PWM {7};
+
+    WPI_VictorSPX motorA1 {6};
+    WPI_VictorSPX motorA2 {7};
+    SpeedControllerGroup motors{motorA1PWM, motorA2PWM, motorA1, motorA2};
 
     Solenoid solenoidArm{1};
 

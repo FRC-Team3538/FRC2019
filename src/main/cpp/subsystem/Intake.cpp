@@ -3,8 +3,10 @@
 // Configure Hardware Settings
 Intake::Intake()
 {
-    motor1.SetInverted(false);
-    motor2.SetInverted(false);
+    motorA1PWM.SetInverted(false);
+    motorA2PWM.SetInverted(false);
+    motorA1.SetInverted(false);
+    motorA2.SetInverted(false);
 
     solenoidArm.Set(false);
 }

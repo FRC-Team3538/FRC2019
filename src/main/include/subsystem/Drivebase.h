@@ -20,6 +20,16 @@ class Drivebase
     WPI_VictorSPX motorRight2{4};
     WPI_VictorSPX motorRight3{5};
 
+    VictorSP motorLeft1PWM{0};
+    VictorSP motorLeft2PWM{1};
+    VictorSP motorLeft3PWM{2};
+    SpeedControllerGroup DriveLeft{motorLeft1PWM, motorLeft2PWM, motorLeft3PWM, motorLeft1, motorLeft2, motorLeft3};
+
+    VictorSP motorRight1PWM{3};
+    VictorSP motorRight2PWM{4};
+    VictorSP motorRight3PWM{5};
+    SpeedControllerGroup DriveRight{motorRight1PWM, motorRight2PWM, motorRight3PWM, motorRight1, motorRight2, motorRight3};
+
     Solenoid solenoidShifter{0}; 
 
     AHRS navx{ SPI::Port::kMXP, 200 };
