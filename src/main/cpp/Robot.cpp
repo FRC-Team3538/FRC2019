@@ -44,6 +44,21 @@ class Robot : public frc::TimedRobot {
     SmartDashboard::PutBoolean("Square Button", m_stick.GetSquareButton());
     SmartDashboard::PutBoolean("Circle Button", m_stick.GetCircleButton());
     SmartDashboard::PutBoolean("Triangle Button", m_stick.GetTriangleButton());
+    SmartDashboard::PutBoolean("ScreenShot Button", m_stick.GetScreenShotButton());
+    SmartDashboard::PutBoolean("Options Button", m_stick.GetOptionsButton());
+    SmartDashboard::PutBoolean("PS Button", m_stick.GetPSButton());
+    SmartDashboard::PutBoolean("TouchPad Button", m_stick.GetTouchPadButton());
+    SmartDashboard::PutNumber("Left Trigger", m_stick.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand));
+    SmartDashboard::PutNumber("Right Trigger", m_stick.GetTriggerAxis(GenericHID::JoystickHand::kRightHand));
+    SmartDashboard::PutBoolean("Left Bumper Button", m_stick.GetBumper(GenericHID::JoystickHand::kLeftHand));
+    SmartDashboard::PutBoolean("Right Bumper Button", m_stick.GetBumper(GenericHID::JoystickHand::kRightHand));
+    SmartDashboard::PutBoolean("Left Stick Button", m_stick.GetStickButton(GenericHID::JoystickHand::kLeftHand));
+    SmartDashboard::PutBoolean("Right Stick Button", m_stick.GetStickButton(GenericHID::JoystickHand::kRightHand));
+    SmartDashboard::PutNumber("POV", m_stick.GetPOV(0));
+    SmartDashboard::PutBoolean("Up Button", m_stick.GetUPButton());
+    SmartDashboard::PutBoolean("Right Button", m_stick.GetRightButton());
+    SmartDashboard::PutBoolean("Down Button", m_stick.GetDownButton());
+    SmartDashboard::PutBoolean("Left Button", m_stick.GetLeftButton());
   }
 
   void TestPeriodic() override {}

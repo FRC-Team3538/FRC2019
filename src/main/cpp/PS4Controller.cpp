@@ -8,6 +8,7 @@
 #include "PS4Controller.h"
 
 #include <HAL/HAL.h>
+#include "DriverStation.h"
 
 using namespace frc;
 
@@ -25,7 +26,7 @@ PS4Controller::PS4Controller(int port) : GenericHID(port) {
 }
 
 /**
- * Get the X axis value of the controller.
+ * Get the X axis value of the controller.GenericHID::JoystickHand::kLeftHand
  *
  * @param hand Side of controller whose value should be returned.
  */
@@ -57,9 +58,9 @@ double PS4Controller::GetY(JoystickHand hand) const {
  */
 double PS4Controller::GetTriggerAxis(JoystickHand hand) const {
   if (hand == kLeftHand) {
-    return GetRawAxis(3);
+    return GetRawAxis(3)/2 + 0.5;
   } else {
-    return GetRawAxis(4);
+    return -GetRawAxis(4)/2 - 0.5;
   }
 }
 
@@ -336,4 +337,83 @@ bool PS4Controller::GetPSButtonPressed() {
  */
 bool PS4Controller::GetPSButtonReleased() {
   return GetRawButtonReleased(static_cast<int>(Button::kPS));
+}
+
+/**
+ * Read the value of the TouchPad button on the controller.
+ *
+ * @param hand Side of controller whose value should be returned.
+ * @return The state of the button.
+ */
+bool PS4Controller::GetTouchPadButton() const {
+  return GetRawButton(static_cast<int>(Button::kTouchPad));
+}
+
+/**
+ * Whether the TouchPad button was pressed since the last check.
+ *
+ * @return Whether the button was pressed since the last check.
+ */
+bool PS4Controller::GetTouchPadButtonPressed() {
+  return GetRawButtonPressed(static_cast<int>(Button::kTouchPad));
+}
+
+/**
+ * Whether the PS button was released since the last check.
+ *
+ * @return Whether the button was released since the last check.
+ */
+bool PS4Controller::GetTouchPadButtonReleased() {
+  return GetRawButtonReleased(static_cast<int>(Button::kTouchPad));
+}
+
+/**
+ * Get the angle in degrees of a POV on the HID.
+ *
+ * The POV angles start at 0 in the up direction, and increase clockwise
+ * (e.g. right is 90, upper-left is 315).
+ *
+ * @param pov The index of the POV to read (starting at 0)
+ * @return the angle of the POV in degrees, or -1 if the POV is not pressed.
+ */
+int GenericHID::GetPOV(int pov) const { return m_ds.GetStickPOV(m_port, pov); }
+
+/**
+ * Read the value of the TouchPad button on the controller.
+ *
+ * @param hand Side of controller whose value should be returned.
+ * @return The state of the button.
+ */
+bool PS4Controller::GetUPButton() const {
+  return (GetPOV() == 315 || GetPOV() == 0 || GetPOV() == 45 );
+}
+
+/**
+ * Read the value of the TouchPad button on the controller.
+ *
+ * @param hand Side of controller whose value should be returned.
+ * @return The state of the button.
+ */
+bool PS4Controller::GetRightButton() const {
+  return (GetPOV() == 45 || GetPOV() == 90 || GetPOV() == 135 );
+}
+
+/**
+ * Read the value of the TouchPad button on the controller.
+ *
+ * @param hand Side of controller whose value should be returned.
+ * @return The state of the button.
+ */
+bool PS4Controller::GetDownButton() const {
+  return (GetPOV() == 135 || GetPOV() == 180 || GetPOV() == 225 );
+}
+
+/**
+ * Read the value of the TouchPad button on the controller.
+ *
+ * @param hand Side of controller whose value should be returned.
+ * @return The state of the button.
+ */
+bool PS4Controller::GetLeftButton() const {
+  return (GetPOV() == 225 || GetPOV() == 270 || GetPOV() == 315 );
 }
