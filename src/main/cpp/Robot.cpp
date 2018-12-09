@@ -6,15 +6,21 @@
 /*----------------------------------------------------------------------------*/
 
 #include <TimedRobot.h>
-#include <Timer.h>
+#include <LiveWindow/LiveWindow.h>
+#include <SmartDashboard/SmartDashboard.h>
+
 #include "robotmap.h"
+#include "auto/AutoPrograms.h"
 
 class Robot : public frc::TimedRobot
 {
 private:
-  Timer autoTimer;
   robotmap IO;
+  AutoPrograms autoPrograms{IO};
+  LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
+
   const double deadband = 0.05;
+  
   enum driveModes
   {
     ARCADE,
@@ -24,15 +30,12 @@ private:
   int driveMode = driveModes::ARCADE;
 
 public:
-  Robot()
-  {
-    autoTimer.Start();
-  }
 
   void RobotInit() override
   {
     this->SetPeriod(.020);
   }
+
   void RobotPeriodic() override
   {
     UpdateSD();
@@ -46,27 +49,6 @@ public:
     if (driveMode == 3)
     {
       driveMode = 0;
-    }
-  }
-
-  void AutonomousInit() override
-  {
-    autoTimer.Reset();
-    autoTimer.Start();
-  }
-
-  void AutonomousPeriodic() override
-  {
-    // Drive for 2 seconds
-    if (autoTimer.Get() < 2.0)
-    {
-      // Drive forwards half speed
-      IO.drivebase.Arcade(0.5, 0.0);
-    }
-    else
-    {
-      // Stop robot
-      IO.drivebase.Stop();
     }
   }
 
@@ -182,7 +164,19 @@ public:
     }
   }
 
-  void TestPeriodic() override {}
+  /*************************************************
+   *               Auto No Mouse!                  *
+   *************************************************/
+
+  void AutonomousInit() override
+  {
+    autoPrograms.Init();
+  }
+
+  void AutonomousPeriodic() override
+  {
+    autoPrograms.Run();
+  }
 
 private:
   double Deadband(double input, double deadband)
@@ -219,6 +213,8 @@ private:
       break;
     }
   }
+
+
 };
 
 START_ROBOT_CLASS(Robot)
