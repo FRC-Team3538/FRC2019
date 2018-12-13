@@ -67,21 +67,41 @@ class PS4Controller : public GenericHID {
   bool GetPSButtonPressed();
   bool GetPSButtonReleased();
 
+  bool GetTouchPadButton() const;
+  bool GetTouchPadButtonPressed();
+  bool GetTouchPadButtonReleased();
+
+  bool GetUPButton() const;
+
+  bool GetRightButton() const;
+
+  bool GetDownButton() const;
+
+  bool GetLeftButton() const;
 
  private:
   enum class Button {
     kBumperLeft = 5,
     kBumperRight = 6,
-    kStickLeft = 9,
-    kStickRight = 10,
-    kCross = 1,
-    kCircle = 2,
-    kSquare = 3,
+    kStickLeft = 11,
+    kStickRight = 12,
+    kCross = 2,
+    kCircle = 3,
+    kSquare = 1,
     kTriangle = 4,
-    kScreenShot = 7,
-    kOptions = 8,
-    kPS = 9
+    kScreenShot = 9,
+    kOptions = 10,
+    kPS = 13,
+    kTouchPad = 14
   };
+
+  enum class POV {
+    kUP = 0,
+    kRight = 90,
+    kDown = 180,
+    kLeft = 270
+  };
+
 };
 
 }  // namespace frc
