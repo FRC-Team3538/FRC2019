@@ -13,7 +13,7 @@ class Robot : public frc::TimedRobot {
 private:
   Timer autoTimer;
   robotmap IO;
-  const double deadband = 0.1;
+  const double deadband = 0.05;
   const int driveTypes = 3;
   int driveMode = 0;
 public:
@@ -21,6 +21,9 @@ public:
     autoTimer.Start();
   }
 
+  void RobotInit() override{
+    this->SetPeriod(.020);
+  }
   void RobotPeriodic() override{
     UpdateSD();
 
@@ -55,7 +58,7 @@ public:
   void TeleopPeriodic() override {
     double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand);
     double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand);
-    double strafe = IO.ds.DriverPS.GetX(GenericHID::kRightHand);
+    double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand);
     double forwardR = IO.ds.DriverPS.GetY(GenericHID::kRightHand);
     double leftTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kLeftHand);
     double rightTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
@@ -76,10 +79,19 @@ public:
     bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
 
     //Deadbands
+    SmartDashboard::PutNumber("forward1", forward);
+    SmartDashboard::PutNumber("forward2", forwardR);
+    SmartDashboard::PutNumber("rotate1", rotate);
+    SmartDashboard::PutNumber("strafe1", strafe);
+
     forward = Deadband(forward, deadband);
     rotate = Deadband(rotate, deadband);
     strafe = Deadband(strafe, deadband);
+    forwardR = Deadband(forwardR, deadband);
 
+    SmartDashboard::PutNumber("forward", forward);
+    SmartDashboard::PutNumber("rotate", rotate);
+    SmartDashboard::PutNumber("strafe", strafe);
 
     //Drive
     if(driveMode == 0){
@@ -128,7 +140,7 @@ public:
 
 private:
   double Deadband(double input, double deadband){
-    if(abs(input) < deadband){
+    if((std::abs(input)) < deadband){
       return 0.0;
     }
     else{
@@ -151,6 +163,7 @@ private:
       SmartDashboard::PutString(dm,"Holonomic");
       break;
     }
+
   }
 };
 

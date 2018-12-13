@@ -1,4 +1,5 @@
 #include "subsystem/Drivebase.h"
+#include <SmartDashboard/SmartDashboard.h>
 
 Drivebase::Drivebase()
 {
@@ -47,10 +48,14 @@ void Drivebase::SetLowGear()
 }
 
 void Drivebase::Holonomic(double forward, double rotate, double strafe){
-    double front_Left = forward + rotate - strafe;
-    double front_Right = forward - rotate + strafe;
-    double back_Left = forward + rotate - strafe;
-    double back_Right = forward - rotate - strafe;
+    double front_Left = forward - rotate + strafe;
+    double front_Right = -(forward + rotate + strafe);
+    double back_Left = forward - rotate - strafe;
+    double back_Right = -(forward + rotate - strafe);
+    SmartDashboard::PutNumber("FrontLeft", front_Left);
+    SmartDashboard::PutNumber("FrontRight", front_Right);
+    SmartDashboard::PutNumber("BackLeft", back_Left);
+    SmartDashboard::PutNumber("BackRight", back_Right);
     double Magnitude = abs(forward) + abs(rotate) + abs(strafe);
 
     if(abs(front_Right) > Magnitude){
