@@ -13,8 +13,13 @@
   },
   "wpilib.online": true,
   "files.associations": {
-    "memory": "cpp",
-    "thread": "cpp",
-    "cstdint": "cpp"
-  }
+    "cmath": "cpp",
+    "complex": "cpp",
+    "cstdlib": "cpp"
+  },
+  //"files.associations": {
+   // "memory": "cpp",
+   // "thread": "cpp",
+    //"cstdint": "cpp"
+  //}
 }

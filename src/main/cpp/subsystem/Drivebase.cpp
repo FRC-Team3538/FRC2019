@@ -37,11 +37,40 @@ void Drivebase::Stop()
 // Shift to High Gear
 void Drivebase::SetHighGear()
 {
-    solenoidShifter.Set(false);
+    solenoidShifter.Set(true);
 }
 
 // Shift to Low Gear
 void Drivebase::SetLowGear()
 {
-    solenoidShifter.Set(true);
+    solenoidShifter.Set(false);
+}
+
+void Drivebase::Holonomic(double forward, double rotate, double strafe){
+    double front_Left = forward + rotate - strafe;
+    double front_Right = forward - rotate + strafe;
+    double back_Left = forward + rotate - strafe;
+    double back_Right = forward - rotate - strafe;
+    double Magnitude = abs(forward) + abs(rotate) + abs(strafe);
+
+    if(abs(front_Right) > Magnitude){
+        Magnitude = abs(front_Right);
+    }
+    if(abs(back_Left) > Magnitude){
+        Magnitude = abs(back_Left);
+    }
+    if(abs(back_Right) > Magnitude){
+        Magnitude = abs(back_Right);
+    }
+
+    if(Magnitude > 1){
+        front_Left /= Magnitude;
+        front_Right /= Magnitude;
+        back_Left /= Magnitude;
+        back_Right /= Magnitude;
+    }
+    frontLeft.Set(front_Left);
+    frontRight.Set(front_Right);
+    backLeft.Set(back_Left);
+    backRight.Set(back_Right);
 }

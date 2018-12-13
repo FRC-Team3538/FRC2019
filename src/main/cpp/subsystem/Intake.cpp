@@ -26,12 +26,16 @@ void Intake::Stop()
     motors.StopMotor();
 }
 
-void Intake::Suck()
+//Positive Speed is intaking
+void Intake::Set(double speed)
 {
-    motors.Set(kMotorSpeed);
+    motors.Set(speed);
 }
 
-void Intake::Spit()
-{
-    motors.Set(-kMotorSpeed);
+bool Intake::SolenoidState(){
+    return solenoidArm.Get();
+}
+
+void Intake::SolenoidSet(bool state){
+    solenoidArm.Set(state);
 }

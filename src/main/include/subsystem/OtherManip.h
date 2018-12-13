@@ -6,31 +6,31 @@
 #include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
 
 using namespace ctre::phoenix::motorcontrol::can;
-
-class Intake
+class OtherManip
 {
   private:
     // Hardware setup
-    VictorSP motorA1PWM {6};
-    VictorSP motorA2PWM {7};
+    VictorSP motorB1PWM {8};
+    VictorSP motorB2PWM {9};
 
-    WPI_VictorSPX motorA1 {6};
-    WPI_VictorSPX motorA2 {7};
-    SpeedControllerGroup motors{motorA1PWM, motorA2PWM, motorA1, motorA2};
+    WPI_VictorSPX motorB1 {8};
+    WPI_VictorSPX motorB2 {9};
+    SpeedControllerGroup motorsB{motorB1PWM, motorB2PWM, motorB1, motorB2};
 
-    Solenoid solenoidArm{1};
+    Solenoid solenoidArmB{2};
+
+    const double kMotorSpeed = 1;
 
   public:
     // Default Constructor
-    Intake();
+    OtherManip();
 
     // Actions
     void Deploy();
     void Retract();
-    void SolenoidSet(bool state);
-
-    void Set(double speed);
+    
+    void Forward();
+    void Backward();
     void Stop();
-
-    bool SolenoidState();
 };
+
