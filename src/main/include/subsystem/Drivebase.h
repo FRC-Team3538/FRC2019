@@ -4,6 +4,7 @@
 #include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
 #include <Solenoid.h>
 #include <AHRS.h>
+#include <SmartDashboard/SmartDashboard.h>
 
 using namespace ctre::phoenix::motorcontrol::can;
 
@@ -51,4 +52,6 @@ class Drivebase
 
     void SetHighGear();
     void SetLowGear();
+
+    void LogDriveOutputs();
 };

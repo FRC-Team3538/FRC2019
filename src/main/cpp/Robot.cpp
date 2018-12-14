@@ -9,45 +9,57 @@
 #include <Timer.h>
 #include "robotmap.h"
 
-class Robot : public frc::TimedRobot {
+class Robot : public frc::TimedRobot
+{
 private:
   Timer autoTimer;
   robotmap IO;
   const double deadband = 0.05;
   const int driveTypes = 3;
   int driveMode = 0;
+
 public:
-  Robot() {
+  Robot()
+  {
     autoTimer.Start();
   }
 
-  void RobotInit() override{
+  void RobotInit() override
+  {
     this->SetPeriod(.020);
   }
-  void RobotPeriodic() override{
+  void RobotPeriodic() override
+  {
     UpdateSD();
 
-    bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();        
+    bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();
     //Drive Swapping
-    if(btnOptDrPrsd){
+    if (btnOptDrPrsd)
+    {
       driveMode++;
     }
-    if(driveMode == 3){
+    if (driveMode == 3)
+    {
       driveMode = 0;
     }
   }
 
-  void AutonomousInit() override {
+  void AutonomousInit() override
+  {
     autoTimer.Reset();
     autoTimer.Start();
   }
 
-  void AutonomousPeriodic() override {
+  void AutonomousPeriodic() override
+  {
     // Drive for 2 seconds
-    if (autoTimer.Get() < 2.0) {
+    if (autoTimer.Get() < 2.0)
+    {
       // Drive forwards half speed
       IO.drivebase.Arcade(0.5, 0.0);
-    } else {
+    }
+    else
+    {
       // Stop robot
       IO.drivebase.Stop();
     }
@@ -55,7 +67,8 @@ public:
 
   void TeleopInit() override {}
 
-  void TeleopPeriodic() override {
+  void TeleopPeriodic() override
+  {
     double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand);
     double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand);
     double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand);
@@ -79,91 +92,97 @@ public:
     bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
 
     //Deadbands
-    SmartDashboard::PutNumber("forward1", forward);
-    SmartDashboard::PutNumber("forward2", forwardR);
-    SmartDashboard::PutNumber("rotate1", rotate);
-    SmartDashboard::PutNumber("strafe1", strafe);
-
     forward = Deadband(forward, deadband);
     rotate = Deadband(rotate, deadband);
     strafe = Deadband(strafe, deadband);
     forwardR = Deadband(forwardR, deadband);
 
-    SmartDashboard::PutNumber("forward", forward);
-    SmartDashboard::PutNumber("rotate", rotate);
-    SmartDashboard::PutNumber("strafe", strafe);
-
     //Drive
-    if(driveMode == 0){
+    if (driveMode == 0)
+    {
       IO.drivebase.Arcade(forward, rotate);
     }
-    else if(driveMode == 1){
+    else if (driveMode == 1)
+    {
       IO.drivebase.Tank(forward, forwardR);
     }
-    else{
+    else
+    {
       IO.drivebase.Holonomic(forward, rotate, strafe);
     }
 
-    if(leftBumpDr){
+    if (leftBumpDr)
+    {
       IO.drivebase.SetLowGear();
     }
 
-    if(rightBumpDr){
+    if (rightBumpDr)
+    {
       IO.drivebase.SetHighGear();
     }
 
     IO.intake.Set(leftTrigDr + rightTrigDr);
 
-    if(btnLeftDr || btnLeftOp){
+    if (btnLeftDr || btnLeftOp)
+    {
       IO.intake.Deploy();
     }
-    else{
+    else
+    {
       IO.intake.Retract();
     }
 
-    bool PCM2 = IO.intake.SolenoidState();
-    if(btnUpDrPrsd || btnUpOpPrsd){
-      IO.intake.SolenoidSet(!PCM2);
+    if (btnUpDrPrsd || btnUpOpPrsd)
+    {
+      IO.intake.SolenoidToggle();
     }
 
-    if(btnDownDrPrsd || btnDownOpPrsd){
+    if (btnDownDrPrsd || btnDownOpPrsd)
+    {
       IO.manipB.Forward();
     }
 
-    if(btnRightDrPrsd || btnRightOpPrsd){
+    if (btnRightDrPrsd || btnRightOpPrsd)
+    {
       IO.manipB.Stop();
     }
-    
   }
 
   void TestPeriodic() override {}
 
 private:
-  double Deadband(double input, double deadband){
-    if((std::abs(input)) < deadband){
+  double Deadband(double input, double deadband)
+  {
+    if ((std::abs(input)) < deadband)
+    {
       return 0.0;
     }
-    else{
+    else
+    {
       return input;
     }
   }
 
-  void UpdateSD(){
+  void UpdateSD()
+  {
     std::string dm = "DriveMode";
-    switch(driveMode){
-      case 0:
+
+    IO.drivebase.LogDriveOutputs();
+
+    switch (driveMode)
+    {
+    case 0:
       SmartDashboard::PutString(dm, "Arcade");
       break;
-    
-      case 1:
+
+    case 1:
       SmartDashboard::PutString(dm, "TankyTank");
       break;
-    
-      case 2:
-      SmartDashboard::PutString(dm,"Holonomic");
+
+    case 2:
+      SmartDashboard::PutString(dm, "Holonomic");
       break;
     }
-
   }
 };
 

@@ -36,6 +36,7 @@ bool Intake::SolenoidState(){
     return solenoidArm.Get();
 }
 
-void Intake::SolenoidSet(bool state){
-    solenoidArm.Set(state);
+void Intake::SolenoidToggle(){
+    bool PCM2 = SolenoidState();
+    solenoidArm.Set(!PCM2);
 }

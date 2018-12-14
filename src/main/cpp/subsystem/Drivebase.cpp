@@ -47,28 +47,30 @@ void Drivebase::SetLowGear()
     solenoidShifter.Set(false);
 }
 
-void Drivebase::Holonomic(double forward, double rotate, double strafe){
+void Drivebase::Holonomic(double forward, double rotate, double strafe)
+{
     double front_Left = forward - rotate + strafe;
     double front_Right = -(forward + rotate + strafe);
     double back_Left = forward - rotate - strafe;
     double back_Right = -(forward + rotate - strafe);
-    SmartDashboard::PutNumber("FrontLeft", front_Left);
-    SmartDashboard::PutNumber("FrontRight", front_Right);
-    SmartDashboard::PutNumber("BackLeft", back_Left);
-    SmartDashboard::PutNumber("BackRight", back_Right);
+
     double Magnitude = abs(forward) + abs(rotate) + abs(strafe);
 
-    if(abs(front_Right) > Magnitude){
+    if (abs(front_Right) > Magnitude)
+    {
         Magnitude = abs(front_Right);
     }
-    if(abs(back_Left) > Magnitude){
+    if (abs(back_Left) > Magnitude)
+    {
         Magnitude = abs(back_Left);
     }
-    if(abs(back_Right) > Magnitude){
+    if (abs(back_Right) > Magnitude)
+    {
         Magnitude = abs(back_Right);
     }
 
-    if(Magnitude > 1){
+    if (Magnitude > 1)
+    {
         front_Left /= Magnitude;
         front_Right /= Magnitude;
         back_Left /= Magnitude;
@@ -78,4 +80,17 @@ void Drivebase::Holonomic(double forward, double rotate, double strafe){
     frontRight.Set(front_Right);
     backLeft.Set(back_Left);
     backRight.Set(back_Right);
+}
+
+void Drivebase::LogDriveOutputs()
+{
+    std::string moL = "DriveLeft";
+    std::string moR = "DriveRight";
+    std::string moLPWM = "DriveLeftPWM";
+    std::string moRPWM = "DriveRightPWM";
+
+    SmartDashboard::PutNumber("moLA", motorLeft1.Get());
+    SmartDashboard::PutNumber("moLB", motorRight1.Get());
+    SmartDashboard::PutNumber("moLC", motorLeft1PWM.Get());
+    SmartDashboard::PutNumber("moRA", motorRight1PWM.Get());
 }

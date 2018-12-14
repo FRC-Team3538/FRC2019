@@ -27,7 +27,7 @@ class Intake
     // Actions
     void Deploy();
     void Retract();
-    void SolenoidSet(bool state);
+    void SolenoidToggle();
 
     void Set(double speed);
     void Stop();

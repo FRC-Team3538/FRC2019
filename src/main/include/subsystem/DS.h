@@ -1,16 +1,19 @@
 #pragma once
 
 #include <SmartDashboard/SmartDashboard.h>
+#include <SmartDashboard/SendableChooser.h>
 #include <LiveWindow/LiveWindow.h>
 #include <XboxController.h>
 #include <CameraServer.h>
 #include "PS4Controller.h"
 
+using namespace llvm;
+
 class DS
 {
     public:
-    //XboxController DriverXB{0};
-    //XboxController OperatorXB{1};
+    XboxController DriverXB{0};
+    XboxController OperatorXB{1};
 
     PS4Controller DriverPS{0};
     PS4Controller OperatorPS{1};
@@ -25,4 +28,10 @@ class DS
 
     DS();
 
+    struct autoModes{
+        SendableChooser<StringRef> chooseAutoProgram;
+        const StringRef AutoNone = "1 None";
+        const StringRef AutoLine = "2 Line";
+    };
+    autoModes AM;
 };
