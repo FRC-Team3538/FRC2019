@@ -121,7 +121,7 @@ public:
       IO.drivebase.SetHighGear();
     }
 
-    IO.intake.Set(leftTrigDr + rightTrigDr);
+    IO.intake.Set(leftTrigDr + rightTrigDr + leftTrigOp + rightTrigOp);
 
     if (btnLeftDr || btnLeftOp)
     {
