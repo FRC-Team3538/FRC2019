@@ -19,19 +19,9 @@ class DS
     PS4Controller OperatorPS{1};
 
     cs::UsbCamera cam0 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 0", 0);
-
     cs::VideoSink server = CameraServer::GetInstance()->GetServer();
-
     cs::CvSink sink0;
-
     LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 
     DS();
-
-    struct autoModes{
-        SendableChooser<StringRef> chooseAutoProgram;
-        const StringRef AutoNone = "1 None";
-        const StringRef AutoLine = "2 Line";
-    };
-    autoModes AM;
 };

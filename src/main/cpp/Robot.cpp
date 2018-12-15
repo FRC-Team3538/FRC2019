@@ -168,6 +168,7 @@ private:
     std::string dm = "DriveMode";
 
     IO.drivebase.LogDriveOutputs();
+    IO.drivebase.LogEncoders();
 
     switch (driveMode)
     {
@@ -183,6 +184,7 @@ private:
       SmartDashboard::PutString(dm, "Holonomic");
       break;
     }
+
   }
 };
 

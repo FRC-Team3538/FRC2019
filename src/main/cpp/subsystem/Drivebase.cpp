@@ -12,6 +12,16 @@ Drivebase::Drivebase()
 
     // set default shifter state
     solenoidShifter.Set(false);
+
+    motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
+    motorRight1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
+    motorRight1.ConfigVelocityMeasurementWindow(32, 0);
+    motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
+
+    motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
+    motorLeft1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
+    motorLeft1.ConfigVelocityMeasurementWindow(32, 0);
+    motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
 }
 
 // Tanks Drive
@@ -89,8 +99,14 @@ void Drivebase::LogDriveOutputs()
     std::string moLPWM = "DriveLeftPWM";
     std::string moRPWM = "DriveRightPWM";
 
-    SmartDashboard::PutNumber("moLA", motorLeft1.Get());
-    SmartDashboard::PutNumber("moLB", motorRight1.Get());
-    SmartDashboard::PutNumber("moLC", motorLeft1PWM.Get());
-    SmartDashboard::PutNumber("moRA", motorRight1PWM.Get());
+    SmartDashboard::PutNumber(moL, motorLeft1.Get());
+    SmartDashboard::PutNumber(moR, motorRight1.Get());
+    SmartDashboard::PutNumber(moLPWM, motorLeft1PWM.Get());
+    SmartDashboard::PutNumber(moRPWM, motorRight1PWM.Get());
+}
+
+void Drivebase::LogEncoders()
+{
+    SmartDashboard::PutNumber("EncLVel", motorLeft1.GetSensorCollection().GetQuadratureVelocity());
+    SmartDashboard::PutNumber("EncRVel", motorRight1.GetSensorCollection().GetQuadratureVelocity());
 }
