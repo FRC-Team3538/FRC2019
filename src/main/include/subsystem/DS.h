@@ -12,8 +12,8 @@ using namespace llvm;
 class DS
 {
     public:
-    XboxController DriverXB{0};
-    XboxController OperatorXB{1};
+    XboxController DriverXB{3};
+    XboxController OperatorXB{4};
 
     PS4Controller DriverPS{0};
     PS4Controller OperatorPS{1};
