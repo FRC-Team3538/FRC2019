@@ -40,6 +40,15 @@ void OtherManip::Backward()
     motorsB.Set(-kMotorSpeed);
 }
 
+bool OtherManip::SolenoidState(){
+    return solenoidArmB.Get();
+}
+
+void OtherManip::SolenoidToggle(){
+    bool PCM2 = SolenoidState();
+    solenoidArmB.Set(!PCM2);
+}
+
 bool OtherManip::GetFwdLim()
 {
     return motorB1.GetSensorCollection().IsFwdLimitSwitchClosed() != 0;

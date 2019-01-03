@@ -9,6 +9,7 @@ Intake::Intake()
     motorA2.SetInverted(false);
 
     solenoidArm.Set(false);
+    
 }
 
 void Intake::Deploy()
@@ -32,11 +33,5 @@ void Intake::Set(double speed)
     motors.Set(speed);
 }
 
-bool Intake::SolenoidState(){
-    return solenoidArm.Get();
-}
 
-void Intake::SolenoidToggle(){
-    bool PCM2 = SolenoidState();
-    solenoidArm.Set(!PCM2);
-}
+

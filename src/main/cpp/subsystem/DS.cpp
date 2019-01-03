@@ -6,4 +6,8 @@ DS::DS(){
 	cam0.SetExposureAuto();
 	cam0.SetWhiteBalanceAuto();
 
+
+    chooseController.AddDefault(sPS4, sPS4);
+	chooseController.AddObject(sXBX, sXBX);
+	frc::SmartDashboard::PutData("Selected Controller", &chooseController);
 }

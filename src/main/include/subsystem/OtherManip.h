@@ -34,6 +34,8 @@ public:
   void Forward();
   void Backward();
   void Stop();
+  void SolenoidToggle();
+  bool SolenoidState();
   
   bool GetFwdLim();
   bool GetRevLim();

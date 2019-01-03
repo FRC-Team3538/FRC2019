@@ -17,6 +17,7 @@
     "complex": "cpp",
     "cstdlib": "cpp"
   },
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
   //"files.associations": {
    // "memory": "cpp",
    // "thread": "cpp",

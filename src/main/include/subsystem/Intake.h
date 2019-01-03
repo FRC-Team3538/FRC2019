@@ -19,6 +19,7 @@ class Intake
     SpeedControllerGroup motors{motorA1PWM, motorA2PWM, motorA1, motorA2};
 
     Solenoid solenoidArm{1};
+    
 
   public:
     // Default Constructor
@@ -32,5 +33,5 @@ class Intake
     void Set(double speed);
     void Stop();
 
-    bool SolenoidState();
+   
 };
