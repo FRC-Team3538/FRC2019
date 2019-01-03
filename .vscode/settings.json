@@ -12,5 +12,15 @@
     ".project": true
   },
   "wpilib.online": true,
-  "C_Cpp.intelliSenseEngineFallback": "Enabled"
+  "files.associations": {
+    "cmath": "cpp",
+    "complex": "cpp",
+    "cstdlib": "cpp"
+  },
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+  //"files.associations": {
+   // "memory": "cpp",
+   // "thread": "cpp",
+    //"cstdint": "cpp"
+  //}
 }

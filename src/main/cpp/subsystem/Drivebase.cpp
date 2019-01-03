@@ -1,56 +1,112 @@
 #include "subsystem/Drivebase.h"
+#include <SmartDashboard/SmartDashboard.h>
 
 Drivebase::Drivebase()
 {
     // Link motors together
-    motorRight2.Follow(motorRight1);
-    motorRight3.Follow(motorRight1);
-
-    motorLeft2.Follow(motorLeft1);
-    motorLeft3.Follow(motorLeft1);
 
     // Invert one side of the drive
-    motorLeft1.SetInverted(false);
-    motorLeft2.SetInverted(false);
-    motorLeft3.SetInverted(false);
+    DriveLeft.SetInverted(false);
 
-    motorRight1.SetInverted(true);
-    motorRight2.SetInverted(true);
-    motorRight3.SetInverted(true);
+    DriveRight.SetInverted(true);
 
     // set default shifter state
     solenoidShifter.Set(false);
+
+    motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
+    motorRight1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
+    motorRight1.ConfigVelocityMeasurementWindow(32, 0);
+    motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
+
+    motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
+    motorLeft1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
+    motorLeft1.ConfigVelocityMeasurementWindow(32, 0);
+    motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
 }
 
 // Tanks Drive
 void Drivebase::Tank(double left, double right)
 {
-    motorLeft1.Set(left);
-    motorRight1.Set(right);
+    DriveLeft.Set(left);
+    DriveRight.Set(right);
 }
 
 // Arcade Drive
 void Drivebase::Arcade(double forward, double turn)
 {
-    motorLeft1.Set(forward - turn);
-    motorRight1.Set(forward + turn);
+    DriveLeft.Set(forward - turn);
+    DriveRight.Set(forward + turn);
 }
 
 // Stop!
 void Drivebase::Stop()
 {
-    motorLeft1.StopMotor();
-    motorRight1.StopMotor();
+    DriveLeft.StopMotor();
+    DriveRight.StopMotor();
 }
 
 // Shift to High Gear
 void Drivebase::SetHighGear()
 {
-    solenoidShifter.Set(false);
+    solenoidShifter.Set(true);
 }
 
 // Shift to Low Gear
 void Drivebase::SetLowGear()
 {
-    solenoidShifter.Set(true);
+    solenoidShifter.Set(false);
+}
+
+void Drivebase::Holonomic(double forward, double rotate, double strafe)
+{
+    double front_Left = forward - rotate + strafe;
+    double front_Right = -(forward + rotate + strafe);
+    double back_Left = forward - rotate - strafe;
+    double back_Right = -(forward + rotate - strafe);
+
+    double Magnitude = abs(forward) + abs(rotate) + abs(strafe);
+
+    if (abs(front_Right) > Magnitude)
+    {
+        Magnitude = abs(front_Right);
+    }
+    if (abs(back_Left) > Magnitude)
+    {
+        Magnitude = abs(back_Left);
+    }
+    if (abs(back_Right) > Magnitude)
+    {
+        Magnitude = abs(back_Right);
+    }
+
+    if (Magnitude > 1)
+    {
+        front_Left /= Magnitude;
+        front_Right /= Magnitude;
+        back_Left /= Magnitude;
+        back_Right /= Magnitude;
+    }
+    frontLeft.Set(front_Left);
+    frontRight.Set(front_Right);
+    backLeft.Set(back_Left);
+    backRight.Set(back_Right);
+}
+
+void Drivebase::LogDriveOutputs()
+{
+    std::string moL = "DriveLeft";
+    std::string moR = "DriveRight";
+    std::string moLPWM = "DriveLeftPWM";
+    std::string moRPWM = "DriveRightPWM";
+
+    SmartDashboard::PutNumber(moL, motorLeft1.Get());
+    SmartDashboard::PutNumber(moR, motorRight1.Get());
+    SmartDashboard::PutNumber(moLPWM, motorLeft1PWM.Get());
+    SmartDashboard::PutNumber(moRPWM, motorRight1PWM.Get());
+}
+
+void Drivebase::LogEncoders()
+{
+    SmartDashboard::PutNumber("EncLVel", motorLeft1.GetSensorCollection().GetQuadratureVelocity());
+    SmartDashboard::PutNumber("EncRVel", motorRight1.GetSensorCollection().GetQuadratureVelocity());
 }

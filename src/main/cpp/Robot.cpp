@@ -5,31 +5,66 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include <IterativeRobot.h>
-#include <LiveWindow/LiveWindow.h>
+#include <TimedRobot.h>
 #include <Timer.h>
-#include <SmartDashboard/SmartDashboard.h>
-
 #include "robotmap.h"
-#include "PS4Controller.h"
 
-class Robot : public frc::TimedRobot {
- public:
-  Robot() {
-    m_timer.Start();
+class Robot : public frc::TimedRobot
+{
+private:
+  Timer autoTimer;
+  robotmap IO;
+  const double deadband = 0.05;
+  enum driveModes
+  {
+    ARCADE,
+    TANKYTANK,
+    HOLONOMIC
+  };
+  int driveMode = driveModes::ARCADE;
+
+public:
+  Robot()
+  {
+    autoTimer.Start();
   }
 
-  void AutonomousInit() override {
-    m_timer.Reset();
-    m_timer.Start();
+  void RobotInit() override
+  {
+    this->SetPeriod(.020);
+  }
+  void RobotPeriodic() override
+  {
+    UpdateSD();
+
+    bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();
+    //Drive Swapping
+    if (btnOptDrPrsd)
+    {
+      driveMode++;
+    }
+    if (driveMode == 3)
+    {
+      driveMode = 0;
+    }
   }
 
-  void AutonomousPeriodic() override {
+  void AutonomousInit() override
+  {
+    autoTimer.Reset();
+    autoTimer.Start();
+  }
+
+  void AutonomousPeriodic() override
+  {
     // Drive for 2 seconds
-    if (m_timer.Get() < 2.0) {
+    if (autoTimer.Get() < 2.0)
+    {
       // Drive forwards half speed
       IO.drivebase.Arcade(0.5, 0.0);
-    } else {
+    }
+    else
+    {
       // Stop robot
       IO.drivebase.Stop();
     }
@@ -37,38 +72,153 @@ class Robot : public frc::TimedRobot {
 
   void TeleopInit() override {}
 
-  void TeleopPeriodic() override {
-    // Drive with arcade style (use right stick)
-    IO.drivebase.Arcade(m_stick.GetY(GenericHID::JoystickHand::kLeftHand), m_stick.GetX(GenericHID::JoystickHand::kRightHand));    
-    SmartDashboard::PutBoolean("Cross Button", m_stick.GetCrossButton());
-    SmartDashboard::PutBoolean("Square Button", m_stick.GetSquareButton());
-    SmartDashboard::PutBoolean("Circle Button", m_stick.GetCircleButton());
-    SmartDashboard::PutBoolean("Triangle Button", m_stick.GetTriangleButton());
-    SmartDashboard::PutBoolean("ScreenShot Button", m_stick.GetScreenShotButton());
-    SmartDashboard::PutBoolean("Options Button", m_stick.GetOptionsButton());
-    SmartDashboard::PutBoolean("PS Button", m_stick.GetPSButton());
-    SmartDashboard::PutBoolean("TouchPad Button", m_stick.GetTouchPadButton());
-    SmartDashboard::PutNumber("Left Trigger", m_stick.GetTriggerAxis(GenericHID::JoystickHand::kLeftHand));
-    SmartDashboard::PutNumber("Right Trigger", m_stick.GetTriggerAxis(GenericHID::JoystickHand::kRightHand));
-    SmartDashboard::PutBoolean("Left Bumper Button", m_stick.GetBumper(GenericHID::JoystickHand::kLeftHand));
-    SmartDashboard::PutBoolean("Right Bumper Button", m_stick.GetBumper(GenericHID::JoystickHand::kRightHand));
-    SmartDashboard::PutBoolean("Left Stick Button", m_stick.GetStickButton(GenericHID::JoystickHand::kLeftHand));
-    SmartDashboard::PutBoolean("Right Stick Button", m_stick.GetStickButton(GenericHID::JoystickHand::kRightHand));
-    SmartDashboard::PutNumber("POV", m_stick.GetPOV(0));
-    SmartDashboard::PutBoolean("Up Button", m_stick.GetUPButton());
-    SmartDashboard::PutBoolean("Right Button", m_stick.GetRightButton());
-    SmartDashboard::PutBoolean("Down Button", m_stick.GetDownButton());
-    SmartDashboard::PutBoolean("Left Button", m_stick.GetLeftButton());
+  void TeleopPeriodic() override
+  {
+    double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand);
+    double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand);
+    double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand);
+    double forwardR = IO.ds.DriverPS.GetY(GenericHID::kRightHand);
+    double leftTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kLeftHand);
+    double rightTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
+    bool leftBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kLeftHand);
+    bool rightBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kRightHand);
+    bool btnDownDrPrsd = IO.ds.DriverPS.GetCrossButtonPressed();
+    bool btnUpDrPrsd = IO.ds.DriverPS.GetTriangleButtonPressed();
+    bool btnRightDrPrsd = IO.ds.DriverPS.GetCircleButtonPressed();
+    bool btnLeftDr = IO.ds.DriverPS.GetSquareButton();
+
+    double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand);
+    double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
+    bool leftBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kLeftHand);
+    bool rightBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kRightHand);
+    bool btnDownOpPrsd = IO.ds.OperatorPS.GetCrossButtonPressed();
+    bool btnUpOpPrsd = IO.ds.OperatorPS.GetTriangleButtonPressed();
+    bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
+    bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
+    frc::SmartDashboard::PutNumber("Forward0", forward);
+
+    if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
+    {
+      forward = IO.ds.DriverXB.GetY(GenericHID::kLeftHand);
+      rotate = IO.ds.DriverXB.GetX(GenericHID::kRightHand);
+      strafe = IO.ds.DriverXB.GetX(GenericHID::kLeftHand);
+      forwardR = IO.ds.DriverXB.GetY(GenericHID::kRightHand);
+      leftTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kLeftHand);
+      rightTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
+      leftBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kLeftHand);
+      rightBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kRightHand);
+      btnDownDrPrsd = IO.ds.DriverXB.GetAButtonPressed();
+      btnUpDrPrsd = IO.ds.DriverXB.GetYButtonPressed();
+      btnRightDrPrsd = IO.ds.DriverXB.GetBButtonPressed();
+      btnLeftDr = IO.ds.DriverXB.GetXButton();
+      frc::SmartDashboard::PutNumber("Forward1", forward);
+
+      leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
+      rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
+      leftBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
+      rightBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
+      btnDownOpPrsd = IO.ds.OperatorXB.GetAButtonPressed();
+      btnUpOpPrsd = IO.ds.OperatorXB.GetYButtonPressed();
+      btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
+      btnLeftOp = IO.ds.OperatorXB.GetXButton();
+    };
+
+    //Deadbands
+    forward = Deadband(forward, deadband);
+    rotate = Deadband(rotate, deadband);
+    strafe = Deadband(strafe, deadband);
+    forwardR = Deadband(forwardR, deadband);
+
+    //Drive
+    switch (driveMode)
+    {
+    case driveModes::ARCADE:
+      IO.drivebase.Arcade(forward, rotate);
+      break;
+
+    case driveModes::TANKYTANK:
+      IO.drivebase.Tank(forward, forwardR);
+      break;
+
+    case driveModes::HOLONOMIC:
+      IO.drivebase.Holonomic(forward, rotate, strafe);
+      break;
+    }
+
+    if (leftBumpDr)
+    {
+      IO.drivebase.SetLowGear();
+    }
+
+    if (rightBumpDr)
+    {
+      IO.drivebase.SetHighGear();
+    }
+
+    IO.intake.Set(leftTrigDr + rightTrigDr + leftTrigOp + rightTrigOp);
+
+    if (btnLeftDr || btnLeftOp)
+    {
+      IO.intake.Deploy();
+    }
+    else
+    {
+      IO.intake.Retract();
+    }
+
+    if (btnUpDrPrsd || btnUpOpPrsd)
+    {
+      IO.manipB.SolenoidToggle();
+    }
+
+    if (btnDownDrPrsd || btnDownOpPrsd)
+    {
+      IO.manipB.Forward();
+    }
+
+    if (btnRightDrPrsd || btnRightOpPrsd)
+    {
+      IO.manipB.Stop();
+    }
   }
 
   void TestPeriodic() override {}
 
- private:
-  PS4Controller m_stick{0};
-  LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
-  Timer m_timer;
+private:
+  double Deadband(double input, double deadband)
+  {
+    if ((std::abs(input)) < deadband)
+    {
+      return 0.0;
+    }
+    else
+    {
+      return input;
+    }
+  }
 
-  robotmap IO;
+  void UpdateSD()
+  {
+    std::string dm = "DriveMode";
+
+    IO.drivebase.LogDriveOutputs();
+    IO.drivebase.LogEncoders();
+
+    switch (driveMode)
+    {
+    case 0:
+      SmartDashboard::PutString(dm, "Arcade");
+      break;
+
+    case 1:
+      SmartDashboard::PutString(dm, "TankyTank");
+      break;
+
+    case 2:
+      SmartDashboard::PutString(dm, "Holonomic");
+      break;
+    }
+  }
 };
 
 START_ROBOT_CLASS(Robot)
