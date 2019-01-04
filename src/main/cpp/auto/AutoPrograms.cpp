@@ -19,11 +19,11 @@ void AutoPrograms::Init()
     // Get Selected Program from SmartDash Chooser
     std::string name = m_chooser.GetSelected();
 
-    // Delete previously selected program
+    // Delete previously selected auto program
     delete m_autoProgram;
     m_autoProgram = NULL;
 
-    // Create the Selected Auto Program [List 3 of 3]
+    // Create the Selected auto program [List 3 of 3]
     if (name == AutoLineCross::GetName())
     {
         m_autoProgram = new AutoLineCross(IO);

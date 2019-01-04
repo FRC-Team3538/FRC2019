@@ -3,7 +3,7 @@
 // Name for Smart Dash Chooser
 std::string AutoLineCross::GetName()
 {
-    return "AutoLineCross";
+    return "1 - AutoLineCross";
 }
 
 // Initialization
