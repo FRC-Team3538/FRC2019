@@ -20,7 +20,7 @@ private:
   LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
 
   const double deadband = 0.05;
-  
+
   enum driveModes
   {
     ARCADE,
@@ -30,6 +30,10 @@ private:
   int driveMode = driveModes::ARCADE;
 
 public:
+
+  /*************************************************
+   *                    Robot                      *
+   *************************************************/
 
   void RobotInit() override
   {
@@ -51,6 +55,10 @@ public:
       driveMode = 0;
     }
   }
+
+  /*************************************************
+   *                    Teleop                     *
+   *************************************************/
 
   void TeleopInit() override {}
 
@@ -178,6 +186,10 @@ public:
     autoPrograms.Run();
   }
 
+
+  /*************************************************
+   *              Helper Functions                 *
+   *************************************************/
 private:
   double Deadband(double input, double deadband)
   {
