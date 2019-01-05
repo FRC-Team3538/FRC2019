@@ -53,6 +53,5 @@ public:
   void SetHighGear();
   void SetLowGear();
 
-  void LogDriveOutputs();
-  void LogEncoders();
+  void UpdateSmartdash();
 };
