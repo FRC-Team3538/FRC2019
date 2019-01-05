@@ -23,5 +23,9 @@ class DS
     cs::CvSink sink0;
     LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 
+    SendableChooser<llvm::StringRef> chooseController;
+		const llvm::StringRef sPS4 = "PS4";
+		const llvm::StringRef sXBX = "Xbox";
+
     DS();
 };

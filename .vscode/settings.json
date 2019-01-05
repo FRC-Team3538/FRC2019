@@ -18,6 +18,7 @@
     "cstdlib": "cpp"
   },
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
   //"files.associations": {
    // "memory": "cpp",
    // "thread": "cpp",

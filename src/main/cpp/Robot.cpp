@@ -74,29 +74,54 @@ public:
 
   void TeleopPeriodic() override
   {
-    double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand) + IO.ds.DriverXB.GetY(GenericHID::kLeftHand);
-    double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand) + IO.ds.DriverXB.GetX(GenericHID::kRightHand);
-    double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand) + IO.ds.DriverXB.GetX(GenericHID::kLeftHand);
-    double forwardR = IO.ds.DriverPS.GetY(GenericHID::kRightHand) + IO.ds.DriverXB.GetY(GenericHID::kRightHand);
-    double leftTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kLeftHand) + IO.ds.DriverXB.GetTriggerAxis(GenericHID::kLeftHand);
-    double rightTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kRightHand) + IO.ds.DriverXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
-    bool leftBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kLeftHand) || IO.ds.DriverXB.GetBumper(GenericHID::kLeftHand);
-    bool rightBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kRightHand) || IO.ds.DriverXB.GetBumper(GenericHID::kRightHand);
-    bool btnDownDrPrsd = IO.ds.DriverPS.GetCrossButtonPressed() || IO.ds.DriverXB.GetAButtonPressed();
-    bool btnUpDrPrsd = IO.ds.DriverPS.GetTriangleButtonPressed() || IO.ds.DriverXB.GetYButtonPressed();
-    bool btnRightDrPrsd = IO.ds.DriverPS.GetCircleButtonPressed() || IO.ds.DriverXB.GetBButtonPressed();
-    bool btnLeftDr = IO.ds.DriverPS.GetSquareButton() || IO.ds.DriverXB.GetXButton();
+    double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand);
+    double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand);
+    double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand);
+    double forwardR = IO.ds.DriverPS.GetY(GenericHID::kRightHand);
+    double leftTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kLeftHand);
+    double rightTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
+    bool leftBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kLeftHand);
+    bool rightBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kRightHand);
+    bool btnDownDrPrsd = IO.ds.DriverPS.GetCrossButtonPressed();
+    bool btnUpDrPrsd = IO.ds.DriverPS.GetTriangleButtonPressed();
+    bool btnRightDrPrsd = IO.ds.DriverPS.GetCircleButtonPressed();
+    bool btnLeftDr = IO.ds.DriverPS.GetSquareButton();
 
-    double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand) + IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
-    ;
-    double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand) + IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand);
-    ; //Negative
-    bool leftBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kLeftHand) || IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
-    bool rightBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kRightHand) || IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
-    bool btnDownOpPrsd = IO.ds.OperatorPS.GetCrossButtonPressed() || IO.ds.OperatorXB.GetAButtonPressed();
-    bool btnUpOpPrsd = IO.ds.OperatorPS.GetTriangleButtonPressed() || IO.ds.OperatorXB.GetYButtonPressed();
-    bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed() || IO.ds.OperatorXB.GetBButtonPressed();
-    bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton() || IO.ds.OperatorXB.GetXButton();
+    double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand);
+    double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
+    bool leftBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kLeftHand);
+    bool rightBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kRightHand);
+    bool btnDownOpPrsd = IO.ds.OperatorPS.GetCrossButtonPressed();
+    bool btnUpOpPrsd = IO.ds.OperatorPS.GetTriangleButtonPressed();
+    bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
+    bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
+    frc::SmartDashboard::PutNumber("Forward0", forward);
+
+    if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
+    {
+      forward = IO.ds.DriverXB.GetY(GenericHID::kLeftHand);
+      rotate = IO.ds.DriverXB.GetX(GenericHID::kRightHand);
+      strafe = IO.ds.DriverXB.GetX(GenericHID::kLeftHand);
+      forwardR = IO.ds.DriverXB.GetY(GenericHID::kRightHand);
+      leftTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kLeftHand);
+      rightTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
+      leftBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kLeftHand);
+      rightBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kRightHand);
+      btnDownDrPrsd = IO.ds.DriverXB.GetAButtonPressed();
+      btnUpDrPrsd = IO.ds.DriverXB.GetYButtonPressed();
+      btnRightDrPrsd = IO.ds.DriverXB.GetBButtonPressed();
+      btnLeftDr = IO.ds.DriverXB.GetXButton();
+      frc::SmartDashboard::PutNumber("Forward1", forward);
+
+      leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
+      rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
+      leftBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
+      rightBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
+      btnDownOpPrsd = IO.ds.OperatorXB.GetAButtonPressed();
+      btnUpOpPrsd = IO.ds.OperatorXB.GetYButtonPressed();
+      btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
+      btnLeftOp = IO.ds.OperatorXB.GetXButton();
+    };
 
     //Deadbands
     forward = Deadband(forward, deadband);
@@ -143,7 +168,7 @@ public:
 
     if (btnUpDrPrsd || btnUpOpPrsd)
     {
-      IO.intake.SolenoidToggle();
+      IO.manipB.SolenoidToggle();
     }
 
     if (btnDownDrPrsd || btnDownOpPrsd)
