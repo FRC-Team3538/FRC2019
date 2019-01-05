@@ -49,3 +49,8 @@ bool OtherManip::GetRevLim()
 {
     return motorB1.GetSensorCollection().IsRevLimitSwitchClosed() != 0;
 }
+void OtherManip::UpdateSmartdash()
+{
+    SmartDashboard::PutNumber("auxMotorB", motorsB.Get());
+    SmartDashboard::PutNumber("auxSolenoidB", solenoidArmB.Get());
+}

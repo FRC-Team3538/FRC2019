@@ -17,6 +17,7 @@
     "complex": "cpp",
     "cstdlib": "cpp"
   },
+  "C_Cpp.default.configurationProvider": "vscode-wpilib",
   //"files.associations": {
    // "memory": "cpp",
    // "thread": "cpp",

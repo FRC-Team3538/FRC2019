@@ -87,8 +87,10 @@ public:
     bool btnRightDrPrsd = IO.ds.DriverPS.GetCircleButtonPressed() || IO.ds.DriverXB.GetBButtonPressed();
     bool btnLeftDr = IO.ds.DriverPS.GetSquareButton() || IO.ds.DriverXB.GetXButton();
 
-    double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand) + IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);;
-    double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand) + IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand);; //Negative
+    double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand) + IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
+    ;
+    double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand) + IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand);
+    ; //Negative
     bool leftBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kLeftHand) || IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
     bool rightBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kRightHand) || IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
     bool btnDownOpPrsd = IO.ds.OperatorPS.GetCrossButtonPressed() || IO.ds.OperatorXB.GetAButtonPressed();
@@ -174,9 +176,6 @@ private:
   {
     std::string dm = "DriveMode";
 
-    IO.drivebase.LogDriveOutputs();
-    IO.drivebase.LogEncoders();
-
     switch (driveMode)
     {
     case 0:
@@ -191,7 +190,10 @@ private:
       SmartDashboard::PutString(dm, "Holonomic");
       break;
     }
+
+    IO.drivebase.UpdateSmartdash();
+    IO.intake.UpdateSmartdash();
+    IO.manipB.UpdateSmartdash();
   }
 };
-
 START_ROBOT_CLASS(Robot)

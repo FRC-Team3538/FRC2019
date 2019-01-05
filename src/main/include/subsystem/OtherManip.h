@@ -6,6 +6,7 @@
 //#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
 //#include <ctre/phoenix/MotorControl/CAN/WPI_TalonSRX.h>
 #include <ctre/Phoenix.h>
+#include <SmartDashboard/SmartDashboard.h>
 
 using namespace ctre::phoenix::motorcontrol::can;
 class OtherManip
@@ -37,4 +38,6 @@ public:
   
   bool GetFwdLim();
   bool GetRevLim();
+
+  void UpdateSmartdash();
 };

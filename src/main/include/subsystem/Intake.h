@@ -4,6 +4,7 @@
 #include <SpeedControllerGroup.h>
 #include <Solenoid.h>
 #include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
+#include <SmartDashboard/SmartDashboard.h>
 
 using namespace ctre::phoenix::motorcontrol::can;
 
@@ -33,4 +34,6 @@ class Intake
     void Stop();
 
     bool SolenoidState();
+
+    void UpdateSmartdash();
 };
