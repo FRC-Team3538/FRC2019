@@ -12,9 +12,16 @@ AutoLineCross::AutoLineCross(robotmap &IO) : IO(IO)
 {
     m_state = 0;
     m_autoTimer.Reset();
-
+    m_autoTimer.Start();
     IO.drivebase.Stop();
 };
+
+//State Machine
+void AutoLineCross::NextState(){
+    m_state++;
+    m_autoTimer.Reset();
+    m_autoTimer.Start();
+}
 
 // Execute the program
 void AutoLineCross::Run()
@@ -28,7 +35,7 @@ void AutoLineCross::Run()
         IO.drivebase.Arcade(fwd, rot);
         if (m_autoTimer.Get() > 2.0)
         {
-            m_state++;
+            NextState();
         }
         break;
     }
@@ -39,7 +46,7 @@ void AutoLineCross::Run()
         IO.drivebase.Arcade(fwd, rot);
         if (m_autoTimer.Get() > 2.0)
         {
-            m_state++;
+            NextState();
         }
         break;
     }

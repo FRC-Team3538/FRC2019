@@ -20,6 +20,8 @@ class AutoLineCross : public AutoInterface {
     int m_state;   
     Timer m_autoTimer;
 
+    void NextState();
+
  public:
     // Constructor requires a reference to the RobotMap
     AutoLineCross() = delete;
