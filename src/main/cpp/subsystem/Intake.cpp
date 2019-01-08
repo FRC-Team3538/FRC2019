@@ -34,4 +34,12 @@ void Intake::Set(double speed)
 }
 
 
-
+void Intake::SolenoidToggle(){
+    bool PCM2 = SolenoidState();
+    solenoidArm.Set(!PCM2);
+}
+void Intake::UpdateSmartdash()
+{
+    SmartDashboard::PutNumber("auxMotorA", motors.Get());
+    SmartDashboard::PutNumber("auxSolenoidA", solenoidArm.Get());
+}

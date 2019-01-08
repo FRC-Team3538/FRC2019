@@ -210,9 +210,6 @@ private:
   {
     std::string dm = "DriveMode";
 
-    IO.drivebase.LogDriveOutputs();
-    IO.drivebase.LogEncoders();
-
     switch (driveMode)
     {
     case 0:
@@ -227,9 +224,12 @@ private:
       SmartDashboard::PutString(dm, "Holonomic");
       break;
     }
+
+    IO.drivebase.UpdateSmartdash();
+    IO.intake.UpdateSmartdash();
+    IO.manipB.UpdateSmartdash();
   }
 
 
 };
-
 START_ROBOT_CLASS(Robot)

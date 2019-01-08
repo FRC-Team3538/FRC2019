@@ -92,19 +92,15 @@ void Drivebase::Holonomic(double forward, double rotate, double strafe)
     backRight.Set(back_Right);
 }
 
-void Drivebase::LogDriveOutputs()
+void Drivebase::UpdateSmartdash()
 {
     std::string moL = "DriveLeft";
     std::string moR = "DriveRight";
-    std::string moLPWM = "DriveLeftPWM";
-    std::string moRPWM = "DriveRightPWM";
 
     SmartDashboard::PutNumber(moL, motorLeft1.Get());
     SmartDashboard::PutNumber(moR, motorRight1.Get());
-    SmartDashboard::PutNumber(moLPWM, motorLeft1PWM.Get());
-    SmartDashboard::PutNumber(moRPWM, motorRight1PWM.Get());
-}
 
+<<<<<<< HEAD
 void Drivebase::LogEncoders()
 {
     SmartDashboard::PutNumber("EncLVel", motorLeft1.GetSensorCollection().GetQuadratureVelocity());
@@ -127,4 +123,13 @@ int Drivebase::GetEncPos(std::string side){
     else if(side == "kLeft"){
         return motorLeft1.GetSensorCollection().GetQuadraturePosition();
     }
+=======
+    SmartDashboard::PutNumber("EncVelL", motorLeft1.GetSensorCollection().GetQuadratureVelocity());
+    SmartDashboard::PutNumber("EncPosL", motorLeft1.GetSensorCollection().GetQuadraturePosition());
+    SmartDashboard::PutNumber("EncVelR", motorRight1.GetSensorCollection().GetQuadratureVelocity());
+    SmartDashboard::PutNumber("EncPosR", motorRight1.GetSensorCollection().GetQuadraturePosition());
+
+    SmartDashboard::PutNumber("SolShifter", solenoidShifter.Get());
+    SmartDashboard::PutNumber("GyroFused", navx.GetFusedHeading());
+>>>>>>> master
 }
