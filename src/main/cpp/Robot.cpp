@@ -45,6 +45,9 @@ public:
     UpdateSD();
 
     bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();
+    if(IO.ds.chooseController.GetSelected() == IO.ds.sXBX){
+      btnOptDrPrsd = IO.ds.DriverXB.GetStartButtonPressed();
+    }
     //Drive Swapping
     if (btnOptDrPrsd)
     {
@@ -111,7 +114,7 @@ public:
       btnUpOpPrsd = IO.ds.OperatorXB.GetYButtonPressed();
       btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
       btnLeftOp = IO.ds.OperatorXB.GetXButton();
-    };
+    }
 
     //Deadbands
     forward = Deadband(forward, deadband);

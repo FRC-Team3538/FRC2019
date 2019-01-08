@@ -53,6 +53,9 @@ public:
   void SetHighGear();
   void SetLowGear();
 
+  double GetEncVel(std::string side);
+  int GetEncPos(std::string side);
+
   void LogDriveOutputs();
   void LogEncoders();
 };

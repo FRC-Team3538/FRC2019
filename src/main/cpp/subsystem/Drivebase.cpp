@@ -110,3 +110,21 @@ void Drivebase::LogEncoders()
     SmartDashboard::PutNumber("EncLVel", motorLeft1.GetSensorCollection().GetQuadratureVelocity());
     SmartDashboard::PutNumber("EncRVel", motorRight1.GetSensorCollection().GetQuadratureVelocity());
 }
+
+double Drivebase::GetEncVel(std::string side){
+    if(side == "kRight"){
+        return motorRight1.GetSensorCollection().GetQuadratureVelocity();
+    }
+    else if(side == "kLeft"){
+        return motorLeft1.GetSensorCollection().GetQuadratureVelocity();
+    }
+}
+
+int Drivebase::GetEncPos(std::string side){
+    if(side == "kRight"){
+        return motorRight1.GetSensorCollection().GetQuadraturePosition();
+    }
+    else if(side == "kLeft"){
+        return motorLeft1.GetSensorCollection().GetQuadraturePosition();
+    }
+}
