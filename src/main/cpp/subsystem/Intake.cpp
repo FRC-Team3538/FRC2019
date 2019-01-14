@@ -33,6 +33,9 @@ void Intake::Set(double speed)
     motors.Set(speed);
 }
 
+bool Intake::SolenoidState(){
+    return solenoidArm.Get();
+}
 
 void Intake::SolenoidToggle(){
     bool PCM2 = SolenoidState();

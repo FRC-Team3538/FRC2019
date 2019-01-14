@@ -53,13 +53,8 @@ public:
   void SetHighGear();
   void SetLowGear();
 
-<<<<<<< HEAD
   double GetEncVel(std::string side);
   int GetEncPos(std::string side);
 
-  void LogDriveOutputs();
-  void LogEncoders();
-=======
   void UpdateSmartdash();
->>>>>>> master
 };
