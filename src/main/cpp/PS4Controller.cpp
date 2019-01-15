@@ -5,10 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "PS4Controller.h"
+#include "PS4Controller.hpp"
 
 #include <HAL/HAL.h>
-#include "DriverStation.h"
+#include "frc/DriverStation.h"
 
 using namespace frc;
 

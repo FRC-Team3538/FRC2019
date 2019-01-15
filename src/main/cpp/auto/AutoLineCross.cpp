@@ -1,4 +1,4 @@
-#include "auto/AutoLineCross.h"
+#include "auto/AutoLineCross.hpp"
 
 // Name for Smart Dash Chooser
 std::string AutoLineCross::GetName()
@@ -14,7 +14,7 @@ AutoLineCross::AutoLineCross(robotmap &IO) : IO(IO)
     m_autoTimer.Reset();
     m_autoTimer.Start();
     IO.drivebase.Stop();
-};
+}
 
 //State Machine
 void AutoLineCross::NextState(){

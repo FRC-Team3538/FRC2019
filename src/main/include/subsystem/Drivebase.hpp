@@ -2,12 +2,15 @@
 
 //#include <ctre/phoenix/MotorControl/CAN/WPI_TalonSRX.h>
 //#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
-#include <Solenoid.h>
+#include <frc/Solenoid.h>
 #include <AHRS.h>
-#include <SmartDashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
+#include <frc/VictorSP.h>
+#include <frc/SpeedControllerGroup.h>
 
 using namespace ctre::phoenix::motorcontrol::can;
+using namespace frc;
 
 class Drivebase
 {
@@ -52,9 +55,6 @@ public:
 
   void SetHighGear();
   void SetLowGear();
-
-  double GetEncVel(std::string side);
-  int GetEncPos(std::string side);
 
   void UpdateSmartdash();
 };

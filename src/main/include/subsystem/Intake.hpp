@@ -1,11 +1,13 @@
 #pragma once
 
-#include <VictorSP.h>
-#include <SpeedControllerGroup.h>
-#include <Solenoid.h>
-#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
-#include <SmartDashboard/SmartDashboard.h>
+#include <frc/VictorSP.h>
+#include <frc/SpeedControllerGroup.h>
+#include <frc/Solenoid.h>
+//#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <ctre/Phoenix.h>
 
+using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
 
 class Intake

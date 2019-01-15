@@ -1,7 +1,7 @@
-#include "subsystem/Logging.h"
+#include "subsystem/Logging.hpp"
 
-#include "Timer.h"
-#include "Preferences.h"
+#include "frc/Timer.h"
+#include "frc/Preferences.h"
 
 Logging::Logging()
 {
@@ -16,7 +16,7 @@ Logging::Logging(string path)
 Logging::Logging(string path, string _filename)
 {
     // Get a log serial number from robot Preferences
-    auto pref = Preferences::GetInstance();
+    auto pref = frc::Preferences::GetInstance();
     auto logNumber = pref->GetInt("LogNumber", 1);
     auto logNumberStr = to_string(logNumber);
 

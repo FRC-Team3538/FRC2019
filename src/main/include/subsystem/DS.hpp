@@ -1,13 +1,14 @@
 #pragma once
 
-#include <SmartDashboard/SmartDashboard.h>
-#include <SmartDashboard/SendableChooser.h>
-#include <LiveWindow/LiveWindow.h>
-#include <XboxController.h>
-#include <CameraServer.h>
-#include "PS4Controller.h"
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SendableChooser.h>
+#include <frc/livewindow/LiveWindow.h>
+#include <frc/XboxController.h>
+#include <cameraserver/CameraServer.h>
+#include "PS4Controller.hpp"
+#include <String>
 
-using namespace llvm;
+using namespace frc;
 
 class DS
 {
@@ -23,9 +24,9 @@ class DS
     cs::CvSink sink0;
     LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 
-    SendableChooser<llvm::StringRef> chooseController;
-		const llvm::StringRef sPS4 = "PS4";
-		const llvm::StringRef sXBX = "Xbox";
+    SendableChooser<std::string> chooseController;
+		const std::string sPS4 = "PS4";
+		const std::string sXBX = "Xbox";
 
     DS();
 };

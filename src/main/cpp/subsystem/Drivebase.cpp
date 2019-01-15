@@ -1,5 +1,5 @@
-#include "subsystem/Drivebase.h"
-#include <SmartDashboard/SmartDashboard.h>
+#include "subsystem/Drivebase.hpp"
+#include <frc/smartDashboard/SmartDashboard.h>
 
 Drivebase::Drivebase()
 {
@@ -90,24 +90,6 @@ void Drivebase::Holonomic(double forward, double rotate, double strafe)
     frontRight.Set(front_Right);
     backLeft.Set(back_Left);
     backRight.Set(back_Right);
-}
-
-double Drivebase::GetEncVel(std::string side){
-    if(side == "kRight"){
-        return motorRight1.GetSensorCollection().GetQuadratureVelocity();
-    }
-    else if(side == "kLeft"){
-        return motorLeft1.GetSensorCollection().GetQuadratureVelocity();
-    }
-}
-
-int Drivebase::GetEncPos(std::string side){
-    if(side == "kRight"){
-        return motorRight1.GetSensorCollection().GetQuadraturePosition();
-    }
-    else if(side == "kLeft"){
-        return motorLeft1.GetSensorCollection().GetQuadraturePosition();
-    }
 }
 
 void Drivebase::UpdateSmartdash()

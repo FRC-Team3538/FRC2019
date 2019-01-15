@@ -2,12 +2,12 @@
 
 #include <string>
 
-#include <Timer.h>
+#include <frc/Timer.h>
 
-#include "AutoInterface.h"
-#include "robotmap.h"
+#include "AutoInterface.hpp"
+#include "robotmap.hpp"
 
-class AutoLineCrossEnc : public AutoInterface {
+class AutoLineCross : public AutoInterface {
  public:
     // Name of this program, used by SmartDash
     static std::string GetName();
@@ -22,12 +22,10 @@ class AutoLineCrossEnc : public AutoInterface {
 
     void NextState();
 
-    bool forward(double distance, double speed);
-
  public:
     // Constructor requires a reference to the RobotMap
-    AutoLineCrossEnc() = delete;
-    AutoLineCrossEnc(robotmap& );
+    AutoLineCross() = delete;
+    AutoLineCross(robotmap& );
 
     // Auto Program Logic
     void Run();

@@ -1,4 +1,4 @@
-#include "subsystem/OtherManip.h"
+#include "subsystem/OtherManip.hpp"
 using namespace ctre::phoenix::motorcontrol;
 
 // Configure Hardware Settings

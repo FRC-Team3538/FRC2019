@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include <SmartDashboard/SmartDashboard.h>
+#include <frc/smartDashboard/SmartDashboard.h>
 
-#include "robotmap.h"
-#include "auto/AutoInterface.h"
+#include "robotmap.hpp"
+#include "auto/AutoInterface.hpp"
 
 class AutoPrograms
 {

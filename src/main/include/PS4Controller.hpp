@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "GenericHID.h"
+#include "frc/GenericHID.h"
 
 namespace frc {
 
