@@ -32,14 +32,6 @@ class Robot : public frc::TimedRobot {
 
   const double deadband = 0.05;
 
-  enum driveModes
-  {
-    ARCADE,
-    TANKYTANK,
-    HOLONOMIC
-  };
-  int driveMode = driveModes::ARCADE;
-
   double Deadband(double input, double deadband);
   void UpdateSD();
   

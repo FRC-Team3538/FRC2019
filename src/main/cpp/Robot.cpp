@@ -26,33 +26,8 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   UpdateSD();
-
-  bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();
-  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX){
-    btnOptDrPrsd = IO.ds.DriverXB.GetStartButtonPressed();
-  }
-  //Drive Swapping
-  if (btnOptDrPrsd)
-  {
-    driveMode++;
-  }
-  if (driveMode == 3)
-  {
-    driveMode = 0;
-  }
 }
 
-/**
- * This autonomous (along with the chooser code above) shows how to select
- * between different autonomous modes using the dashboard. The sendable chooser
- * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
- * remove all of the chooser code and uncomment the GetString line to get the
- * auto name from the text box below the Gyro.
- *
- * You can add additional auto modes by adding additional comparisons to the
- * if-else structure below with additional strings. If using the SendableChooser
- * make sure to add them to the chooser code above as well.
- */
 void Robot::AutonomousInit()
 {
   autoPrograms.Init();
@@ -88,7 +63,8 @@ void Robot::TeleopPeriodic()
   bool btnUpOpPrsd = IO.ds.OperatorPS.GetTriangleButtonPressed();
   bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
   bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
-  frc::SmartDashboard::PutNumber("Forward0", forward);
+  double rightOpY = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
+
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
@@ -104,7 +80,6 @@ void Robot::TeleopPeriodic()
     btnUpDrPrsd = IO.ds.DriverXB.GetYButtonPressed();
     btnRightDrPrsd = IO.ds.DriverXB.GetBButtonPressed();
     btnLeftDr = IO.ds.DriverXB.GetXButton();
-    frc::SmartDashboard::PutNumber("Forward1", forward);
 
     leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
     rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
@@ -114,29 +89,16 @@ void Robot::TeleopPeriodic()
     btnUpOpPrsd = IO.ds.OperatorXB.GetYButtonPressed();
     btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
     btnLeftOp = IO.ds.OperatorXB.GetXButton();
+    rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
   };
 
   //Deadbands
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
-  strafe = Deadband(strafe, deadband);
-  forwardR = Deadband(forwardR, deadband);
+  rightOpY = Deadband(rightOpY, deadband);
 
   //Drive
-  switch (driveMode)
-  {
-  case driveModes::ARCADE:
-    IO.drivebase.Arcade(forward, rotate);
-    break;
-
-  case driveModes::TANKYTANK:
-    IO.drivebase.Tank(forward, forwardR);
-    break;
-
-  case driveModes::HOLONOMIC:
-    IO.drivebase.Holonomic(forward, rotate, strafe);
-    break;
-  }
+  IO.drivebase.Arcade(forward, rotate);
 
   if (leftBumpDr)
   {
@@ -148,31 +110,8 @@ void Robot::TeleopPeriodic()
     IO.drivebase.SetHighGear();
   }
 
-  IO.intake.Set(leftTrigDr + rightTrigDr + leftTrigOp + rightTrigOp);
-
-  if (btnLeftDr || btnLeftOp)
-  {
-    IO.intake.Deploy();
-  }
-  else
-  {
-    IO.intake.Retract();
-  }
-
-  if (btnUpDrPrsd || btnUpOpPrsd)
-  {
-    IO.manipB.SolenoidToggle();
-  }
-
-  if (btnDownDrPrsd || btnDownOpPrsd)
-  {
-    IO.manipB.Forward();
-  }
-
-  if (btnRightDrPrsd || btnRightOpPrsd)
-  {
-    IO.manipB.Stop();
-  }
+  //Elevator
+  IO.elevator.Set(rightOpY);
 }
 
 void Robot::TestPeriodic() {}
@@ -193,24 +132,8 @@ void Robot::UpdateSD()
 {
   std::string dm = "DriveMode";
 
-  switch (driveMode)
-  {
-  case 0:
-    SmartDashboard::PutString(dm, "Arcade");
-    break;
-
-  case 1:
-    SmartDashboard::PutString(dm, "TankyTank");
-    break;
-
-  case 2:
-    SmartDashboard::PutString(dm, "Holonomic");
-    break;
-  }
-
   IO.drivebase.UpdateSmartdash();
-  IO.intake.UpdateSmartdash();
-  IO.manipB.UpdateSmartdash();
+  IO.elevator.UpdateSmartdash();
 }
 
 #ifndef RUNNING_FRC_TESTS

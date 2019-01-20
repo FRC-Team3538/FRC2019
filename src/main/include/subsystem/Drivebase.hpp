@@ -16,12 +16,12 @@ class Drivebase
 {
 private:
   // Hardware setup
-  WPI_TalonSRX motorLeft1{0};
-  WPI_VictorSPX motorLeft2{1};
+  WPI_TalonSRX motorLeft1{1};
+  WPI_VictorSPX motorLeft2{0};
   WPI_VictorSPX motorLeft3{2};
 
-  WPI_TalonSRX motorRight1{3};
-  WPI_VictorSPX motorRight2{4};
+  WPI_TalonSRX motorRight1{4};
+  WPI_VictorSPX motorRight2{3};
   WPI_VictorSPX motorRight3{5};
 
   VictorSP motorLeft1PWM{0};
