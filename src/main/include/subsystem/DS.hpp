@@ -7,8 +7,12 @@
 #include <cameraserver/CameraServer.h>
 #include "PS4Controller.hpp"
 #include <String>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/opencv.hpp>
 
 using namespace frc;
+using namespace cv;
 
 class DS
 {
@@ -29,4 +33,6 @@ class DS
 		const std::string sXBX = "Xbox";
 
     DS();
+
+    bool CVStuff();
 };

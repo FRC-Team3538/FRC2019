@@ -8,7 +8,7 @@
 #include "Robot.hpp"
 
 #include <iostream>
-
+#include <frc/Threads.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit()
@@ -28,7 +28,8 @@ void Robot::RobotPeriodic()
   UpdateSD();
 
   bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();
-  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX){
+  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
+  {
     btnOptDrPrsd = IO.ds.DriverXB.GetStartButtonPressed();
   }
   //Drive Swapping
@@ -211,6 +212,10 @@ void Robot::UpdateSD()
   IO.drivebase.UpdateSmartdash();
   IO.intake.UpdateSmartdash();
   IO.manipB.UpdateSmartdash();
+  if (IO.ds.CVStuff())
+  {
+    SmartDashboard::PutString("Hooray", "YeahBoiiiiii");
+  }
 }
 
 #ifndef RUNNING_FRC_TESTS
