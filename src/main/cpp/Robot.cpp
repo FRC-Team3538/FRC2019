@@ -64,7 +64,7 @@ void Robot::TeleopPeriodic()
   bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
   bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
   double rightOpY = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
-
+  double wristStick = IO.ds.OperatorPS.GetX(GenericHID::kRightHand);
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
@@ -90,12 +90,17 @@ void Robot::TeleopPeriodic()
     btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
     btnLeftOp = IO.ds.OperatorXB.GetXButton();
     rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
+
   };
+
+  double OpIntakeCommand = (rightTrigOp - leftTrigOp);
 
   //Deadbands
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
   rightOpY = Deadband(rightOpY, deadband);
+  wristStick = Deadband(wristStick, deadband);
+  OpIntakeCommand = Deadband(OpIntakeCommand, deadband) * .7;
 
   //Drive
   IO.drivebase.Arcade(forward, rotate);
@@ -112,6 +117,44 @@ void Robot::TeleopPeriodic()
 
   //Elevator
   IO.elevator.Set(rightOpY);
+
+  //Claw
+  if (rightBumpOp or (rightTrigOp > 0.125)) {
+			// Loose Intake
+			IO.claw.Compliant(); // Compliant
+			IO.claw.Set(1.0);
+
+		} else if (leftBumpOp) {
+			// Drop it like it's hot
+			IO.claw.Open(); // Open
+			IO.claw.Set(0.0);
+
+		} else if (btnRightOpPrsd) {
+			IO.claw.Close(); // Closed
+			IO.claw.Set(1.0); // Intake
+
+		}
+		else if (rightTrigDr > 0.75) {
+			// Loose Intake [Driver]
+			IO.claw.Close(); // Closed
+			IO.claw.Set(-0.7);
+
+		} else if (rightTrigDr > 0.15) {
+			// Loose Intake [Driver]
+			IO.claw.Close(); // Closed
+			IO.claw.Set(-0.3);
+
+		} else if (leftTrigDr > 0.25) {
+			// Drop it like it's hot
+			IO.claw.Open(); // Open
+			IO.claw.Set(0.0);
+
+		}
+		else {
+			// Default Hold Cube, cube eject routes through here as well
+			IO.claw.Close(); // Closed 
+			IO.claw.Set(OpIntakeCommand);
+		}
 }
 
 void Robot::TestPeriodic() {}
@@ -134,6 +177,8 @@ void Robot::UpdateSD()
 
   IO.drivebase.UpdateSmartdash();
   IO.elevator.UpdateSmartdash();
+  IO.claw.UpdateSmartdash();
+  IO.wrist.UpdateSmartdash();
 }
 
 #ifndef RUNNING_FRC_TESTS

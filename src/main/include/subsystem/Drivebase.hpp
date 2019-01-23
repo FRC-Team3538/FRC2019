@@ -1,13 +1,12 @@
 #pragma once
 
-//#include <ctre/phoenix/MotorControl/CAN/WPI_TalonSRX.h>
-//#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
-#include <frc/Solenoid.h>
-#include <AHRS.h>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <ctre/Phoenix.h>
 #include <frc/VictorSP.h>
 #include <frc/SpeedControllerGroup.h>
+#include <frc/Solenoid.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
+#include <ctre/Phoenix.h>
+#include <AHRS.h>
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace frc;

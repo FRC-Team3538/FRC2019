@@ -5,7 +5,9 @@
 #include <frc/Solenoid.h>
 //#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <ctre/Phoenix.h>
+//#include <ctre/Phoenix.h>
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
+#include <ctre/phoenix/motorcontrol/can/WPI_VictorSPX.h>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
