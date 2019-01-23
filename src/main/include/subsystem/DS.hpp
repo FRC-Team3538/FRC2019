@@ -6,7 +6,7 @@
 #include <frc/XboxController.h>
 #include <cameraserver/CameraServer.h>
 #include "PS4Controller.hpp"
-#include <String>
+#include <string>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
@@ -35,4 +35,7 @@ class DS
     DS();
 
     bool CVStuff();
+
+    private:
+    int imNum = 1;
 };

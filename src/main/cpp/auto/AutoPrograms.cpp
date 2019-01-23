@@ -8,7 +8,7 @@
 AutoPrograms::AutoPrograms(robotmap &IO) : IO(IO) {
 
     // SmartDash Chooser [List 2 of 3]
-    m_chooser.AddDefault("0 - None", "0 - None");
+    m_chooser.SetDefaultOption("0 - None", "0 - None");
 	m_chooser.AddOption(AutoLineCross::GetName(), AutoLineCross::GetName());
 	SmartDashboard::PutData("AutoProgram", &m_chooser);
 }

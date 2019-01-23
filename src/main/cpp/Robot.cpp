@@ -89,6 +89,8 @@ void Robot::TeleopPeriodic()
   bool btnUpOpPrsd = IO.ds.OperatorPS.GetTriangleButtonPressed();
   bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
   bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
+
+  bool btnBackDr = IO.ds.DriverPS.GetScreenShotButtonPressed();
   frc::SmartDashboard::PutNumber("Forward0", forward);
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
@@ -115,6 +117,8 @@ void Robot::TeleopPeriodic()
     btnUpOpPrsd = IO.ds.OperatorXB.GetYButtonPressed();
     btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
     btnLeftOp = IO.ds.OperatorXB.GetXButton();
+
+    btnBackDr = IO.ds.DriverXB.GetBackButtonPressed();
   };
 
   //Deadbands
@@ -174,6 +178,10 @@ void Robot::TeleopPeriodic()
   {
     IO.manipB.Stop();
   }
+
+  if(btnBackDr){
+    IO.ds.CVStuff();
+  }
 }
 
 void Robot::TestPeriodic() {}
@@ -212,10 +220,6 @@ void Robot::UpdateSD()
   IO.drivebase.UpdateSmartdash();
   IO.intake.UpdateSmartdash();
   IO.manipB.UpdateSmartdash();
-  if (IO.ds.CVStuff())
-  {
-    SmartDashboard::PutString("Hooray", "YeahBoiiiiii");
-  }
 }
 
 #ifndef RUNNING_FRC_TESTS
