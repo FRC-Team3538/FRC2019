@@ -64,7 +64,7 @@ void Robot::TeleopPeriodic()
   bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
   bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
   double rightOpY = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
-  double wristStick = IO.ds.OperatorPS.GetX(GenericHID::kRightHand);
+  double wristStick = IO.ds.OperatorPS.GetX(GenericHID::kLeftHand);
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
@@ -90,7 +90,7 @@ void Robot::TeleopPeriodic()
     btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
     btnLeftOp = IO.ds.OperatorXB.GetXButton();
     rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
-
+    wristStick = IO.ds.OperatorXB.GetX(GenericHID::kLeftHand);
   };
 
   double OpIntakeCommand = (rightTrigOp - leftTrigOp);
@@ -118,6 +118,9 @@ void Robot::TeleopPeriodic()
   //Elevator
   IO.elevator.Set(rightOpY);
 
+  //Wrist
+  IO.wrist.Set(wristStick);
+
   //Claw
   if (rightBumpOp or (rightTrigOp > 0.125)) {
 			// Loose Intake
@@ -132,7 +135,6 @@ void Robot::TeleopPeriodic()
 		} else if (btnRightOpPrsd) {
 			IO.claw.Close(); // Closed
 			IO.claw.Set(1.0); // Intake
-
 		}
 		else if (rightTrigDr > 0.75) {
 			// Loose Intake [Driver]
