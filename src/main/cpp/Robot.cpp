@@ -50,18 +50,18 @@ void Robot::TeleopPeriodic()
   double rightTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
   bool leftBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kLeftHand);
   bool rightBumpDr = IO.ds.DriverPS.GetBumper(GenericHID::kRightHand);
-  bool btnDownDrPrsd = IO.ds.DriverPS.GetCrossButtonPressed();
-  bool btnUpDrPrsd = IO.ds.DriverPS.GetTriangleButtonPressed();
-  bool btnRightDrPrsd = IO.ds.DriverPS.GetCircleButtonPressed();
+  bool btnDownDr = IO.ds.DriverPS.GetCrossButton();
+  bool btnUpDr = IO.ds.DriverPS.GetTriangleButton();
+  bool btnRightDr = IO.ds.DriverPS.GetCircleButton();
   bool btnLeftDr = IO.ds.DriverPS.GetSquareButton();
 
   double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand);
   double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
   bool leftBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kLeftHand);
   bool rightBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kRightHand);
-  bool btnDownOpPrsd = IO.ds.OperatorPS.GetCrossButtonPressed();
-  bool btnUpOpPrsd = IO.ds.OperatorPS.GetTriangleButtonPressed();
-  bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
+  bool btnDownOp = IO.ds.OperatorPS.GetCrossButton();
+  bool btnUpOp = IO.ds.OperatorPS.GetTriangleButton();
+  bool btnRightOp = IO.ds.OperatorPS.GetCircleButton();
   bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
   double rightOpY = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
   double wristStick = IO.ds.OperatorPS.GetX(GenericHID::kLeftHand);
@@ -76,18 +76,18 @@ void Robot::TeleopPeriodic()
     rightTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
     leftBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kLeftHand);
     rightBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kRightHand);
-    btnDownDrPrsd = IO.ds.DriverXB.GetAButtonPressed();
-    btnUpDrPrsd = IO.ds.DriverXB.GetYButtonPressed();
-    btnRightDrPrsd = IO.ds.DriverXB.GetBButtonPressed();
+    btnDownDr = IO.ds.DriverXB.GetAButton();
+    btnUpDr = IO.ds.DriverXB.GetYButton();
+    btnRightDr = IO.ds.DriverXB.GetBButton();
     btnLeftDr = IO.ds.DriverXB.GetXButton();
 
     leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
     rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
     leftBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
     rightBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
-    btnDownOpPrsd = IO.ds.OperatorXB.GetAButtonPressed();
-    btnUpOpPrsd = IO.ds.OperatorXB.GetYButtonPressed();
-    btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
+    btnDownOp = IO.ds.OperatorXB.GetAButton();
+    btnUpOp = IO.ds.OperatorXB.GetYButton();
+    btnRightOp = IO.ds.OperatorXB.GetBButton();
     btnLeftOp = IO.ds.OperatorXB.GetXButton();
     rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
     wristStick = IO.ds.OperatorXB.GetX(GenericHID::kLeftHand);
@@ -100,7 +100,7 @@ void Robot::TeleopPeriodic()
   rotate = Deadband(rotate, deadband);
   rightOpY = Deadband(rightOpY, deadband);
   wristStick = Deadband(wristStick, deadband);
-  OpIntakeCommand = Deadband(OpIntakeCommand, deadband) * .7;
+  OpIntakeCommand = Deadband(OpIntakeCommand, deadband) * 0.7;
 
   //Drive
   IO.drivebase.Arcade(forward, rotate);
@@ -132,7 +132,7 @@ void Robot::TeleopPeriodic()
 			IO.claw.Open(); // Open
 			IO.claw.Set(0.0);
 
-		} else if (btnRightOpPrsd) {
+		} else if (btnRightOp) {
 			IO.claw.Close(); // Closed
 			IO.claw.Set(1.0); // Intake
 		}
@@ -154,7 +154,7 @@ void Robot::TeleopPeriodic()
 		}
 		else {
 			// Default Hold Cube, cube eject routes through here as well
-			IO.claw.Close(); // Closed 
+			IO.claw.Close(); // Closed
 			IO.claw.Set(OpIntakeCommand);
 		}
 }

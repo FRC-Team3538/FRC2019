@@ -57,10 +57,15 @@ double PS4Controller::GetY(JoystickHand hand) const {
  * @param hand Side of controller whose value should be returned.
  */
 double PS4Controller::GetTriggerAxis(JoystickHand hand) const {
+  if (GetRawAxis(3) == 0.0 && GetRawAxis(4) == 0.0){
+    //Controller is unplugged
+    return 0.0;
+  } 
+
   if (hand == kLeftHand) {
-    return GetRawAxis(3)/2 + 0.5;
+    return GetRawAxis(3)/2.0 + 0.5;
   } else {
-    return -GetRawAxis(4)/2 - 0.5;
+    return GetRawAxis(4)/2.0 + 0.5;
   }
 }
 
