@@ -1,60 +1,106 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Elevator Position" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="459" y="73"/>
+	</widget>
+	<widget field="Elevator Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="464" y="97"/>
+	</widget>
+	<widget field="EncVelL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="122" y="31"/>
+	</widget>
+	<widget field="EncPosL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="121" y="56"/>
+	</widget>
+	<widget field="EncPosR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="276" y="58"/>
+	</widget>
+	<widget field="EncVelR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="277" y="31"/>
+	</widget>
+	<widget field="DriveRight" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="273" y="6"/>
+	</widget>
+	<widget field="DriveLeft" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="117" y="6"/>
+	</widget>
+	<widget field="Claw Solenoid" type="String" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="460" y="250"/>
+	</widget>
+	<widget field="Claw Motors" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="465" y="279"/>
+	</widget>
+	<widget field="Wrist Motor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="465" y="198"/>
+	</widget>
+	<widget field="Wrist Analog Input Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="441" y="172"/>
+	</widget>
+	<widget field="Elevator CMD" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="472" y="48"/>
+	</widget>
+	<widget field="Wrist Pot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="480" y="144"/>
+	</widget>
+	<widget field="Limit Switch Lower" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="497" y="26"/>
+	</widget>
+	<widget field="Limit Switch Upper" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="497" y="7"/>
+	</widget>
+	<widget field="High Gear" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="238" y="93"/>
+		<property name="Color to show when false" value="153.153.153.255"/>
+	</widget>
+	<widget field="GyroFused" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="196" y="118"/>
+	</widget>
+	<widget field="Selected Auto" type="String" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="664" y="6"/>
+	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="799" y="4"/>
-		<width>553</width>
-		<height>432</height>
-		<property name="Camera Choice" value="Camera 0"/>
+		<location x="846" y="11"/>
+		<width>485</width>
+		<height>419</height>
+		<property name="Camera Choice" value=""/>
 	</static-widget>
-	<widget field="DriveMode" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="140" y="153"/>
-	</widget>
-	<widget field="DriveFilter" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="142" y="130"/>
-	</widget>
-	<widget field="SolShifter" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="145" y="83"/>
-	</widget>
-	<widget field="DriveLeft" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="78" y="13"/>
-	</widget>
-	<widget field="DriveRight" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="226" y="9"/>
-	</widget>
-	<widget field="EncVelR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="238" y="33"/>
-	</widget>
-	<widget field="EncVelL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="87" y="36"/>
-		<height>20</height>
-	</widget>
-	<widget field="GyroFused" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="139" y="107"/>
-	</widget>
-	<widget field="EncPosR" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="234" y="57"/>
-	</widget>
-	<widget field="EncPosL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="83" y="60"/>
-	</widget>
 	<widget field="Selected Controller" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="187" y="293"/>
+		<location x="232" y="146"/>
 	</widget>
-	<widget field="AutoProgram" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="594" y="41"/>
+	<widget field="Choose Auto" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="688" y="26"/>
 	</widget>
-	<widget field="Elevator CMD" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="397" y="15"/>
-	</widget>
-	<widget field="Auto Selector" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="597" y="16"/>
-		<width>191</width>
-	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="846" y="11"/>
+		<width>485</width>
+		<height>419</height>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="846" y="11"/>
+		<width>485</width>
+		<height>419</height>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="846" y="11"/>
+		<width>485</width>
+		<height>419</height>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="846" y="11"/>
+		<width>485</width>
+		<height>419</height>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="846" y="11"/>
+		<width>485</width>
+		<height>419</height>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="auxMotorB"/>
-	<hidden field="auxMotorA"/>
-	<hidden field="auxSolenoidB"/>
-	<hidden field="auxSolenoidA"/>
 </xml>

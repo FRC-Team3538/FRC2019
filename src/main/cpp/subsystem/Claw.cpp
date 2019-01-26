@@ -38,5 +38,13 @@ void Claw::Compliant()
 void Claw::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("Claw Motors", motors.Get());
-    SmartDashboard::PutNumber("Claw Solenoid", clamp.Get());
+
+    if (clamp.Get() == DoubleSolenoid::Value::kReverse) {
+        SmartDashboard::PutString("Claw Solenoid", "Open");
+    } else if (clamp.Get() == DoubleSolenoid::Value::kForward) {
+        SmartDashboard::PutString("Claw Solenoid", "Closed");
+    } else {
+        SmartDashboard::PutString("Claw Solenoid", "Off");
+    }
+        
 }

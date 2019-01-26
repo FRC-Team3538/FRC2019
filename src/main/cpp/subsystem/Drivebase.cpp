@@ -105,6 +105,6 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutNumber("EncVelR", motorRight1.GetSensorCollection().GetQuadratureVelocity());
     SmartDashboard::PutNumber("EncPosR", motorRight1.GetSensorCollection().GetQuadraturePosition());
 
-    SmartDashboard::PutNumber("SolShifter", solenoidShifter.Get());
+    SmartDashboard::PutBoolean("High Gear", solenoidShifter.Get());
     SmartDashboard::PutNumber("GyroFused", navx.GetFusedHeading());
 }

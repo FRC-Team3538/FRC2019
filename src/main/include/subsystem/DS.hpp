@@ -29,4 +29,5 @@ class DS
 		const std::string sXBX = "Xbox";
 
     DS();
+    void SmartDash();
 };

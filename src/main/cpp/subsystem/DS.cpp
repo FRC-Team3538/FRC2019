@@ -9,5 +9,8 @@ DS::DS(){
 
     chooseController.SetDefaultOption(sPS4, sPS4);
 	chooseController.AddOption(sXBX, sXBX);
+}
+
+void DS::SmartDash() {
 	frc::SmartDashboard::PutData("Selected Controller", &chooseController);
 }

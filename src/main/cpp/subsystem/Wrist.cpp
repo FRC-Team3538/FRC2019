@@ -29,6 +29,5 @@ void Wrist::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("Wrist Pot", pot.Get());
     SmartDashboard::PutNumber("Wrist Analog Input Voltage", analogInput.GetVoltage());
-    SmartDashboard::PutNumber("Wrist Analog Input Value", analogInput.GetValue());
     SmartDashboard::PutNumber("Wrist Motor", motor1.Get());
 }

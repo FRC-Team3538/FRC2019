@@ -3,11 +3,9 @@
 #include <frc/VictorSP.h>
 #include <frc/SpeedControllerGroup.h>
 #include <frc/Solenoid.h>
-//#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
+#include <frc/DigitalInput.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-//#include <ctre/Phoenix.h>
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
-#include <ctre/phoenix/motorcontrol/can/WPI_VictorSPX.h>
+#include <ctre/Phoenix.h>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
@@ -19,6 +17,9 @@ class Elevator
     WPI_TalonSRX motor1 {6};
     WPI_VictorSPX motor2 {7};
 
+    DigitalInput LimitSwitchLower {8};
+		DigitalInput LimitSwitchUpper {9};
+
     SpeedControllerGroup motors{motor1, motor2}; 
 
   public:
@@ -28,6 +29,10 @@ class Elevator
     // Actions
     void Set(double speed);
     void Stop();
+    void switchUpper();
+    void switchLower();
+    double GetDistance();
+    void resetEnc();
 
     void UpdateSmartdash();
 };

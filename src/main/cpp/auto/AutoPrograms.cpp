@@ -9,8 +9,8 @@ AutoPrograms::AutoPrograms(robotmap &IO) : IO(IO) {
 
     // SmartDash Chooser [List 2 of 3]
     m_chooser.SetDefaultOption("0 - None", "0 - None");
-	m_chooser.AddOption(AutoLineCross::GetName(), AutoLineCross::GetName());
-	SmartDashboard::PutData("AutoProgram", &m_chooser);
+    m_chooser.AddOption(AutoLineCross::GetName(), AutoLineCross::GetName());
+
 }
 
 // Initialize the selected auto program
@@ -37,4 +37,11 @@ void AutoPrograms::Run()
     {
         m_autoProgram->Run();
     }
+}
+
+void AutoPrograms::SmartDash() 
+{
+    SmartDashboard::PutData("Choose Auto", &m_chooser);
+    std::string name = m_chooser.GetSelected();
+    SmartDashboard::PutString("Selected Auto", name);
 }

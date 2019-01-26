@@ -116,8 +116,12 @@ void Robot::TeleopPeriodic()
   }
 
   //Elevator
-  IO.elevator.Set(rightOpY);
+  IO.elevator.Set(-rightOpY);
 
+  if (btnUpOp)
+  {
+    IO.elevator.resetEnc();
+  }
   //Wrist
   IO.wrist.Set(wristStick);
 
@@ -181,6 +185,8 @@ void Robot::UpdateSD()
   IO.elevator.UpdateSmartdash();
   IO.claw.UpdateSmartdash();
   IO.wrist.UpdateSmartdash();
+  autoPrograms.SmartDash();
+  IO.ds.SmartDash();
 }
 
 #ifndef RUNNING_FRC_TESTS

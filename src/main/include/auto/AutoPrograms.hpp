@@ -30,4 +30,5 @@ class AutoPrograms
 
     // Run the selected program
     void Run();
+    void SmartDash();
 };
