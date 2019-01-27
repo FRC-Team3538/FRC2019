@@ -15,6 +15,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <opencv2/videoio.hpp>
+#include <subsystem/Vision.hpp>
 using namespace cv;
 
 class Robot : public frc::TimedRobot
@@ -30,6 +31,7 @@ public:
 
 private:
   robotmap IO;
+  Vision vision;
   AutoPrograms autoPrograms{IO};
   LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
 
@@ -45,4 +47,6 @@ private:
 
   double Deadband(double input, double deadband);
   void UpdateSD();
+
+  bool AutoTarget();  
 };

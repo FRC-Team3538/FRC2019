@@ -6,13 +6,13 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.hpp"
-
 #include <iostream>
 #include <frc/Threads.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit()
 {
+  vision.Init();
 }
 
 /**
@@ -25,6 +25,17 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+
+  bool btnBackDr = IO.ds.DriverPS.GetScreenShotButton();
+  
+  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
+  {
+    btnBackDr = IO.ds.DriverXB.GetBackButton();
+  }
+
+  vision.CVMode(btnBackDr);
+  AutoTarget();
+
   UpdateSD();
 
   bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();
@@ -90,7 +101,6 @@ void Robot::TeleopPeriodic()
   bool btnRightOpPrsd = IO.ds.OperatorPS.GetCircleButtonPressed();
   bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
 
-  bool btnBackDr = IO.ds.DriverPS.GetScreenShotButtonPressed();
   frc::SmartDashboard::PutNumber("Forward0", forward);
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
@@ -118,7 +128,6 @@ void Robot::TeleopPeriodic()
     btnRightOpPrsd = IO.ds.OperatorXB.GetBButtonPressed();
     btnLeftOp = IO.ds.OperatorXB.GetXButton();
 
-    btnBackDr = IO.ds.DriverXB.GetBackButtonPressed();
   };
 
   //Deadbands
@@ -128,21 +137,22 @@ void Robot::TeleopPeriodic()
   forwardR = Deadband(forwardR, deadband);
 
   //Drive
-  switch (driveMode)
-  {
-  case driveModes::ARCADE:
-    IO.drivebase.Arcade(forward, rotate);
-    break;
+  if(!vision.CVT){
+    switch (driveMode)
+    {
+    case driveModes::ARCADE:
+      IO.drivebase.Arcade(forward, rotate);
+      break;
 
-  case driveModes::TANKYTANK:
-    IO.drivebase.Tank(forward, forwardR);
-    break;
+    case driveModes::TANKYTANK:
+      IO.drivebase.Tank(forward, forwardR);
+      break;
 
-  case driveModes::HOLONOMIC:
-    IO.drivebase.Holonomic(forward, rotate, strafe);
-    break;
+    case driveModes::HOLONOMIC:
+      IO.drivebase.Holonomic(forward, rotate, strafe);
+      break;
+    }
   }
-
   if (leftBumpDr)
   {
     IO.drivebase.SetLowGear();
@@ -179,9 +189,6 @@ void Robot::TeleopPeriodic()
     IO.manipB.Stop();
   }
 
-  if(btnBackDr){
-    IO.ds.CVStuff();
-  }
 }
 
 void Robot::TestPeriodic() {}
@@ -220,6 +227,12 @@ void Robot::UpdateSD()
   IO.drivebase.UpdateSmartdash();
   IO.intake.UpdateSmartdash();
   IO.manipB.UpdateSmartdash();
+}
+
+bool Robot::AutoTarget(){
+  if(vision.Run() < std::abs(0.05)){
+    return true;
+  }
 }
 
 #ifndef RUNNING_FRC_TESTS
