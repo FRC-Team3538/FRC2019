@@ -13,6 +13,7 @@
 
 void Robot::RobotInit()
 {
+  IO.log.Start();
 }
 
 /**
@@ -25,6 +26,8 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+  IO.log.Commit();
+
   UpdateSD();
 
   bool btnOptDrPrsd = IO.ds.DriverPS.GetOptionsButtonPressed();

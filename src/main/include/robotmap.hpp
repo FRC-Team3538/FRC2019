@@ -4,6 +4,7 @@
 #include <subsystem/Intake.hpp>
 #include <subsystem/OtherManip.hpp>
 #include <subsystem/DS.hpp>
+#include <subsystem/Logging.hpp>
 
 class robotmap
 {
@@ -12,5 +13,5 @@ class robotmap
     Intake intake;
     OtherManip manipB;
     DS ds;
-    
+    Logging log;
 };

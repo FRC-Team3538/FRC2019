@@ -108,3 +108,9 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutNumber("SolShifter", solenoidShifter.Get());
     SmartDashboard::PutNumber("GyroFused", navx.GetFusedHeading());
 }
+
+void Drivebase::Log()
+{
+    //IO.log.Log("Drivebase.L1.get", motorLeft1.Get());
+    //IO.log.Log("Drivebase.R1.get", motorRight1.Get());
+}

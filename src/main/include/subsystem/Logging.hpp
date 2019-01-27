@@ -19,9 +19,7 @@ class Logging
     bool m_started = false;
 
   public:
-    Logging();
-    Logging(string path);
-    Logging(string path, string filename);
+    Logging(string path = "", string filename = "");
     
     void AddKey(string key);
     void Start();

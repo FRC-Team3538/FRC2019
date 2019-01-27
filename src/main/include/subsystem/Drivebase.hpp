@@ -57,4 +57,5 @@ public:
   void SetLowGear();
 
   void UpdateSmartdash();
+  void Log();
 };

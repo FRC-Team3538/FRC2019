@@ -3,36 +3,33 @@
 #include "frc/Timer.h"
 #include "frc/Preferences.h"
 
-Logging::Logging()
+Logging::Logging(string path, string filename)
 {
-    Logging("./Logging/");
-}
+    // Default Values
+    if(path == "") path = "/home/lvuser/logs/";
+    if(filename == "") filename = "Log-#.csv";
 
-Logging::Logging(string path)
-{
-    Logging(path, "Log-#.csv");
-}
-
-Logging::Logging(string path, string _filename)
-{
     // Get a log serial number from robot Preferences
     auto pref = frc::Preferences::GetInstance();
     auto logNumber = pref->GetInt("LogNumber", 1);
-    auto logNumberStr = to_string(logNumber);
+    pref->PutInt("LogNumber", (logNumber + 1) % 200 ); // Limit to 200 log files
 
     // pad with zeros
+    auto logNumberStr = to_string(logNumber);
     while (logNumberStr.length() < 6)
     {
         logNumberStr = "0" + logNumberStr;
     }
 
     // Replace # in the log file name with the log number
-    auto i = _filename.find("#");
+    auto i = filename.find("#");
     if (i >= 0)
     {
-        _filename = _filename.replace(i, logNumberStr.length(), logNumberStr);
+        filename = filename.replace(i, 1, logNumberStr, 0, logNumberStr.length());
     }
 
+    m_path = path;
+    m_filename = filename;
 }
 
 void Logging::AddKey(string _key)
@@ -41,16 +38,22 @@ void Logging::AddKey(string _key)
     if (m_started)
         return;
 
-    m_map[_key] = "";
+    m_map[_key] = "NULL";
 }
 
 void Logging::Start()
 {
     // Cannot add new columns once logging is started
+    if (m_started)
+        return;
+
+    // Cannot add new columns once logging is started
     m_started = true;
 
     // Lets open dat log file!
     m_file.open(m_path + m_filename);
+
+    cout << "Open: " << m_path << m_filename << endl;
 
     // Print the header
     m_file << "Time, ";
@@ -69,7 +72,7 @@ void Logging::Start()
 void Logging::Log(string _key, string _value)
 {
     // Must start log first
-    if (m_started)
+    if (!m_started)
     {
         return;
     }
@@ -86,7 +89,7 @@ void Logging::Log(string _key, string _value)
 void Logging::Commit()
 {
     // Must start log first
-    if (m_started)
+    if (!m_started)
     {
         return;
     }
