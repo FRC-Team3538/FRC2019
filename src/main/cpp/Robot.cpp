@@ -34,7 +34,7 @@ void Robot::RobotPeriodic()
   }
 
   vision.CVMode(btnBackDr);
-  AutoTarget();
+  AutoTarget(btnBackDr);
 
   UpdateSD();
 
@@ -229,10 +229,16 @@ void Robot::UpdateSD()
   IO.manipB.UpdateSmartdash();
 }
 
-bool Robot::AutoTarget(){
-  if(vision.Run() < std::abs(0.05)){
+bool Robot::AutoTarget(bool Go){
+  double error = vision.Run();
+
+  if(Go)
+  IO.drivebase.Arcade(0, error);
+  
+  if(abs(error) < 0.05){
     return true;
   }
+  std::cout << error << endl;
 }
 
 #ifndef RUNNING_FRC_TESTS

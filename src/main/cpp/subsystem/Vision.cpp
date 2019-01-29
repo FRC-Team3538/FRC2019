@@ -38,9 +38,7 @@ double Vision::Run(){
 		double realCenter = 0;
 		auto centers = contourCenters(*VP.GetFilterContoursOutput());
 		for(auto c : centers){
-			if(centers.size() < 2){
-				realCenter += c.x; 
-			}
+			realCenter += c.x; 
 		}
 		realCenter /= centers.size();
 		if((realCenter != 80) && (realCenter > 0)){
@@ -54,7 +52,7 @@ double Vision::Run(){
 	// 	cs::CvSource outputStreamStd = CameraServer::GetInstance()->PutVideo("HSLThresh", 160, 120);
 	// 	outputStreamStd.PutFrame(frame0/**VP.GetHslThresholdOutput()*/);
 	// }
-	return -1;
+	return 0.0;
 }
 void Vision::Init(){
 	camera = CameraServer::GetInstance()->StartAutomaticCapture();
