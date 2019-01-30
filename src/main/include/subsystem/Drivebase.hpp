@@ -58,4 +58,10 @@ public:
 
   void UpdateSmartdash();
   void Log();
+
+  double EncPosL();
+  double EncPosR();
+  void ResetEnc();
+
+  double GetGyroAngle();
 };

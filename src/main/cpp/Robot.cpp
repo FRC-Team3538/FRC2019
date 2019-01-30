@@ -6,13 +6,16 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.hpp"
-
+#include <frc/DriverStation.h>
 #include <iostream>
-
+#include <sstream>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit()
 {
+  IO.log.AddKey("Distance LeftEnc");
+  IO.log.AddKey("Distance RightEnc");
+  IO.log.AddKey("Gyro Angle");
   IO.log.Start();
 }
 
@@ -26,7 +29,25 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-  IO.log.Commit();
+  DriverStation& DS = frc::DriverStation::GetInstance();
+  std::ostringstream strsL;
+  std::ostringstream strsR;
+  std::ostringstream gyroAngle;
+  
+  gyroAngle << IO.drivebase.GetGyroAngle();
+  strsL << IO.drivebase.EncPosL();
+  strsR << IO.drivebase.EncPosR();
+  std::string gyAng = gyroAngle.str();
+  std::string strL = strsL.str();
+  std::string strR = strsR.str();
+
+  if(DS.IsEnabled())
+  {
+    IO.log.Log("Gyro Angle", gyAng);
+    IO.log.Log("Distance LeftEnc", strL);   
+    IO.log.Log("Distance RightEnc", strR);
+    IO.log.Commit();
+  }
 
   UpdateSD();
 
@@ -34,6 +55,16 @@ void Robot::RobotPeriodic()
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX){
     btnOptDrPrsd = IO.ds.DriverXB.GetStartButtonPressed();
   }
+
+  bool btnDrBackPrsd = IO.ds.DriverPS.GetScreenShotButtonPressed();
+  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX){
+    btnDrBackPrsd = IO.ds.DriverXB.GetBackButtonPressed();
+  }
+
+  if(btnDrBackPrsd){
+    IO.drivebase.ResetEnc();
+  }
+
   //Drive Swapping
   if (btnOptDrPrsd)
   {

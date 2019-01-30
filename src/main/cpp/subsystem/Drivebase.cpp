@@ -100,10 +100,13 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutNumber(moL, motorLeft1.Get());
     SmartDashboard::PutNumber(moR, motorRight1.Get());
 
-    SmartDashboard::PutNumber("EncVelL", motorLeft1.GetSensorCollection().GetQuadratureVelocity());
-    SmartDashboard::PutNumber("EncPosL", motorLeft1.GetSensorCollection().GetQuadraturePosition());
-    SmartDashboard::PutNumber("EncVelR", motorRight1.GetSensorCollection().GetQuadratureVelocity());
-    SmartDashboard::PutNumber("EncPosR", motorRight1.GetSensorCollection().GetQuadraturePosition());
+    //SmartDashboard::PutNumber("EncVelL (FeetPerSec)", motorLeft1.GetSensorCollection().GetQuadratureVelocity() / 4096);
+    SmartDashboard::PutNumber("EncPosL", (double)motorLeft1.GetSensorCollection().GetQuadraturePosition() / 4096.0 * 6.0 * 3.14159265358979323);
+    //SmartDashboard::PutNumber("EncVelR (FeetPerSec)", motorRight1.GetSensorCollection().GetQuadratureVelocity() / 4096);
+    SmartDashboard::PutNumber("EncPosR", (double)motorRight1.GetSensorCollection().GetQuadraturePosition() / 4096.0 * 6.0 * 3.14159265358979323);
+    SmartDashboard::PutNumber("Gyro Angle", navx.GetAngle());
+
+    
 
     SmartDashboard::PutNumber("SolShifter", solenoidShifter.Get());
     SmartDashboard::PutNumber("GyroFused", navx.GetFusedHeading());
@@ -113,4 +116,21 @@ void Drivebase::Log()
 {
     //IO.log.Log("Drivebase.L1.get", motorLeft1.Get());
     //IO.log.Log("Drivebase.R1.get", motorRight1.Get());
+}
+
+double Drivebase::EncPosL(){
+    return (motorLeft1.GetSensorCollection().GetQuadraturePosition() / 4096 * 6 * 3.1415926535897932);
+}
+
+double Drivebase::EncPosR(){
+    return (motorRight1.GetSensorCollection().GetQuadraturePosition() / 4096 * 6 * 3.1415926535897932);
+}
+
+void Drivebase::ResetEnc(){
+    motorLeft1.SetSelectedSensorPosition(0);
+    motorRight1.SetSelectedSensorPosition(0);
+}
+
+double Drivebase::GetGyroAngle(){
+    return navx.GetAngle();
 }

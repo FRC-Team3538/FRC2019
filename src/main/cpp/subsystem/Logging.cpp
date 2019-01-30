@@ -6,8 +6,8 @@
 Logging::Logging(string path, string filename)
 {
     // Default Values
-    if(path == "") path = "/home/lvuser/logs/";
-    if(filename == "") filename = "Log-#.csv";
+    if(path == "") path = "/u/logs/";
+    if(filename == "") filename = "log-#.csv";
 
     // Get a log serial number from robot Preferences
     auto pref = frc::Preferences::GetInstance();
