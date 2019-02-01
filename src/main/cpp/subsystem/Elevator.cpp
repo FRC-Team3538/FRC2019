@@ -22,9 +22,9 @@ void Elevator::Set(double speed)
 {
     if (LimitSwitchUpper.Get() == false && speed > 0.0) {
         motors.Set(0.0);
-        resetEnc();
     } else if (LimitSwitchLower.Get() == false && speed < 0.0) {
         motors.Set(0.0);
+        resetEnc();
     } else {
         motors.Set(speed);
     }
@@ -33,7 +33,12 @@ void Elevator::Set(double speed)
 double Elevator::GetDistance()
 {
     double elevDistance = motor1.GetSensorCollection().GetQuadraturePosition();
-    double distance = elevDistance * ((47.5) / 10197);
+    double distance = elevDistance * ((45 - 9.375) / 31196);
+     /*
+        9 3/8   0
+        19 15/16    9,287
+        45  31,196
+     */
     return distance;
 }
 
