@@ -92,28 +92,28 @@ double Vision::Run()
 			{
 				if (centerContourLeft)
 				{
-					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x > contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle > 90))
+					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x > contourDataVector[centerContour].x) && (contourDataVector[i].angle < 90))
 					{
 						centerContourPair = i;
 					}
-					else if ((contourDataVector[i].x > contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle > 90) && (contourDataVector[i].x < contourDataVector[centerContourPair].x))
+					else if ((contourDataVector[i].x > contourDataVector[centerContour].x) && (i != centerContour) && (contourDataVector[i].angle < 90) && (contourDataVector[i].x < contourDataVector[centerContourPair].x))
 					{
 						centerContourPair = i;
 					}
 				}
 				else if (!centerContourLeft)
 				{
-					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x < contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle < 90))
+					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x < contourDataVector[centerContour].x) && (contourDataVector[i].angle > 90))
 					{
 						centerContourPair = i;
 					}
-					else if ((contourDataVector[i].x < contourDataVector[centerContour].x) && (i != centerContour) && (contourDataVector[centerContour].angle < 90) && (contourDataVector[i].x > contourDataVector[centerContourPair].x))
+					else if ((contourDataVector[i].x < contourDataVector[centerContour].x) && (i != centerContour) && (contourDataVector[i].angle > 90) && (contourDataVector[i].x > contourDataVector[centerContourPair].x))
 					{
 						centerContourPair = i;
 					}
 				}
 			}
-			cout << "bahhhhhhhhhhh " << contourDataVector[1].angle << endl;
+			cout << "bahhhhhhhhhhh " << contourDataVector[centerContourPair].angle << endl;
 		}
 		//fitLine(singleContour(*VP.GetFilterContoursOutput(), 1), line2, CV_DIST_L2, 0, 0.01, 0.01);
 		// DrawLine(line, *VP.GetHslThresholdOutput());
@@ -125,10 +125,17 @@ double Vision::Run()
 			cout << "Reet " << contourDataVector[centerContour].numero << endl;
 			drawContours(source, hulls, contourDataVector[centerContour].numero, Scalar(148, 148, 0), 2);
 		}
+		//cout << "OwoOwo" << contourDataVector[centerContourPair].numero << endl;
 		if (centerContourPair > -1)
 		{
 			cout << "NYEEEEEEEEEEEEEEEEE" << contourDataVector[centerContourPair].numero << endl;
 			drawContours(source, hulls, contourDataVector[centerContourPair].numero, Scalar(148, 148, 0), 2);
+		}
+		cv::Point position;
+		if(centerContour > -1 && centerContourPair > -1){
+			position.x = (contourDataVector[centerContourPair].x + contourDataVector[centerContour].x) / 2;
+			position.y = (centers[contourDataVector[centerContourPair].numero].y + centers[contourDataVector[centerContourPair].numero].y) / 2;
+			drawMarker(source, position, Scalar(255, 255, 255), 1, 10, 2);
 		}
 
 		SmartDashboard::PutNumber("TimeB", time.Get());
@@ -144,23 +151,31 @@ double Vision::Run()
 		int imNum2 = imNum + 1;
 		imwrite("/u/vision" + std::to_string(imNum2) + ".jpg", frame0);
 		imNum += 2;
-		double realCenter = 0;
+		// double realCenter = 0;
 
 		SmartDashboard::PutNumber("TimeD", time.Get());
 
-		for (auto c : centers)
-		{
-			realCenter += c.x;
-		}
-		realCenter /= centers.size();
+		// for (auto c : centers)
+		// {
+		// 	realCenter += c.x;
+		// }
+		// realCenter /= centers.size();
 
 		SmartDashboard::PutNumber("TimeE", time.Get());
 
-		if ((realCenter != 80) && (realCenter > 0))
-		{
-			double error = (realCenter - 80) / 160;
+		// if ((realCenter != 80) && (realCenter > 0))
+		// {
+		// 	double error = (realCenter - 80) / 160;
 
+		// 	cout << "F: " << time.Get() << endl;
+		// 	return error;
+		// }
+		cout << "Before Error" << position.x << endl;
+		if ((position.x > 0))
+		{
+			double error = (position.x - 80.0) / 80.0;
 			cout << "F: " << time.Get() << endl;
+			cout << "BLYATTTTTT" << error << endl;
 			return error;
 		}
 	}

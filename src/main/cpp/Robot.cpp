@@ -235,8 +235,7 @@ bool Robot::AutoTarget(bool Go){
   double error = vision.Run();
 
   if(Go)
-  //IO.drivebase.Arcade(0, error);
-  
+  IO.drivebase.Arcade(0, error);
   if(abs(error) < 0.05){
     return true;
   }
