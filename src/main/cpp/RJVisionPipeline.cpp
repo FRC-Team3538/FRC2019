@@ -11,9 +11,9 @@ void RJVisionPipeline::Process(cv::Mat& source0){
 	//Step HSL_Threshold0:
 	//input
 	cv::Mat hslThresholdInput = source0;
-	double hslThresholdHue[] = {58.2733874698337, 86.82594247238627};
-	double hslThresholdSaturation[] = {58.09352226394543, 255.0};
-	double hslThresholdLuminance[] = {35.161869774619454, 130.2559671629818};
+	double hslThresholdHue[] = {65.2733874698337, 100.82594247238627};
+	double hslThresholdSaturation[] = {90.09352226394543, 255.0};
+	double hslThresholdLuminance[] = {40.0, 175.0};
 	hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, this->hslThresholdOutput);
 	//Step Find_Contours0:
 	//input
@@ -30,7 +30,7 @@ void RJVisionPipeline::Process(cv::Mat& source0){
 	double filterContoursMinHeight = 0;  // default Double
 	double filterContoursMaxHeight = 1000;  // default Double
 	double filterContoursSolidity[] = {0.0, 100.0};
-	double filterContoursMaxVertices = 1000000;  // default Double
+	double filterContoursMaxVertices = 100000.0; 
 	double filterContoursMinVertices = 4.0;  // default Double
 	double filterContoursMinRatio = 0.0;  // default Double
 	double filterContoursMaxRatio = 10.0;  // default Double

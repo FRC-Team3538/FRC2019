@@ -131,10 +131,12 @@ void Robot::TeleopPeriodic()
   };
 
   //Deadbands
+  SmartDashboard::PutNumber("rotate1", rotate);
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
   strafe = Deadband(strafe, deadband);
   forwardR = Deadband(forwardR, deadband);
+  SmartDashboard::PutNumber("rotate2", rotate);
 
   //Drive
   if(!vision.CVT){
@@ -233,7 +235,7 @@ bool Robot::AutoTarget(bool Go){
   double error = vision.Run();
 
   if(Go)
-  IO.drivebase.Arcade(0, error);
+  //IO.drivebase.Arcade(0, error);
   
   if(abs(error) < 0.05){
     return true;

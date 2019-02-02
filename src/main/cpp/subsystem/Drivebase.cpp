@@ -34,6 +34,8 @@ void Drivebase::Tank(double left, double right)
 // Arcade Drive
 void Drivebase::Arcade(double forward, double turn)
 {
+    SmartDashboard::PutNumber("turn", turn);
+    SmartDashboard::PutNumber("LeftValue", (forward - turn));
     DriveLeft.Set(forward - turn);
     DriveRight.Set(forward + turn);
 }
