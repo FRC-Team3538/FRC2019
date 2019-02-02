@@ -8,7 +8,6 @@ Wrist::Wrist()
 
 void Wrist::Stop()
 {
-    //motors.StopMotor();
     motor1.Set(0.0);
 }
 
@@ -22,7 +21,7 @@ void Wrist::Set(double speed)
     }
     if (GetAngle() < (-45.0) && speed < 0.0) {
         motor1.Set(0.0);
-    }
+    } 
 }
 
 bool Wrist::SetAngle(double angle)
@@ -43,7 +42,10 @@ double Wrist::GetAngle()
 
 void Wrist::setPosition(double pos)
 {
-    
+    double error = (pos - GetAngle());
+    double kp = 0.05;
+
+    Set(error * kp);
 }
 
 void Wrist::UpdateSmartdash()

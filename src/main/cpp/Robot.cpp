@@ -131,6 +131,15 @@ void Robot::TeleopPeriodic()
   //Wrist
   IO.wrist.Set(wristStick);
 
+  if (rightBumpOp == true) 
+  {
+    IO.wrist.setPosition(-30);
+  }
+  if (leftBumpOp == true) 
+  {
+    IO.wrist.setPosition(30);
+  }
+
   //Claw
   if (rightBumpOp or (rightTrigOp > 0.125)) {
 			// Loose Intake
