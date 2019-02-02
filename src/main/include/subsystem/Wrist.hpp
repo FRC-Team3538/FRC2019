@@ -23,12 +23,12 @@ class Wrist
   public:
     // Default Constructor
     Wrist();
-
     // Actions
     bool SetAngle(double angle);
-
+    double GetAngle();
     void Set(double speed);
     void Stop();
+    void setPosition(double pos);
 
     void UpdateSmartdash();
 };
