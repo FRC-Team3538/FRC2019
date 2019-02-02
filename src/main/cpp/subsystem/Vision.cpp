@@ -52,6 +52,7 @@ double Vision::Run()
 			cD.angle = lineAngle;
 			cD.numero = contourNum;
 			convexHull(Mat(contours[contourNum]), hulls[contourNum], false);
+			cout << "ANGLE" << lineAngle << endl; 
 			if (!(lineAngle < 50 || lineAngle > 130))
 			{
 				contourDataVector.push_back(cD);
@@ -59,6 +60,9 @@ double Vision::Run()
 				putText(source, to_string(contourNum), cvPoint((centers[contourNum].x + 10),(centers[contourNum].y + 5)), FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(255,255,255), 1, CV_AA);
 			}
 			contourNum++;
+		}
+		if(contourDataVector.size() > 0){
+		cout << "ANGLE2" << contourDataVector[1].angle << endl;
 		}
 		// for(auto hull : hulls){
 		// 	cout << "------->HULL SIZE<------- :" << hull.size() << endl;
@@ -79,7 +83,7 @@ double Vision::Run()
 				}
 			}
 
-			bool centerContourLeft = (contourDataVector[centerContour].angle < 90.0);
+			bool centerContourLeft = (contourDataVector[centerContour].angle > 90.0);
 			string test = centerContourLeft ? "YEEEEt" : "AntiYeet";
 			cout << "akhg;ajg;eal " << contourDataVector[centerContour].angle << endl;
 			cout << test << endl;
@@ -88,7 +92,7 @@ double Vision::Run()
 			{
 				if (centerContourLeft)
 				{
-					if ((i == 0) && (contourDataVector[i].x > contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle > 90))
+					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x > contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle > 90))
 					{
 						centerContourPair = i;
 					}
@@ -99,16 +103,17 @@ double Vision::Run()
 				}
 				else if (!centerContourLeft)
 				{
-					if ((i == 0) && (contourDataVector[i].x < contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle < 90))
+					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x < contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle < 90))
 					{
 						centerContourPair = i;
 					}
-					else if ((contourDataVector[i].x < contourDataVector[centerContour].x) && (contourDataVector[centerContour].angle < 90) && (contourDataVector[i].x > contourDataVector[centerContourPair].x))
+					else if ((contourDataVector[i].x < contourDataVector[centerContour].x) && (i != centerContour) && (contourDataVector[centerContour].angle < 90) && (contourDataVector[i].x > contourDataVector[centerContourPair].x))
 					{
 						centerContourPair = i;
 					}
 				}
 			}
+			cout << "bahhhhhhhhhhh " << contourDataVector[1].angle << endl;
 		}
 		//fitLine(singleContour(*VP.GetFilterContoursOutput(), 1), line2, CV_DIST_L2, 0, 0.01, 0.01);
 		// DrawLine(line, *VP.GetHslThresholdOutput());
@@ -123,7 +128,7 @@ double Vision::Run()
 		if (centerContourPair > -1)
 		{
 			cout << "NYEEEEEEEEEEEEEEEEE" << contourDataVector[centerContourPair].numero << endl;
-			//drawContours(source, hulls, contourDataVector[centerContourPair].numero, Scalar(148, 148, 0), 2);
+			drawContours(source, hulls, contourDataVector[centerContourPair].numero, Scalar(148, 148, 0), 2);
 		}
 
 		SmartDashboard::PutNumber("TimeB", time.Get());

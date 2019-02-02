@@ -240,7 +240,7 @@ bool Robot::AutoTarget(bool Go){
   if(abs(error) < 0.05){
     return true;
   }
-  std::cout << error << endl;
+  //std::cout << error << endl;
 }
 
 #ifndef RUNNING_FRC_TESTS
