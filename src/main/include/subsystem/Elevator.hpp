@@ -6,6 +6,7 @@
 #include <frc/DigitalInput.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
+#include <frc/WPILib.h>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
@@ -33,6 +34,7 @@ class Elevator
     void switchLower();
     double GetDistance();
     void resetEnc();
+    void setPosition(double pos);
 
     void UpdateSmartdash();
 };

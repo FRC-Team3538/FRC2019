@@ -10,6 +10,31 @@ Elevator::Elevator()
     motor1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
     motor1.ConfigVelocityMeasurementWindow(32, 0);
     motor1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
+
+    int absolutePosition = motor1.GetSelectedSensorPosition(0) & 0xFFF;
+    int kPIDLoopIdx = 0;
+    int kTimeoutMs = 30;
+
+		motor1.SetSelectedSensorPosition(absolutePosition, kPIDLoopIdx,
+				kTimeoutMs);
+
+		/* choose the sensor and sensor direction */
+		motor1.ConfigSelectedFeedbackSensor(
+				FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx,
+				kTimeoutMs);
+		motor1.SetSensorPhase(true);
+
+		/* set the peak and nominal outputs, 12V means full */
+		motor1.ConfigNominalOutputForward(0, kTimeoutMs);
+		motor1.ConfigNominalOutputReverse(0, kTimeoutMs);
+		motor1.ConfigPeakOutputForward(1, kTimeoutMs);
+		motor1.ConfigPeakOutputReverse(-1, kTimeoutMs);
+
+		/* set closed loop gains in slot0 */
+		motor1.Config_kF(kPIDLoopIdx, 0.0, kTimeoutMs);
+		motor1.Config_kP(kPIDLoopIdx, 0.1, kTimeoutMs);
+		motor1.Config_kI(kPIDLoopIdx, 0.0, kTimeoutMs);
+		motor1.Config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
 }
 
 void Elevator::Stop()
@@ -45,6 +70,12 @@ double Elevator::GetDistance()
 void Elevator::resetEnc()
 {
     motor1.SetSelectedSensorPosition(0.0);
+}
+
+void Elevator::setPosition(double pos)
+{
+    pos = (pos / ((45 - 9.375) / 31196));
+    motor1.Set(ControlMode::Position, pos);
 }
 
 void Elevator::UpdateSmartdash()

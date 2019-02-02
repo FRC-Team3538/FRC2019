@@ -117,11 +117,17 @@ void Robot::TeleopPeriodic()
 
   //Elevator
   IO.elevator.Set(-rightOpY);
-
-  if (btnUpOp)
-  {
-    IO.elevator.resetEnc();
+  
+  if (btnUpOp == true)  {
+    IO.elevator.setPosition(65);
   }
+  if (btnDownOp == true)  {
+    IO.elevator.setPosition(35);
+  }
+  if (btnLeftOp == true)  {
+    IO.elevator.setPosition(5);
+  }
+  
   //Wrist
   IO.wrist.Set(wristStick);
 
