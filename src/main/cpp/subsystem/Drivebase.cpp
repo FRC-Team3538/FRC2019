@@ -16,12 +16,12 @@ Drivebase::Drivebase()
     motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
     motorRight1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
     motorRight1.ConfigVelocityMeasurementWindow(32, 0);
-    motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
+    motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18, 100);
 
     motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
     motorLeft1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
     motorLeft1.ConfigVelocityMeasurementWindow(32, 0);
-    motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
+    motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18, 100);
 }
 
 // Tanks Drive
@@ -119,11 +119,11 @@ void Drivebase::Log()
 }
 
 double Drivebase::EncPosL(){
-    return (motorLeft1.GetSensorCollection().GetQuadraturePosition() / 4096 * 6 * 3.1415926535897932);
+    return (motorLeft1.GetSensorCollection().GetQuadraturePosition() / 4096.0 * 6.0 * 3.1415926535897932);
 }
 
 double Drivebase::EncPosR(){
-    return (motorRight1.GetSensorCollection().GetQuadraturePosition() / 4096 * 6 * 3.1415926535897932);
+    return (motorRight1.GetSensorCollection().GetQuadraturePosition() / 4096.0 * 6.0 * 3.1415926535897932);
 }
 
 void Drivebase::ResetEnc(){

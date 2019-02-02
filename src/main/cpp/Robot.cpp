@@ -207,6 +207,7 @@ void Robot::TeleopPeriodic()
   {
     IO.manipB.Stop();
   }
+
 }
 
 void Robot::TestPeriodic() {}
