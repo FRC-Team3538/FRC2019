@@ -32,7 +32,7 @@ Elevator::Elevator()
 
 		/* set closed loop gains in slot0 */
 		motor1.Config_kF(kPIDLoopIdx, 0.0, kTimeoutMs);
-		motor1.Config_kP(kPIDLoopIdx, 0.1, kTimeoutMs);
+		motor1.Config_kP(kPIDLoopIdx, 0.2, kTimeoutMs);
 		motor1.Config_kI(kPIDLoopIdx, 0.0, kTimeoutMs);
 		motor1.Config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
 }
