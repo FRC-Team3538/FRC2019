@@ -1,12 +1,8 @@
 #pragma once
 
-#include <frc/VictorSP.h>
-#include <frc/SpeedControllerGroup.h>
-#include <frc/Solenoid.h>
 #include <frc/DigitalInput.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
-#include <frc/WPILib.h>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
@@ -15,13 +11,11 @@ class Elevator
 {
   private:
     // Hardware setup
-    WPI_TalonSRX motor1 {6};
-    WPI_VictorSPX motor2 {7};
+    WPI_TalonSRX motor1 {3};
+    WPI_VictorSPX motor2 {12};
 
-    DigitalInput LimitSwitchLower {8};
-		DigitalInput LimitSwitchUpper {9};
-
-    SpeedControllerGroup motors{motor1, motor2}; 
+    DigitalInput LimitSwitchLower {1};
+		DigitalInput LimitSwitchUpper {2};
 
   public:
     // Default Constructor

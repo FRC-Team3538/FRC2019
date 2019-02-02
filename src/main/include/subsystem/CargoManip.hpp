@@ -3,33 +3,25 @@
 #include <frc/VictorSP.h>
 #include <frc/SpeedControllerGroup.h>
 #include <frc/Solenoid.h>
-#include <frc/DoubleSolenoid.h>
+//#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
-//#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
-//#include <ctre/phoenix/motorcontrol/can/WPI_VictorSPX.h>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
 
-class Claw
+class CargoManip
 {
   private:
     // Hardware setup
-    WPI_VictorSPX motor1 {9};
-    WPI_VictorSPX motor2 {10};
-    DoubleSolenoid clamp {1, 2};
-
-    SpeedControllerGroup motors{motor1, motor2}; 
+    WPI_VictorSPX motor1 {5};
+    WPI_VictorSPX motor2 {6};
 
   public:
     // Default Constructor
-    Claw();
+    CargoManip();
 
     // Actions
-    void Open();
-    void Close();
-    void Compliant();
     void Set(double speed);
     void Stop();
 

@@ -6,9 +6,15 @@ Drivebase::Drivebase()
     // Link motors together
 
     // Invert one side of the drive
-    DriveLeft.SetInverted(false);
+    motorLeft1.SetInverted(false);
 
-    DriveRight.SetInverted(true);
+    motorRight1.SetInverted(true);
+
+    motorLeft2.Follow(motorLeft1);
+    motorLeft3.Follow(motorLeft1);
+
+    motorRight2.Follow(motorRight1);
+    motorRight3.Follow(motorRight1);
 
     // set default shifter state
     solenoidShifter.Set(false);
@@ -24,25 +30,18 @@ Drivebase::Drivebase()
     motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
 }
 
-// Tanks Drive
-void Drivebase::Tank(double left, double right)
-{
-    DriveLeft.Set(left);
-    DriveRight.Set(right);
-}
-
 // Arcade Drive
 void Drivebase::Arcade(double forward, double turn)
 {
-    DriveLeft.Set(forward - turn);
-    DriveRight.Set(forward + turn);
+    motorLeft1.Set(forward - turn);
+    motorRight1.Set(forward + turn);
 }
 
 // Stop!
 void Drivebase::Stop()
 {
-    DriveLeft.StopMotor();
-    DriveRight.StopMotor();
+    motorLeft1.StopMotor();
+    motorRight1.StopMotor();
 }
 
 // Shift to High Gear
@@ -55,41 +54,6 @@ void Drivebase::SetHighGear()
 void Drivebase::SetLowGear()
 {
     solenoidShifter.Set(false);
-}
-
-void Drivebase::Holonomic(double forward, double rotate, double strafe)
-{
-    double front_Left = forward - rotate + strafe;
-    double front_Right = -(forward + rotate + strafe);
-    double back_Left = forward - rotate - strafe;
-    double back_Right = -(forward + rotate - strafe);
-
-    double Magnitude = abs(forward) + abs(rotate) + abs(strafe);
-
-    if (abs(front_Right) > Magnitude)
-    {
-        Magnitude = abs(front_Right);
-    }
-    if (abs(back_Left) > Magnitude)
-    {
-        Magnitude = abs(back_Left);
-    }
-    if (abs(back_Right) > Magnitude)
-    {
-        Magnitude = abs(back_Right);
-    }
-
-    if (Magnitude > 1)
-    {
-        front_Left /= Magnitude;
-        front_Right /= Magnitude;
-        back_Left /= Magnitude;
-        back_Right /= Magnitude;
-    }
-    frontLeft.Set(front_Left);
-    frontRight.Set(front_Right);
-    backLeft.Set(back_Left);
-    backRight.Set(back_Right);
 }
 
 void Drivebase::UpdateSmartdash()

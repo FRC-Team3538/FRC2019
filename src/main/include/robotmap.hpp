@@ -3,8 +3,10 @@
 #include <subsystem/DS.hpp>
 #include <subsystem/Drivebase.hpp>
 #include <subsystem/Elevator.hpp>
-#include <subsystem/Claw.hpp>
 #include <subsystem/Wrist.hpp>
+#include <subsystem/CargoManip.hpp>
+#include <subsystem/CargoIntake.hpp>
+#include <subsystem/HatchManip.hpp>
 
 class robotmap
 {
@@ -12,6 +14,8 @@ class robotmap
     DS ds;
     Drivebase drivebase;
     Elevator elevator;
-    Claw claw;
     Wrist wrist;
+    CargoManip cargoManip;
+    CargoIntake cargoIntake;
+    HatchManip hatchManip;
 };

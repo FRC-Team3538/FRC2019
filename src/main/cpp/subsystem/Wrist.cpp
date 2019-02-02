@@ -32,25 +32,20 @@ bool Wrist::SetAngle(double angle)
 
 double Wrist::GetAngle()
 {
-    /*
-    34 -90
-    -55 0
-    -133 90
-    */
-    return (pot.Get() + 50.0 )*(-1);
+    //return (pot.Get() + 50.0 )*(-1);
+    return 0;
 }
 
 void Wrist::setPosition(double pos)
 {
-    double error = (pos - GetAngle());
-    double kp = 0.05;
+    //double error = (pos - GetAngle());
+    //double kp = 0.05;
 
-    Set(error * kp);
+    //Set(error * kp);
 }
 
 void Wrist::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("Wrist Pot", GetAngle());
-    SmartDashboard::PutNumber("Wrist Analog Input Voltage", analogInput.GetVoltage());
+    SmartDashboard::PutNumber("Wrist Angle", GetAngle());
     SmartDashboard::PutNumber("Wrist Motor", motor1.Get());
 }

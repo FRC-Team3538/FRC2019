@@ -1,32 +1,27 @@
 #pragma once
 
-#include <frc/VictorSP.h>
 #include <frc/SpeedControllerGroup.h>
 #include <frc/Solenoid.h>
-//#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
+#include <frc/DigitalInput.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
 
-class Intake
+class CargoIntake
 {
   private:
     // Hardware setup
-    VictorSP motorA1PWM {6};
-    VictorSP motorA2PWM {7};
+    WPI_VictorSPX motor1 {8};
+    WPI_VictorSPX motor2 {9};
 
-    WPI_VictorSPX motorA1 {6};
-    WPI_VictorSPX motorA2 {7};
-    SpeedControllerGroup motors{motorA1PWM, motorA2PWM, motorA1, motorA2};
-
-    Solenoid solenoidArm{1};
-    
+    Solenoid deploy{4};
+    DigitalInput sensor{3};
 
   public:
     // Default Constructor
-    Intake();
+    CargoIntake();
 
     // Actions
     void Deploy();

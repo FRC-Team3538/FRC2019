@@ -3,8 +3,10 @@
 // Configure Hardware Settings
 Elevator::Elevator()
 {
-    motor1.SetInverted(true);
+    motor1.SetInverted(false);
     motor2.SetInverted(false);
+
+    motor2.Follow(motor1);
 
     motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
     motor1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
@@ -39,19 +41,19 @@ Elevator::Elevator()
 
 void Elevator::Stop()
 {
-    motors.Set(0.0);
+    motor1.Set(0.0);
 }
 
 //Positive Speed is intaking
 void Elevator::Set(double speed)
 {
     if (LimitSwitchUpper.Get() == false && speed > 0.0) {
-        motors.Set(0.0);
+        motor1.Set(0.0);
     } else if (LimitSwitchLower.Get() == false && speed < 0.0) {
-        motors.Set(0.0);
+        motor1.Set(0.0);
         resetEnc();
     } else {
-        motors.Set(speed);
+        motor1.Set(speed);
     }
 }
 
@@ -59,11 +61,7 @@ double Elevator::GetDistance()
 {
     double elevDistance = motor1.GetSensorCollection().GetQuadraturePosition();
     double distance = elevDistance * ((45 - 9.375) / 31196);
-     /*
-        9 3/8   0
-        19 15/16    9,287
-        45  31,196
-     */
+
     return distance;
 }
 
@@ -75,7 +73,7 @@ void Elevator::resetEnc()
 void Elevator::setPosition(double pos)
 {
     pos = (pos / ((45 - 9.375) / 31196));
-    motor1.Set(ControlMode::Position, pos);
+    //motor1.Set(ControlMode::Position, pos);
 }
 
 void Elevator::UpdateSmartdash()
