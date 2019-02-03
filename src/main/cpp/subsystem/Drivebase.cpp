@@ -2,6 +2,8 @@
 #include "subsystem/Drivebase.hpp"
 #include <frc/smartdashboard/SmartDashboard.h>
 
+using namespace std;
+
 Drivebase::Drivebase()
 {
     // Link motors together
@@ -85,6 +87,11 @@ void Drivebase::SlaveMotors()
     motorRight3.Follow(motorLeft1);
     slave = true;
 
+    if(slave == true)
+    {
+        DriveRight.SetInverted(false);
+    } 
+
 }
 
 void Drivebase::FreeSlaves()
@@ -95,6 +102,13 @@ void Drivebase::FreeSlaves()
     motorRight2.Follow(motorRight1);
     motorRight3.Follow(motorRight1);
     slave = false;
+
+    if(slave == false)
+    {
+        DriveRight.SetInverted(true);
+    } 
+
+
 }
 
 // Tanks Drive
@@ -111,13 +125,14 @@ void Drivebase::Arcade(double forward, double turn)
     //slave = false;
     //SlaveMotors();
     DriveLeft.Set(forward - turn);
+    cout << "Slave: " << slave << endl;
 
     if(slave == false)
     {
     DriveRight.Set(forward + turn);
     }
     
-    cout << "forward: " << forward << endl;
+    cout << "Forward: " << forward << endl;
 }
 
 // Stop!
