@@ -119,13 +119,13 @@ void Robot::TeleopPeriodic()
   IO.elevator.Set(-rightOpY);
   
   if (btnUpOp == true)  {
-    IO.elevator.setPosition(65);
+    IO.elevator.SetPosition(50);
   }
   if (btnDownOp == true)  {
-    IO.elevator.setPosition(35);
+    IO.elevator.SetPosition(35);
   }
   if (btnLeftOp == true)  {
-    IO.elevator.setPosition(5);
+    IO.elevator.SetPosition(5);
   }
   
   //Wrist
@@ -133,11 +133,11 @@ void Robot::TeleopPeriodic()
 
   if (rightBumpOp == true) 
   {
-    IO.wrist.setPosition(-30);
+    IO.wrist.SetAngle(10);
   }
   if (leftBumpOp == true) 
   {
-    IO.wrist.setPosition(30);
+    IO.wrist.SetAngle(90);
   }
 }
 

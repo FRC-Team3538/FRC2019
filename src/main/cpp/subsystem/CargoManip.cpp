@@ -14,7 +14,7 @@ void CargoManip::Stop()
     motor1.StopMotor();
 }
 
-//Positive Speed is intaking
+// Positive Speed is intaking
 void CargoManip::Set(double speed)
 {
     motor1.Set(speed);
@@ -22,5 +22,5 @@ void CargoManip::Set(double speed)
 
 void CargoManip::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("Cargo Manip 1", motor1.Get());
+    SmartDashboard::PutNumber("Cargo Manip CMD", motor1.Get());
 }

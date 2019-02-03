@@ -5,8 +5,9 @@
 #include <subsystem/Elevator.hpp>
 #include <subsystem/Wrist.hpp>
 #include <subsystem/CargoManip.hpp>
-#include <subsystem/CargoIntake.hpp>
 #include <subsystem/HatchManip.hpp>
+#include <subsystem/CargoIntake.hpp>
+#include <subsystem/FrontClimber.hpp>
 
 class robotmap
 {
@@ -16,6 +17,7 @@ class robotmap
     Elevator elevator;
     Wrist wrist;
     CargoManip cargoManip;
-    CargoIntake cargoIntake;
     HatchManip hatchManip;
+    CargoIntake cargoIntake;
+    FrontClimber frontClimber;
 };

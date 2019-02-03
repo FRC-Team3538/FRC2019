@@ -9,23 +9,21 @@
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
 
-class CargoIntake
+class FrontClimber
 {
   private:
     // Hardware setup
-    WPI_VictorSPX motor1 {11};
-    WPI_VictorSPX motor2 {12};
+    WPI_VictorSPX motor1 {13};
 
-    Solenoid SolenoidDeploy{4};
+    Solenoid SolenoidDeploy{5};
 
   public:
     // Default Constructor
-    CargoIntake();
+    FrontClimber();
 
     // Actions
     void Deploy();
     void Retract();
-    void SolenoidToggle();
 
     void Set(double speed);
     void Stop();

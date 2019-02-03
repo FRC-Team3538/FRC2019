@@ -1,9 +1,7 @@
 #pragma once
 
-#include <frc/VictorSP.h>
-#include <frc/SpeedControllerGroup.h>
 #include <frc/Solenoid.h>
-//#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
+#include <frc/DigitalInput.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
@@ -14,8 +12,10 @@ class CargoManip
 {
   private:
     // Hardware setup
-    WPI_VictorSPX motor1 {5};
-    WPI_VictorSPX motor2 {6};
+    WPI_VictorSPX motor1 {9};
+    WPI_VictorSPX motor2 {10};
+
+    DigitalInput LimitSwitch {4};
 
   public:
     // Default Constructor

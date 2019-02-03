@@ -4,48 +4,65 @@
 Wrist::Wrist()
 {
     motor1.SetInverted(false);
+
+    // TODO: Setup angle sensor
 }
 
+// Stop all motors
 void Wrist::Stop()
 {
     motor1.Set(0.0);
 }
 
-//Positive Speed is intaking
+// Positive speed is up
 void Wrist::Set(double speed)
 {
-    motor1.Set(speed);
+    double pos = GetAngle();
 
-    if (GetAngle() > 45.0 && speed > 0.0) {
+    if ((pos > kMax || GetSwitchUpper() ) && speed > 0.0) {
         motor1.Set(0.0);
     }
-    if (GetAngle() < (-45.0) && speed < 0.0) {
+    else if ((pos < kMin || GetSwitchLower() ) && speed < 0.0) {
         motor1.Set(0.0);
     } 
+    else
+    {
+        motor1.Set(speed);
+    }
+    
+    
 }
 
-bool Wrist::SetAngle(double angle)
+// Limit Switches
+bool Wrist::GetSwitchUpper()
 {
-    //motor1.Set(angle);
-    return false;
+    return LimitSwitchUpper.Get();
+}
+
+bool Wrist::GetSwitchLower()
+{
+    return LimitSwitchUpper.Get();
+}
+
+void Wrist::ResetAngle()
+{
+    // TODO
+}
+
+// Closed loop control
+void Wrist::SetAngle(double angle)
+{
+    // TODO
 }
 
 double Wrist::GetAngle()
 {
-    //return (pot.Get() + 50.0 )*(-1);
-    return 0;
-}
-
-void Wrist::setPosition(double pos)
-{
-    //double error = (pos - GetAngle());
-    //double kp = 0.05;
-
-    //Set(error * kp);
+    // TODO
+    return 0.0;
 }
 
 void Wrist::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("Wrist Angle", GetAngle());
     SmartDashboard::PutNumber("Wrist Motor", motor1.Get());
+    SmartDashboard::PutNumber("Wrist Angle", GetAngle());
 }

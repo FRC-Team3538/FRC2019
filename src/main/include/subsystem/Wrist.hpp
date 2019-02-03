@@ -1,5 +1,6 @@
 #pragma once
 
+#include <frc/DigitalInput.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
@@ -10,17 +11,28 @@ class Wrist
 {
   private:
     // Hardware setup
-    WPI_TalonSRX motor1 {4};
+    WPI_TalonSRX motor1 {8};
+
+    DigitalInput LimitSwitchLower {2};
+		DigitalInput LimitSwitchUpper {3};
+
+    // Soft Limits
+    const double kMin = 5;
+    const double kMax = -110;
 
   public:
     // Default Constructor
     Wrist();
-    // Actions
-    bool SetAngle(double angle);
-    double GetAngle();
-    void Set(double speed);
+
     void Stop();
-    void setPosition(double pos);
+    void Set(double speed);
+
+    bool GetSwitchUpper();
+    bool GetSwitchLower();
+
+    void ResetAngle();
+    double GetAngle();
+    void SetAngle(double angle);
 
     void UpdateSmartdash();
 };

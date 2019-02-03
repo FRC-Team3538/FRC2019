@@ -24,22 +24,23 @@ void CargoIntake::Stop()
     motor1.StopMotor();
 }
 
-//Positive Speed is intaking
+// Positive Speed is intaking
 void CargoIntake::Set(double speed)
 {
     motor1.Set(speed);
 }
 
 bool CargoIntake::SolenoidState(){
-    return deploy.Get();
+    return SolenoidDeploy.Get();
 }
 
 void CargoIntake::SolenoidToggle(){
     bool PCM2 = SolenoidState();
-    deploy.Set(!PCM2);
+    SolenoidDeploy.Set(!PCM2);
 }
+
 void CargoIntake::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("Cargo Intake 1", motor1.Get());
-    SmartDashboard::PutNumber("Cargo Intake Deploy", deploy.Get());
+    SmartDashboard::PutNumber("Cargo Intake CMD", motor1.Get());
+    SmartDashboard::PutNumber("Cargo Intake Sol", SolenoidDeploy.Get());
 }

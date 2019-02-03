@@ -13,6 +13,7 @@ using namespace ctre::phoenix::motorcontrol::can;
 class HatchManip
 {
   private:
+  
     // Hardware setup
     Solenoid clamp{2};
     Solenoid eject{3};

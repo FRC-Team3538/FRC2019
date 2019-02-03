@@ -3,31 +3,31 @@
 
 Drivebase::Drivebase()
 {
-    // Link motors together
+    // set default shifter state
+    solenoidShifter.Set(false);
 
     // Invert one side of the drive
     motorLeft1.SetInverted(false);
+    motorLeft2.SetInverted(false);
+    motorLeft3.SetInverted(false);
 
     motorRight1.SetInverted(true);
+    motorRight2.SetInverted(true);
+    motorRight3.SetInverted(true);
 
+    // master > slaves
     motorLeft2.Follow(motorLeft1);
     motorLeft3.Follow(motorLeft1);
 
     motorRight2.Follow(motorRight1);
     motorRight3.Follow(motorRight1);
 
-    // set default shifter state
-    solenoidShifter.Set(false);
+    // Encoder Feedback
+    motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
+    motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
 
-    motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
-    motorRight1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
-    motorRight1.ConfigVelocityMeasurementWindow(32, 0);
-    motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
-
-    motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
-    motorLeft1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
-    motorLeft1.ConfigVelocityMeasurementWindow(32, 0);
-    motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 3, 100);
+    motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
+    motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
 }
 
 // Arcade Drive
@@ -56,19 +56,44 @@ void Drivebase::SetLowGear()
     solenoidShifter.Set(false);
 }
 
+// Reset Encoders
+void Drivebase::ResetEncoders()
+{
+    motorLeft1.SetSelectedSensorPosition(0);
+    motorRight1.SetSelectedSensorPosition(0);
+}
+
+double Drivebase::GetEncoderPositionLeft()
+{
+    return motorLeft1.GetSensorCollection().GetQuadraturePosition() * kScaleFactor;
+}
+
+double Drivebase::GetEncoderPositionRight()
+{
+    return motorRight1.GetSensorCollection().GetQuadraturePosition() * kScaleFactor;
+}
+
+// Gyro
+void Drivebase::ResetGyro()
+{
+    navx.ZeroYaw();
+}
+
+double Drivebase::GetGyroHeading()
+{
+    return navx.GetFusedHeading();
+}
+
+// SmartDash updator
 void Drivebase::UpdateSmartdash()
 {
-    std::string moL = "DriveLeft";
-    std::string moR = "DriveRight";
+    SmartDashboard::PutNumber("DriveL", motorLeft1.Get());
+    SmartDashboard::PutNumber("DriveR", motorRight1.Get());
 
-    SmartDashboard::PutNumber(moL, motorLeft1.Get());
-    SmartDashboard::PutNumber(moR, motorRight1.Get());
+    SmartDashboard::PutNumber("DriveEncL", GetEncoderPositionRight());
+    SmartDashboard::PutNumber("DriveEncR", GetEncoderPositionRight());
 
-    SmartDashboard::PutNumber("EncVelL", motorLeft1.GetSensorCollection().GetQuadratureVelocity());
-    SmartDashboard::PutNumber("EncPosL", motorLeft1.GetSensorCollection().GetQuadraturePosition());
-    SmartDashboard::PutNumber("EncVelR", motorRight1.GetSensorCollection().GetQuadratureVelocity());
-    SmartDashboard::PutNumber("EncPosR", motorRight1.GetSensorCollection().GetQuadraturePosition());
+    SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
 
-    SmartDashboard::PutBoolean("High Gear", solenoidShifter.Get());
-    SmartDashboard::PutNumber("GyroFused", navx.GetFusedHeading());
+    SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
 }
