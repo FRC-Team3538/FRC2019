@@ -2,7 +2,6 @@
 
 #include <frc/DigitalInput.h>
 #include <frc/Solenoid.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
 using namespace frc;

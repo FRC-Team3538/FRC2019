@@ -1,7 +1,6 @@
 #pragma once
 
 #include <frc/Solenoid.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 

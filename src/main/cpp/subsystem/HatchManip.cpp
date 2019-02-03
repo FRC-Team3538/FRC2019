@@ -1,15 +1,18 @@
 #include "subsystem/HatchManip.hpp"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 // Configure Hardware Settings
 HatchManip::HatchManip()
 {
+    // Default State
     clamp.Set(false);
     eject.Set(false);
 }
 
-void HatchManip::Deploy()
+void HatchManip::Eject()
 {
-    clamp.Set(true);
+    eject.Set(true);
 }
 
 void HatchManip::Retract()
@@ -17,14 +20,17 @@ void HatchManip::Retract()
     eject.Set(false);
 }
 
-bool HatchManip::SolenoidState(){
-    return clamp.Get();
+void HatchManip::Clamp()
+{
+    eject.Set(true);
 }
 
-void HatchManip::SolenoidToggle(){
-    bool PCM2 = SolenoidState();
-    clamp.Set(!PCM2);
+void HatchManip::Unclamp()
+{
+    eject.Set(false);
 }
+
+
 void HatchManip::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("Hatch Clamp", clamp.Get());

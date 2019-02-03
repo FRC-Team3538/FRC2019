@@ -1,5 +1,7 @@
 #include "subsystem/CargoManip.hpp"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 // Configure Hardware Settings
 CargoManip::CargoManip()
 {

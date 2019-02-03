@@ -1,12 +1,14 @@
 #pragma once
 
-#include <frc/smartdashboard/SmartDashboard.h>
+#include <string>
+
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/livewindow/LiveWindow.h>
 #include <frc/XboxController.h>
 #include <cameraserver/CameraServer.h>
+
 #include "PS4Controller.hpp"
-#include <string>
+
 
 using namespace frc;
 
@@ -22,6 +24,7 @@ class DS
     cs::UsbCamera cam0 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 0", 0);
     cs::VideoSink server = CameraServer::GetInstance()->GetServer();
     cs::CvSink sink0;
+
     LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 
     SendableChooser<std::string> chooseController;

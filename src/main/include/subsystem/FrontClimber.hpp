@@ -1,9 +1,6 @@
 #pragma once
 
-#include <frc/SpeedControllerGroup.h>
 #include <frc/Solenoid.h>
-#include <frc/DigitalInput.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
 using namespace frc;
@@ -25,10 +22,8 @@ class FrontClimber
     void Deploy();
     void Retract();
 
-    void Set(double speed);
     void Stop();
-
-    bool SolenoidState();
+    void Set(double speed);
 
     void UpdateSmartdash();
 };

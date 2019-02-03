@@ -1,7 +1,10 @@
 #include "subsystem/Logging.hpp"
 
+#include <iostream>
+
 #include "frc/Timer.h"
 #include "frc/Preferences.h"
+
 
 Logging::Logging(string path, string filename)
 {
@@ -49,6 +52,9 @@ void Logging::Start()
 
     // Cannot add new columns once logging is started
     m_started = true;
+
+    // Make directory if it doesn't exist
+    // TODO
 
     // Lets open dat log file!
     m_file.open(m_path + m_filename);

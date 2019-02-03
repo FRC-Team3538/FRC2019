@@ -1,7 +1,6 @@
 #pragma once
 
 #include <frc/DigitalInput.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
 using namespace frc;
@@ -30,8 +29,8 @@ class Wrist
     bool GetSwitchUpper();
     bool GetSwitchLower();
 
-    void ResetAngle();
     double GetAngle();
+    void ResetAngle();
     void SetAngle(double angle);
 
     void UpdateSmartdash();

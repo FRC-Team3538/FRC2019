@@ -1,5 +1,7 @@
 #include "subsystem/FrontClimber.hpp"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 // Configure Hardware Settings
 FrontClimber::FrontClimber()
 {
@@ -7,11 +9,6 @@ FrontClimber::FrontClimber()
 }
 
 // Solenoid
-bool FrontClimber::SolenoidState()
-{
-    return SolenoidDeploy.Get();
-}
-
 void FrontClimber::Deploy()
 {
     SolenoidDeploy.Set(true);

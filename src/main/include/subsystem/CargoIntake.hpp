@@ -1,9 +1,6 @@
 #pragma once
 
-#include <frc/SpeedControllerGroup.h>
 #include <frc/Solenoid.h>
-#include <frc/DigitalInput.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 
 using namespace frc;

@@ -1,5 +1,7 @@
 #include "subsystem/Elevator.hpp"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 // Configure Hardware Settings
 Elevator::Elevator()
 {

@@ -1,14 +1,8 @@
 #pragma once
 
-#include <frc/VictorSP.h>
-#include <frc/SpeedControllerGroup.h>
 #include <frc/Solenoid.h>
-//#include <ctre/phoenix/MotorControl/CAN/WPI_VictorSPX.h>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <ctre/Phoenix.h>
 
 using namespace frc;
-using namespace ctre::phoenix::motorcontrol::can;
 
 class HatchManip
 {
@@ -23,11 +17,11 @@ class HatchManip
     HatchManip();
 
     // Actions
-    void Deploy();
+    void Eject();
     void Retract();
-    void SolenoidToggle();
 
-    bool SolenoidState();
+    void Clamp();
+    void Unclamp();
 
     void UpdateSmartdash();
 };
