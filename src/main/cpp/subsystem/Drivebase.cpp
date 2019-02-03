@@ -1,10 +1,11 @@
+#include <iostream>
 #include "subsystem/Drivebase.hpp"
 #include <frc/smartdashboard/SmartDashboard.h>
 
 Drivebase::Drivebase()
 {
     // Link motors together
-
+    
     // Invert one side of the drive
     DriveLeft.SetInverted(false);
 
@@ -22,11 +23,84 @@ Drivebase::Drivebase()
     motorLeft1.ConfigVelocityMeasurementPeriod(VelocityMeasPeriod::Period_25Ms, 0);
     motorLeft1.ConfigVelocityMeasurementWindow(32, 0);
     motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18, 100);
+
+    //Right SRX
+    /* lets grab the 360 degree position of the MagEncoder's absolute position */
+    int absolutePositionR1 = motorRight1.GetSelectedSensorPosition(0) & 0xFFF; /* mask out the bottom12 bits, we don't care about the wrap arounds */
+    /* use the low level API to set the quad encoder signal */
+    motorRight1.SetSelectedSensorPosition(absolutePositionR1, kPIDLoopIdx,kTimeoutMs);
+
+    /* choose the sensor and sensor direction */
+    motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx,kTimeoutMs);
+    motorRight1.SetSensorPhase(true);
+
+    /* set the peak and nominal outputs, 12V means full */
+    motorRight1.ConfigNominalOutputForward(0, kTimeoutMs);
+    motorRight1.ConfigNominalOutputReverse(0, kTimeoutMs);
+    motorRight1.ConfigPeakOutputForward(1, kTimeoutMs);
+    motorRight1.ConfigPeakOutputReverse(-1, kTimeoutMs);
+
+    /* set closed loop gains in slot0 */
+    motorRight1.Config_kF(kPIDLoopIdx, 0.0, kTimeoutMs);
+    motorRight1.Config_kP(kPIDLoopIdx, 0.2, kTimeoutMs);
+    motorRight1.Config_kI(kPIDLoopIdx, 0.0, kTimeoutMs);
+    motorRight1.Config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
+
+    //Left SRX
+        /* lets grab the 360 degree position of the MagEncoder's absolute position */
+    int absolutePositionL1 = motorLeft1.GetSelectedSensorPosition(0) & 0xFFF; /* mask out the bottom12 bits, we don't care about the wrap arounds */
+    /* use the low level API to set the quad encoder signal */
+    motorLeft1.SetSelectedSensorPosition(absolutePositionL1, kPIDLoopIdx,kTimeoutMs);
+
+    /* choose the sensor and sensor direction */
+    motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative, kPIDLoopIdx,kTimeoutMs);
+    motorLeft1.SetSensorPhase(true);
+
+    /* set the peak and nominal outputs, 12V means full */
+    motorLeft1.ConfigNominalOutputForward(0, kTimeoutMs);
+    motorLeft1.ConfigNominalOutputReverse(0, kTimeoutMs);
+    motorLeft1.ConfigPeakOutputForward(1, kTimeoutMs);
+    motorLeft1.ConfigPeakOutputReverse(-1, kTimeoutMs);
+
+    /* set closed loop gains in slot0 */
+    motorLeft1.Config_kF(kPIDLoopIdx, 0.0, kTimeoutMs);
+    motorLeft1.Config_kP(kPIDLoopIdx, 0.2, kTimeoutMs);
+    motorLeft1.Config_kI(kPIDLoopIdx, 0.0, kTimeoutMs);
+    motorLeft1.Config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
+
+    motorLeft2.Follow(motorLeft1);
+    motorLeft3.Follow(motorLeft1);
+    motorRight2.Follow(motorRight1);
+    motorRight3.Follow(motorRight1);
+
+}
+
+void Drivebase::SlaveMotors()
+{
+    motorRight1.Set(ControlMode::PercentOutput, 0.0);
+    motorRight2.Set(ControlMode::PercentOutput, 0.0);
+    motorRight3.Set(ControlMode::PercentOutput, 0.0);
+    motorRight1.Follow(motorLeft1);
+    motorRight2.Follow(motorLeft1);
+    motorRight3.Follow(motorLeft1);
+    slave = true;
+
+}
+
+void Drivebase::FreeSlaves()
+{
+    motorRight1.Set(ControlMode::PercentOutput, 0.0);
+    motorRight2.Set(ControlMode::PercentOutput, 0.0);
+    motorRight3.Set(ControlMode::PercentOutput, 0.0);
+    motorRight2.Follow(motorRight1);
+    motorRight3.Follow(motorRight1);
+    slave = false;
 }
 
 // Tanks Drive
 void Drivebase::Tank(double left, double right)
 {
+    
     DriveLeft.Set(left);
     DriveRight.Set(right);
 }
@@ -34,8 +108,16 @@ void Drivebase::Tank(double left, double right)
 // Arcade Drive
 void Drivebase::Arcade(double forward, double turn)
 {
+    //slave = false;
+    //SlaveMotors();
     DriveLeft.Set(forward - turn);
+
+    if(slave == false)
+    {
     DriveRight.Set(forward + turn);
+    }
+    
+    cout << "forward: " << forward << endl;
 }
 
 // Stop!
@@ -134,3 +216,11 @@ void Drivebase::ResetEnc(){
 double Drivebase::GetGyroAngle(){
     return navx.GetAngle();
 }
+
+//void Drivebase::drivePosition(double pos) 
+//{// 
+    //slave = true;
+    //SlaveMotors();
+//    pos = (pos / 48 / -1523.0 * 4.0); 
+//    motorLeft1.Set(ControlMode::Position, pos); 
+//} 

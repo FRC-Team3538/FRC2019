@@ -32,8 +32,8 @@ private:
   VictorSP motorRight2PWM{4};
   VictorSP motorRight3PWM{5};
 
-  SpeedControllerGroup DriveLeft{motorLeft1PWM, motorLeft2PWM, motorLeft3PWM, motorLeft1, motorLeft2, motorLeft3};
-  SpeedControllerGroup DriveRight{motorRight1PWM, motorRight2PWM, motorRight3PWM, motorRight1, motorRight2, motorRight3};
+  SpeedControllerGroup DriveLeft{motorLeft1PWM, motorLeft2PWM, motorLeft3PWM, motorLeft1};
+  SpeedControllerGroup DriveRight{motorRight1PWM, motorRight2PWM, motorRight3PWM, motorRight1};
 
   SpeedControllerGroup frontLeft{motorLeft1, motorLeft1PWM};
   SpeedControllerGroup frontRight{motorRight1, motorRight1PWM};
@@ -43,10 +43,32 @@ private:
 
   AHRS navx{SPI::Port::kMXP, 200};
 
+
+ 
+  
+
+  enum Constants {
+	/* Talon SRX/ Victor SPX will supported multiple (cascaded) PID loops.
+	 * For now we just want the primary one.
+	 */
+	kPIDLoopIdx = 0,
+
+	/*
+	 * set to zero to skip waiting for confirmation, set to nonzero to wait
+	 * and report to DS if action fails.
+	 */
+	kTimeoutMs = 30
+  };
+
+bool slave = false;
+
 public:
   // Default Constructor
   Drivebase();
 
+  void SlaveMotors();
+  void FreeSlaves();
+  
   // Actions
   void Tank(double left, double right);
   void Arcade(double forward, double rotate);
@@ -64,4 +86,6 @@ public:
   void ResetEnc();
 
   double GetGyroAngle();
+
+  //void drivePosition(double pos);
 };

@@ -174,12 +174,18 @@ void Robot::TeleopPeriodic()
 
   if (leftBumpDr)
   {
-    IO.drivebase.SetLowGear();
+    IO.drivebase.SlaveMotors();
+    //IO.drivebase.drivePosition(20);
+    //IO.elevator.setPosition(40);
+    //IO.drivebase.SetLowGear();
   }
 
   if (rightBumpDr)
   {
-    IO.drivebase.SetHighGear();
+    IO.drivebase.FreeSlaves();
+    //IO.drivebase.drivePosition(-20);
+    //IO.elevator.setPosition (10);
+    //IO.drivebase.SetHighGear();
   }
 
   IO.intake.Set(leftTrigDr + rightTrigDr + leftTrigOp + rightTrigOp);
