@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <frc/liveWindow/LiveWindow.h>
-#include <frc/smartDashboard/SmartDashboard.h>
+#include <frc/livewindow/LiveWindow.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include "auto/AutoPrograms.hpp"
 #include <string>
 #include "robotmap.hpp"

@@ -1,5 +1,5 @@
 #include "subsystem/Drivebase.hpp"
-#include <frc/smartDashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 Drivebase::Drivebase()
 {

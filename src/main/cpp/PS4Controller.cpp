@@ -7,7 +7,7 @@
 
 #include "PS4Controller.hpp"
 
-#include <HAL/HAL.h>
+#include <hal/HAL.h>
 #include "frc/DriverStation.h"
 
 using namespace frc;

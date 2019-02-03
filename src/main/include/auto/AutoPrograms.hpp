@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <frc/smartDashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "robotmap.hpp"
 #include "auto/AutoInterface.hpp"

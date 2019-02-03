@@ -6,7 +6,7 @@
 #include <frc/XboxController.h>
 #include <cameraserver/CameraServer.h>
 #include "PS4Controller.hpp"
-#include <String>
+#include <string>
 
 using namespace frc;
 
