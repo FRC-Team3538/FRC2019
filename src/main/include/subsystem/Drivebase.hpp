@@ -60,14 +60,11 @@ private:
 	kTimeoutMs = 30
   };
 
-bool slave = false;
+bool slave = true;
 
 public:
   // Default Constructor
   Drivebase();
-
-  void SlaveMotors();
-  void FreeSlaves();
   
   // Actions
   void Tank(double left, double right);
@@ -87,5 +84,4 @@ public:
 
   double GetGyroAngle();
 
-  //void drivePosition(double pos);
 };

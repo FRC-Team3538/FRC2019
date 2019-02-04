@@ -160,7 +160,7 @@ void Robot::TeleopPeriodic()
   switch (driveMode)
   {
   case driveModes::ARCADE:
-    IO.drivebase.Arcade(forward, rotate);
+    IO.drivebase.Arcade(-forward, rotate);
     break;
 
   case driveModes::TANKYTANK:
@@ -174,16 +174,12 @@ void Robot::TeleopPeriodic()
 
   if (leftBumpDr)
   {
-    IO.drivebase.SlaveMotors();
-    //IO.drivebase.drivePosition(20);
     //IO.elevator.setPosition(40);
     //IO.drivebase.SetLowGear();
   }
 
   if (rightBumpDr)
   {
-    IO.drivebase.FreeSlaves();
-    //IO.drivebase.drivePosition(-20);
     //IO.elevator.setPosition (10);
     //IO.drivebase.SetHighGear();
   }
