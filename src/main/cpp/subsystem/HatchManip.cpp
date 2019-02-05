@@ -22,12 +22,12 @@ void HatchManip::Retract()
 
 void HatchManip::Clamp()
 {
-    eject.Set(true);
+    clamp.Set(true);
 }
 
 void HatchManip::Unclamp()
 {
-    eject.Set(false);
+    clamp.Set(false);
 }
 
 

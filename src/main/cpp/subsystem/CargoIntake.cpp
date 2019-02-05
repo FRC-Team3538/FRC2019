@@ -13,12 +13,12 @@ CargoIntake::CargoIntake()
 
 void CargoIntake::Deploy()
 {
-    //deployeploy.Set(true);
+    SolenoidDeploy.Set(true);
 }
 
 void CargoIntake::Retract()
 {
-    //deploy.Set(false);
+    SolenoidDeploy.Set(false);
 }
 
 void CargoIntake::Stop()

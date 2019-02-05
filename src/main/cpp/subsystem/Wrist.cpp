@@ -6,7 +6,7 @@
 Wrist::Wrist()
 {
     motor1.SetInverted(false);
-
+    motor1.ConfigPeakCurrentLimit(5);
     // TODO: Setup angle sensor
 }
 
@@ -19,7 +19,7 @@ void Wrist::Stop()
 // Positive speed is up
 void Wrist::Set(double speed)
 {
-    double pos = GetAngle();
+    /*double pos = GetAngle();
 
     if ((pos > kMax || GetSwitchUpper() ) && speed > 0.0) {
         motor1.Set(0.0);
@@ -30,8 +30,8 @@ void Wrist::Set(double speed)
     else
     {
         motor1.Set(speed);
-    }
-    
+    }*/
+    motor1.Set(speed);
     
 }
 

@@ -89,8 +89,8 @@ void Robot::TeleopPeriodic()
     btnUpOp = IO.ds.OperatorXB.GetYButton();
     btnRightOp = IO.ds.OperatorXB.GetBButton();
     btnLeftOp = IO.ds.OperatorXB.GetXButton();
-    rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
-    wristStick = IO.ds.OperatorXB.GetX(GenericHID::kLeftHand);
+    wristStick = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
+    rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kLeftHand);
   };
 
   double OpIntakeCommand = (rightTrigOp - leftTrigOp);
@@ -115,10 +115,10 @@ void Robot::TeleopPeriodic()
     IO.drivebase.SetHighGear();
   }
 
-  //Elevator
-  IO.elevator.Set(-rightOpY);
+  //Elevator                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+  IO.elevator.Set(rightOpY);
   
-  if (btnUpOp == true)  {
+  /*if (btnUpOp == true)  {
     IO.elevator.SetPosition(50);
   }
   if (btnDownOp == true)  {
@@ -126,21 +126,42 @@ void Robot::TeleopPeriodic()
   }
   if (btnLeftOp == true)  {
     IO.elevator.SetPosition(5);
-  }
+  }*/
   
   //Wrist
-  IO.wrist.Set(wristStick);
+  IO.wrist.Set(-wristStick);
 
-  if (rightBumpOp == true) 
+  /*if (rightBumpOp == true) 
   {
     IO.wrist.SetAngle(10);
   }
   if (leftBumpOp == true) 
   {
     IO.wrist.SetAngle(90);
-  }
-}
+  }*/
 
+  //Cargo Manip
+  IO.cargoManip.Set(rightTrigOp);
+  IO.cargoManip.Set(-leftTrigOp);
+
+  //Cargo Intake
+  //IO.cargoIntake.Set();
+
+  //Hatch Manip
+  if (btnUpOp) {
+    IO.hatchManip.Clamp();
+  }
+  if (btnRightOp) {
+    IO.hatchManip.Unclamp();
+  }
+  if (btnLeftOp) {
+    IO.hatchManip.Eject();
+  }
+  if (btnDownOp) {
+    IO.hatchManip.Retract();
+  }
+
+}
 void Robot::TestPeriodic() {}
 
 double Robot::Deadband(double input, double deadband)

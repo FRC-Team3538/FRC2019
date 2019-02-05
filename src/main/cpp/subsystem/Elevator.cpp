@@ -53,9 +53,10 @@ void Elevator::Stop()
 // Positive Speed is Up
 void Elevator::Set(double speed)
 {
-    double pos = GetDistance();
+    motor1.Set(speed);
+    /*double pos = GetDistance();
 
-    if ((GetSwitchUpper() || pos > kMax) && speed > 0.0) 
+    /if ((GetSwitchUpper() || pos > kMax) && speed > 0.0) 
     {
         motor1.Set(0.0);
     } 
@@ -68,7 +69,7 @@ void Elevator::Set(double speed)
     else 
     {
         motor1.Set(speed);
-    }
+    }*/
 }
 
 // Limit Switches
