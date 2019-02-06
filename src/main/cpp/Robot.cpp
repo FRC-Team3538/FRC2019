@@ -234,8 +234,14 @@ void Robot::UpdateSD()
 bool Robot::AutoTarget(bool Go){
   double error = vision.Run();
 
-  if(Go)
-  IO.drivebase.Arcade(0, error);
+  if(Go){
+    if(error == -1){
+      IO.drivebase.Arcade(0, 0);
+    }
+    else{
+      IO.drivebase.Arcade(-0.15, error);
+    }
+  }
   if(abs(error) < 0.05){
     return true;
   }

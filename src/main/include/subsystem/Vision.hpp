@@ -46,6 +46,8 @@ class Vision
     double vectorAngle(Vec4f vector);
     //double contourAngle(std::vector<cv::Point> contour); //Degrees
 
+    double prevError = 0;
+
     struct contourData{
       double x, angle;
       int numero;

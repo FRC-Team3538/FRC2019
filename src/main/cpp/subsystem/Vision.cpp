@@ -61,9 +61,6 @@ double Vision::Run()
 			}
 			contourNum++;
 		}
-		if(contourDataVector.size() > 0){
-		cout << "ANGLE2" << contourDataVector[1].angle << endl;
-		}
 		// for(auto hull : hulls){
 		// 	cout << "------->HULL SIZE<------- :" << hull.size() << endl;
 		// }
@@ -84,15 +81,11 @@ double Vision::Run()
 			}
 
 			bool centerContourLeft = (contourDataVector[centerContour].angle > 90.0);
-			string test = centerContourLeft ? "YEEEEt" : "AntiYeet";
-			cout << "akhg;ajg;eal " << contourDataVector[centerContour].angle << endl;
-			cout << test << endl;
-			cout << centerContourLeft << endl;
 			for (int i = 0; i < contourDataVector.size(); i++)
 			{
 				if (centerContourLeft)
 				{
-					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x > contourDataVector[centerContour].x) && (contourDataVector[i].angle < 90))
+					if ((centerContourPair == -1) && (i != centerContour) && (contourDataVector[i].x > contourDataVector[centerContour].x) && (contourDataVector[i].angle < 90))
 					{
 						centerContourPair = i;
 					}
@@ -103,7 +96,7 @@ double Vision::Run()
 				}
 				else if (!centerContourLeft)
 				{
-					if ((i == 0) && (i != centerContour) && (contourDataVector[i].x < contourDataVector[centerContour].x) && (contourDataVector[i].angle > 90))
+					if ((centerContourPair == -1) && (i != centerContour) && (contourDataVector[i].x < contourDataVector[centerContour].x) && (contourDataVector[i].angle > 90))
 					{
 						centerContourPair = i;
 					}
@@ -113,7 +106,6 @@ double Vision::Run()
 					}
 				}
 			}
-			cout << "bahhhhhhhhhhh " << contourDataVector[centerContourPair].angle << endl;
 		}
 		//fitLine(singleContour(*VP.GetFilterContoursOutput(), 1), line2, CV_DIST_L2, 0, 0.01, 0.01);
 		// DrawLine(line, *VP.GetHslThresholdOutput());
@@ -122,17 +114,17 @@ double Vision::Run()
 		cout << "SIZE" << contourDataVector.size() << endl;
 		if (centerContour > -1)
 		{
-			cout << "Reet " << contourDataVector[centerContour].numero << endl;
 			drawContours(source, hulls, contourDataVector[centerContour].numero, Scalar(148, 148, 0), 2);
 		}
-		//cout << "OwoOwo" << contourDataVector[centerContourPair].numero << endl;
 		if (centerContourPair > -1)
 		{
-			cout << "NYEEEEEEEEEEEEEEEEE" << contourDataVector[centerContourPair].numero << endl;
 			drawContours(source, hulls, contourDataVector[centerContourPair].numero, Scalar(148, 148, 0), 2);
 		}
 		cv::Point position;
+		double distance;
+
 		if(centerContour > -1 && centerContourPair > -1){
+			distance = (contourDataVector[centerContourPair].x - contourDataVector[centerContour].x);
 			position.x = (contourDataVector[centerContourPair].x + contourDataVector[centerContour].x) / 2;
 			position.y = (centers[contourDataVector[centerContourPair].numero].y + centers[contourDataVector[centerContourPair].numero].y) / 2;
 			drawMarker(source, position, Scalar(255, 255, 255), 1, 10, 2);
@@ -170,13 +162,19 @@ double Vision::Run()
 		// 	cout << "F: " << time.Get() << endl;
 		// 	return error;
 		// }
-		cout << "Before Error" << position.x << endl;
-		if ((position.x > 0))
+		if(abs(distance) > 70){
+			return -1;
+		}
+		else if ((position.x > 0))
 		{
-			double error = (position.x - 80.0) / 80.0;
+			const double kD = 0.0001;
+			const double kP = 0.007; 
+			double error = (position.x - 80.0);
+			double deltaError = (error - prevError) / 0.02;
+			prevError = error;
+			double cmd = error * kP + deltaError * kD;
 			cout << "F: " << time.Get() << endl;
-			cout << "BLYATTTTTT" << error << endl;
-			return error;
+			return cmd;
 		}
 	}
 
