@@ -7,6 +7,8 @@ Wrist::Wrist()
 {
     motor1.SetInverted(false);
     motor1.ConfigPeakCurrentLimit(5);
+    motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
+    motor1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
     // TODO: Setup angle sensor
 }
 
@@ -48,19 +50,21 @@ bool Wrist::GetSwitchLower()
 
 void Wrist::ResetAngle()
 {
-    // TODO
+    motor1.SetSelectedSensorPosition(0);
 }
 
 // Closed loop control
 void Wrist::SetAngle(double angle)
 {
-    // TODO
+    //TODO
 }
 
 double Wrist::GetAngle()
 {
-    // TODO
-    return 0.0;
+    return motor1.GetSensorCollection().GetQuadraturePosition();
+    // double rots = motor1.GetSensorCollection().GetQuadraturePosition() / kScale;
+    // double deg = rots * 360.0;
+    // return deg;
 }
 
 void Wrist::UpdateSmartdash()

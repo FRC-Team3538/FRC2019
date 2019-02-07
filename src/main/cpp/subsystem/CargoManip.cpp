@@ -6,7 +6,7 @@
 CargoManip::CargoManip()
 {
     motor1.SetInverted(false);
-    motor2.SetInverted(false);
+    motor2.SetInverted(true);
 
     motor2.Follow(motor1);
 }
@@ -14,12 +14,14 @@ CargoManip::CargoManip()
 void CargoManip::Stop()
 {
     motor1.StopMotor();
+    motor2.StopMotor();
 }
 
 // Positive Speed is intaking
 void CargoManip::Set(double speed)
 {
     motor1.Set(speed);
+    motor2.Set(speed);
 }
 
 void CargoManip::UpdateSmartdash()

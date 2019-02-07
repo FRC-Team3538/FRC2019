@@ -63,44 +63,21 @@ void Robot::TeleopPeriodic()
   bool btnUpOp = IO.ds.OperatorPS.GetTriangleButton();
   bool btnRightOp = IO.ds.OperatorPS.GetCircleButton();
   bool btnLeftOp = IO.ds.OperatorPS.GetSquareButton();
-  double rightOpY = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
-  double wristStick = IO.ds.OperatorPS.GetX(GenericHID::kLeftHand);
-
-  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
-  {
-    forward = IO.ds.DriverXB.GetY(GenericHID::kLeftHand);
-    rotate = IO.ds.DriverXB.GetX(GenericHID::kRightHand);
-    strafe = IO.ds.DriverXB.GetX(GenericHID::kLeftHand);
-    forwardR = IO.ds.DriverXB.GetY(GenericHID::kRightHand);
-    leftTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kLeftHand);
-    rightTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
-    leftBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kLeftHand);
-    rightBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kRightHand);
-    btnDownDr = IO.ds.DriverXB.GetAButton();
-    btnUpDr = IO.ds.DriverXB.GetYButton();
-    btnRightDr = IO.ds.DriverXB.GetBButton();
-    btnLeftDr = IO.ds.DriverXB.GetXButton();
-
-    leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
-    rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
-    leftBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
-    rightBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
-    btnDownOp = IO.ds.OperatorXB.GetAButton();
-    btnUpOp = IO.ds.OperatorXB.GetYButton();
-    btnRightOp = IO.ds.OperatorXB.GetBButton();
-    btnLeftOp = IO.ds.OperatorXB.GetXButton();
-    wristStick = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
-    rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kLeftHand);
-  };
+  double leftOpY = IO.ds.OperatorPS.GetY(GenericHID::kLeftHand);
+  double wristStick = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
 
   double OpIntakeCommand = (rightTrigOp - leftTrigOp);
 
   //Deadbands
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
-  rightOpY = Deadband(rightOpY, deadband);
+  leftOpY = Deadband(leftOpY, deadband);
   wristStick = Deadband(wristStick, deadband);
-  OpIntakeCommand = Deadband(OpIntakeCommand, deadband) * 0.7;
+  OpIntakeCommand = Deadband(OpIntakeCommand, deadband);
+
+  //Scaling
+  OpIntakeCommand *= 0.7;
+  leftOpY *= -1;
 
   //Drive
   IO.drivebase.Arcade(forward, rotate);
@@ -115,9 +92,9 @@ void Robot::TeleopPeriodic()
     IO.drivebase.SetHighGear();
   }
 
-  //Elevator                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-  IO.elevator.Set(rightOpY);
-  
+  //Elevator
+  IO.elevator.Set(leftOpY);
+
   /*if (btnUpOp == true)  {
     IO.elevator.SetPosition(50);
   }
@@ -127,22 +104,21 @@ void Robot::TeleopPeriodic()
   if (btnLeftOp == true)  {
     IO.elevator.SetPosition(5);
   }*/
-  
+
   //Wrist
   IO.wrist.Set(-wristStick);
 
-  /*if (rightBumpOp == true) 
+  if (rightBumpOp) 
   {
-    IO.wrist.SetAngle(10);
+    IO.wrist.SetAngle(0);
   }
-  if (leftBumpOp == true) 
-  {
-    IO.wrist.SetAngle(90);
-  }*/
+  // if (leftBumpOp == true) 
+  // {
+  //   IO.wrist.SetAngle(90);
+  // }
 
   //Cargo Manip
-  IO.cargoManip.Set(rightTrigOp);
-  IO.cargoManip.Set(-leftTrigOp);
+  IO.cargoManip.Set(OpIntakeCommand);
 
   //Cargo Intake
   //IO.cargoIntake.Set();
@@ -160,7 +136,6 @@ void Robot::TeleopPeriodic()
   if (btnDownOp) {
     IO.hatchManip.Retract();
   }
-
 }
 void Robot::TestPeriodic() {}
 
@@ -178,13 +153,13 @@ double Robot::Deadband(double input, double deadband)
 
 void Robot::UpdateSD()
 {
-  std::string dm = "DriveMode";
 
   IO.drivebase.UpdateSmartdash();
   IO.elevator.UpdateSmartdash();
   IO.wrist.UpdateSmartdash();
   autoPrograms.SmartDash();
   IO.ds.SmartDash();
+  SmartDashboard::PutNumber("ANGLE", IO.wrist.GetAngle());
 }
 
 #ifndef RUNNING_FRC_TESTS

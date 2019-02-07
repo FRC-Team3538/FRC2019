@@ -18,6 +18,7 @@ class Wrist
     // Soft Limits
     const double kMin = 5;
     const double kMax = -110;
+    const double kScale = 4096.0;
 
   public:
     // Default Constructor

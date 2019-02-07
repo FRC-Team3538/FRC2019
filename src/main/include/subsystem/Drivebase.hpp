@@ -3,6 +3,7 @@
 #include <frc/Solenoid.h>
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
+#include <iostream>
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace frc;
