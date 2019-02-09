@@ -21,6 +21,7 @@ class FrontClimber
     // Actions
     void Deploy();
     void Retract();
+    bool isDeployed();
 
     void Stop();
     void Set(double speed);

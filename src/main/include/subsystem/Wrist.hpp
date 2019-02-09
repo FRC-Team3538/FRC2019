@@ -20,6 +20,9 @@ class Wrist
     const double kMax = -110;
     const double kScale = 4096.0;
 
+    double targetAngle = 0;
+    bool sensorOverride = false;
+
   public:
     // Default Constructor
     Wrist();
@@ -29,6 +32,9 @@ class Wrist
 
     bool GetSwitchUpper();
     bool GetSwitchLower();
+
+    void ActivateSensorOverride();
+    void DeactivateSensorOverride();
 
     double GetAngle();
     void ResetAngle();

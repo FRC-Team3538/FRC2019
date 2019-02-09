@@ -26,6 +26,9 @@ class Elevator
     const double kMin = 5.0;
     const double kMax = 50.0;
 
+    double targetPos = 0;
+    bool sensorOverride = false;
+
   public:
     // Default Constructor
     Elevator();
@@ -36,6 +39,12 @@ class Elevator
 
     bool GetSwitchUpper();
     bool GetSwitchLower();
+
+    void ActivateSensorOverride();
+    void DeactivateSensorOverride();
+
+    void ActivateGantry();
+    void DeactivateGantry();
 
     void ResetEnc();
     double GetDistance();
