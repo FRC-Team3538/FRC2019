@@ -13,6 +13,7 @@
 
 void Robot::RobotInit()
 {
+  IO.wrist.ResetAngle();
 }
 
 /**
@@ -159,11 +160,11 @@ void Robot::TeleopPeriodic()
   */
 
   //Wrist
-  IO.wrist.Set(-wristStick);
+  IO.wrist.SetSpeed(-wristStick);
 
-  /*
-  if (rightBumpOp) {
-    IO.wrist.SetAngle(0);
+  if (rightBumpOp)
+  {
+    IO.wrist.ResetAngle();
   }
   if (leftBumpOp == true) {
      IO.wrist.SetAngle(90);
@@ -196,56 +197,6 @@ void Robot::TeleopPeriodic()
   }
   if (btnYTriangleOp) {
     IO.hatchManip.Retract();
-  }
-
-  //Front Climber
-  if (btnXSquareDr) {
-    IO.frontClimber.Deploy();
-    IO.elevator.ActivateGantry();
-  }
-  if (btnYTriangleDr) {
-    IO.frontClimber.Retract();
-    IO.elevator.DeactivateGantry();
-  }
-  if (IO.frontClimber.isDeployed() == true) {
-    IO.frontClimber.Set(forward);
-  } 
-
-  //Sensor Override
-  if (btnStartDr == true || btnStartOp == true){
-    IO.elevator.ActivateSensorOverride();
-    IO.wrist.ActivateSensorOverride();
-  }
-  if (btnBackDr == true || btnBackOp == true) {
-    IO.elevator.DeactivateSensorOverride();
-    IO.wrist.DeactivateSensorOverride();
-  }
-
-  //Presets
-  if (hatchPresets == true){
-    if (btnUpOp == true) {
-        IO.elevator.SetPosition(100); //high rocket
-    }
-    if (btnDownOp == true) {
-        IO.elevator.SetPosition(50); //middle rocket
-    }
-    if (btnRightOp == true) {
-        IO.elevator.SetPosition(25); //cargo ship and low rocket
-    }
-  }
-  else {
-    if (btnUpOp == true) {
-        IO.elevator.SetPosition(100); //high rocket
-    }
-    if (btnDownOp == true) {
-        IO.elevator.SetPosition(50); //middle rocket
-    }
-    if (btnRightOp == true) {
-        IO.elevator.SetPosition(25); //low rocket
-    }
-    if (btnLeftOp == true) {
-        IO.elevator.SetPosition(40); //cargo ship
-    }
   }
 }
 void Robot::TestPeriodic() {}
