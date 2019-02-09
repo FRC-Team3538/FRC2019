@@ -65,7 +65,7 @@ void Robot::TeleopPeriodic()
   double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand);
   double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
   double leftOpY = IO.ds.OperatorPS.GetY(GenericHID::kLeftHand);
-  double wristStick = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
+  double rightOpY = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
   bool leftBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kLeftHand);
   bool rightBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kRightHand);
   bool btnACrossOp = IO.ds.OperatorPS.GetCrossButton();
@@ -103,7 +103,7 @@ void Robot::TeleopPeriodic()
       leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
       rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
       leftOpY = IO.ds.OperatorXB.GetY(GenericHID::kLeftHand);
-      wristStick = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
+      rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
       leftBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
       rightBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
       btnYTriangleOp = IO.ds.OperatorXB.GetYButton();
@@ -124,7 +124,7 @@ void Robot::TeleopPeriodic()
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
   leftOpY = Deadband(leftOpY, deadband);
-  wristStick = Deadband(wristStick, deadband);
+  rightOpY = Deadband(rightOpY, deadband);
   OpIntakeCommand = Deadband(OpIntakeCommand, deadband);
 
   //Scaling
@@ -147,20 +147,8 @@ void Robot::TeleopPeriodic()
   //Elevator
   IO.elevator.Set(leftOpY);
 
-  /*
-  if (btnTriangleOp == true)  {
-    IO.elevator.SetPosition(50);
-  }
-  if (btnCrossOp == true)  {
-    IO.elevator.SetPosition(35);
-  }
-  if (btnSquareOp == true)  {
-    IO.elevator.SetPosition(5);
-  }
-  */
-
   //Wrist
-  IO.wrist.SetSpeed(-wristStick);
+  IO.wrist.SetSpeed(-rightOpY);
 
   if (rightBumpOp)
   {
