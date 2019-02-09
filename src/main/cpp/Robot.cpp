@@ -82,8 +82,18 @@ void Robot::TeleopPeriodic()
   rotate *= 0.8;
 
   //Drive
-  IO.drivebase.Arcade(forward, rotate);
-
+  if (btnUpDr)
+  {
+    IO.drivebase.DriveForward(24);
+  }
+  else if (btnDownDr)
+  {
+    IO.drivebase.DriveForward(0);
+  }
+  else{
+    IO.drivebase.Arcade(forward, rotate);
+  }
+  
   if (leftBumpDr)
   {
     IO.drivebase.SetLowGear();
@@ -118,6 +128,7 @@ void Robot::TeleopPeriodic()
   {
     IO.drivebase.ResetEncoders();
   }
+
   // if (leftBumpOp == true)
   // {
   //   IO.wrist.SetAngle(90);

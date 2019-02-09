@@ -103,8 +103,8 @@ void Wrist::UpdateSmartdash()
     SmartDashboard::PutNumber("Wrist Angle", GetAngle());
 
     
-    SmartDashboard::PutNumber("TARGET", motor1.GetClosedLoopTarget());
-    SmartDashboard::PutNumber("ERROR", motor1.GetClosedLoopError());
-    SmartDashboard::PutNumber("POS", motor1.GetSelectedSensorPosition());
+    // SmartDashboard::PutNumber("TARGET", motor1.GetClosedLoopTarget());
+    // SmartDashboard::PutNumber("ERROR", motor1.GetClosedLoopError());
+    // SmartDashboard::PutNumber("POS", motor1.GetSelectedSensorPosition());
 
 }
