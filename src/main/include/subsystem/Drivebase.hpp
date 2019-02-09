@@ -25,7 +25,7 @@ private:
   AHRS navx{SPI::Port::kMXP, 200};
 
   // Encoder Scale Factor (Inches)/(Pulse)
-  const double kScaleFactor = (1.0)/(1.0);
+  const double kScaleFactor = (1.0/4096.0) * 6 * 3.1415;
 
 public:
   // Default Constructor

@@ -43,8 +43,8 @@ void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic()
 {
-  double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand);
-  double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand);
+  double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand) * -1;
+  double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand) * -1;
   double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand);
   double forwardR = IO.ds.DriverPS.GetY(GenericHID::kRightHand);
   double leftTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kLeftHand);
@@ -79,6 +79,7 @@ void Robot::TeleopPeriodic()
   //Scaling
   OpIntakeCommand *= 0.7;
   leftOpY *= -1;
+  rotate *= 0.8;
 
   //Drive
   IO.drivebase.Arcade(forward, rotate);
@@ -113,7 +114,11 @@ void Robot::TeleopPeriodic()
   {
     IO.wrist.ResetAngle();
   }
-  // if (leftBumpOp == true) 
+  if (btnRightDr)
+  {
+    IO.drivebase.ResetEncoders();
+  }
+  // if (leftBumpOp == true)
   // {
   //   IO.wrist.SetAngle(90);
   // }
@@ -125,19 +130,22 @@ void Robot::TeleopPeriodic()
   //IO.cargoIntake.Set();
 
   //Hatch Manip
-  if (btnUpOp) {
+  if (btnUpOp)
+  {
     IO.hatchManip.Clamp();
   }
-  if (btnRightOp) {
+  if (btnRightOp)
+  {
     IO.hatchManip.Unclamp();
   }
-  if (btnLeftOp) {
+  if (btnLeftOp)
+  {
     IO.hatchManip.Eject();
   }
-  if (btnDownOp) {
+  if (btnDownOp)
+  {
     IO.hatchManip.Retract();
   }
-
 }
 void Robot::TestPeriodic() {}
 
