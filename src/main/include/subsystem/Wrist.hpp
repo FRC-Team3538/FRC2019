@@ -18,14 +18,17 @@ class Wrist
     // Soft Limits
     const double kMin = 5;
     const double kMax = -110;
-    const double kScale = 4096.0;
+    const double kScale = (1.0/4096.0) * 360.0 * (1.0/2.0);
+
+    double prevError = 0;
 
   public:
+    double wristPosTarget;
     // Default Constructor
     Wrist();
 
     void Stop();
-    void Set(double speed);
+    void SetSpeed(double speed);
 
     bool GetSwitchUpper();
     bool GetSwitchLower();
@@ -35,4 +38,6 @@ class Wrist
     void SetAngle(double angle);
 
     void UpdateSmartdash();
+
+    bool oneShot = false;
 };

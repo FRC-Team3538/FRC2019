@@ -34,7 +34,6 @@ Drivebase::Drivebase()
 // Arcade Drive
 void Drivebase::Arcade(double forward, double turn)
 {
-    std::cout << "FORWARD!!!" << forward << std::endl;
     motorLeft1.Set(forward - turn);
     motorRight1.Set(forward + turn);
 }

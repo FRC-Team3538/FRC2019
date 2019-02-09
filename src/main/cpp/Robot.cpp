@@ -13,6 +13,7 @@
 
 void Robot::RobotInit()
 {
+  IO.wrist.ResetAngle();
 }
 
 /**
@@ -106,11 +107,11 @@ void Robot::TeleopPeriodic()
   }*/
 
   //Wrist
-  IO.wrist.Set(-wristStick);
+  IO.wrist.SetSpeed(-wristStick);
 
-  if (rightBumpOp) 
+  if (rightBumpOp)
   {
-    IO.wrist.SetAngle(0);
+    IO.wrist.ResetAngle();
   }
   // if (leftBumpOp == true) 
   // {
@@ -136,6 +137,7 @@ void Robot::TeleopPeriodic()
   if (btnDownOp) {
     IO.hatchManip.Retract();
   }
+
 }
 void Robot::TestPeriodic() {}
 
