@@ -82,7 +82,6 @@ void Wrist::SetAngle(double angle)
     wristPosTarget = angle / kScale;
     //double currentAngle = GetAngle();
     motor1.Set(ControlMode::Position, wristPosTarget);
-    targetAngle = angle;
 }
                                                                  
 double Wrist::GetAngle()
@@ -109,4 +108,6 @@ void Wrist::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("Wrist Motor", motor1.Get());
     SmartDashboard::PutNumber("Wrist Angle", GetAngle());
+    SmartDashboard::PutNumber("Wrist Angle Target", wristPosTarget);
+    SmartDashboard::PutBoolean("Wrist Sensor Override", sensorOverride);
 }
