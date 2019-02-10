@@ -43,8 +43,8 @@ void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic()
 {
-  double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand);
-  double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand);
+  double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand) * -1;
+  double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand) * -1;
   double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand);
   double forwardR = IO.ds.DriverPS.GetY(GenericHID::kRightHand);
   double leftTrigDr = IO.ds.DriverPS.GetTriggerAxis(GenericHID::kLeftHand);
@@ -130,10 +130,56 @@ void Robot::TeleopPeriodic()
   //Scaling
   OpIntakeCommand *= 0.7;
   leftOpY *= -1;
+  rotate *= 0.8;
 
   //Drive
-  IO.drivebase.Arcade(forward, rotate);
 
+  // if (btnUpDr)
+  // {
+  //   IO.drivebase.DriveForward(96);
+  // }
+  // else if (btnDownDr)
+  // {
+  //   IO.drivebase.DriveForward(0);
+  // }
+  // else{
+  //   IO.drivebase.Arcade(forward, rotate);
+  // }
+if(forward != 0 || rotate != 0){
+  IO.drivebase.Arcade(forward, rotate);
+}
+else if(btnUpDr || btnDownDr || btnRightDr || btnLeftDr){
+  if((btnUpDr||btnDownDr) && !forwardOneShot){
+    IO.drivebase.ResetEncoders();
+    forwardOneShot = true;
+  }
+  else if(btnUpDr){
+    IO.drivebase.DriveForward(12);
+  }
+  else if(btnDownDr){
+    IO.drivebase.DriveForward(-12);
+  }
+  else{
+    forwardOneShot = false;
+  }
+
+  if((btnRightDr||btnLeftDr) && !turnOneShot){
+    IO.drivebase.ResetEncoders();
+    turnOneShot = true;
+  }
+  else if(btnLeftDr){
+    IO.drivebase.Turn(45);
+  }
+  else if(btnRightDr){
+    IO.drivebase.Turn(-45);
+  }
+  else{
+    turnOneShot = false;
+  }
+}
+else{
+  IO.drivebase.Arcade(0, 0);
+}
   if (leftBumpDr)
   {
     IO.drivebase.SetLowGear();
