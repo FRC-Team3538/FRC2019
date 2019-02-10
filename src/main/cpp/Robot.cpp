@@ -67,6 +67,11 @@ void Robot::TeleopPeriodic()
   double leftOpY = IO.ds.OperatorPS.GetY(GenericHID::kLeftHand);
   double wristStick = IO.ds.OperatorPS.GetY(GenericHID::kRightHand);
 
+  bool drDLeft = IO.ds.DriverPS.GetLeftButton();
+  bool drDUp = IO.ds.DriverPS.GetUPButton();
+  bool drDRight = IO.ds.DriverPS.GetRightButton();
+  bool drDDown = IO.ds.DriverPS.GetDownButton();
+
   double OpIntakeCommand = (rightTrigOp - leftTrigOp);
 
   //Deadbands
@@ -82,18 +87,53 @@ void Robot::TeleopPeriodic()
   rotate *= 0.8;
 
   //Drive
-  if (btnUpDr)
-  {
-    IO.drivebase.DriveForward(24);
+
+  // if (btnUpDr)
+  // {
+  //   IO.drivebase.DriveForward(96);
+  // }
+  // else if (btnDownDr)
+  // {
+  //   IO.drivebase.DriveForward(0);
+  // }
+  // else{
+  //   IO.drivebase.Arcade(forward, rotate);
+  // }
+if(forward != 0 || rotate != 0){
+  IO.drivebase.Arcade(forward, rotate);
+}
+else if(drDUp || drDDown || drDRight || drDLeft){
+  if((drDUp||drDDown) && !forwardOneShot){
+    IO.drivebase.ResetEncoders();
+    forwardOneShot = true;
   }
-  else if (btnDownDr)
-  {
-    IO.drivebase.DriveForward(0);
+  else if(drDUp){
+    IO.drivebase.DriveForward(12);
+  }
+  else if(drDDown){
+    IO.drivebase.DriveForward(-12);
   }
   else{
-    IO.drivebase.Arcade(forward, rotate);
+    forwardOneShot = false;
   }
-  
+
+  if((drDRight||drDLeft) && !turnOneShot){
+    IO.drivebase.ResetEncoders();
+    turnOneShot = true;
+  }
+  else if(drDLeft){
+    IO.drivebase.Turn(45);
+  }
+  else if(drDRight){
+    IO.drivebase.Turn(-45);
+  }
+  else{
+    turnOneShot = false;
+  }
+}
+else{
+  IO.drivebase.Arcade(0, 0);
+}
   if (leftBumpDr)
   {
     IO.drivebase.SetLowGear();

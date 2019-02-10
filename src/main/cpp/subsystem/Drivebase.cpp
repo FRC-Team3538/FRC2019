@@ -46,15 +46,15 @@ Drivebase::Drivebase()
     motorLeft1.SetSensorPhase(true);
     motorRight1.SetSensorPhase(true);
 
-    motorLeft1.Config_kF(slots::Forward, 0.0, 0);
-	motorLeft1.Config_kP(slots::Forward, 0.0, 0); //0.5
-	motorLeft1.Config_kI(slots::Forward, 0.0, 0);
-	motorLeft1.Config_kD(slots::Forward, 0.0, 0);
+    motorLeft1.Config_kF(slots::Forward, 0.0);
+	motorLeft1.Config_kP(slots::Forward, 0.1); //0.5
+	motorLeft1.Config_kI(slots::Forward, 0.0);
+	motorLeft1.Config_kD(slots::Forward, 0.04);
 
-    motorRight1.Config_kF(slots::Forward, 0.0, 0);
-	motorRight1.Config_kP(slots::Forward, 0.0, 0);
-	motorRight1.Config_kI(slots::Forward, 0.0, 0);
-	motorRight1.Config_kD(slots::Forward, 0.0, 0);
+    motorRight1.Config_kF(slots::Forward, 0.0);
+	motorRight1.Config_kP(slots::Forward, 0.1);
+	motorRight1.Config_kI(slots::Forward, 0.0);
+	motorRight1.Config_kD(slots::Forward, 0.04);
 
     motorLeft1.ConfigNominalOutputForward(0);
     motorLeft1.ConfigNominalOutputReverse(0);
@@ -72,26 +72,26 @@ Drivebase::Drivebase()
     motorLeft1.ConfigRemoteFeedbackFilter(motors::R1, RemoteSensorSource::RemoteSensorSource_TalonSRX_SelectedSensor, Remote0);
     motorRight1.ConfigRemoteFeedbackFilter(motors::L1, RemoteSensorSource::RemoteSensorSource_TalonSRX_SelectedSensor, Remote0);
 
-    motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff0, FeedbackDevice::QuadEncoder);
-    motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff1, FeedbackDevice::RemoteSensor0);
+    motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff1, FeedbackDevice::QuadEncoder);
+    motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff0, FeedbackDevice::RemoteSensor0);
     motorRight1.ConfigSensorTerm(SensorTerm::SensorTerm_Sum0, FeedbackDevice::QuadEncoder);
     motorRight1.ConfigSensorTerm(SensorTerm::SensorTerm_Sum1, FeedbackDevice::RemoteSensor0);
+
+    motorLeft1.ConfigAuxPIDPolarity(true);
+    motorRight1.ConfigAuxPIDPolarity(true);
 
     motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::SensorDifference, PIDind::aux);
     motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::SensorSum, PIDind::aux);
 
-    motorLeft1.ConfigAuxPIDPolarity(false);
-    motorRight1.ConfigAuxPIDPolarity(false);
-
     motorLeft1.Config_kF(slots::Turning, 0.0);
-	motorLeft1.Config_kP(slots::Turning, 0.01);
-	motorLeft1.Config_kI(slots::Turning, 0.0);
-	motorLeft1.Config_kD(slots::Turning, 0.0);
+	motorLeft1.Config_kP(slots::Turning, 0.25); //.25
+	motorLeft1.Config_kI(slots::Turning, 0.0001);
+	motorLeft1.Config_kD(slots::Turning, 0.02); //.02
 
     motorRight1.Config_kF(slots::Turning, 0.0);
-	motorRight1.Config_kP(slots::Turning, 0.01);
-	motorRight1.Config_kI(slots::Turning, 0.0);
-	motorRight1.Config_kD(slots::Turning, 0.0);
+	motorRight1.Config_kP(slots::Turning, 0.25);
+	motorRight1.Config_kI(slots::Turning, 0.0001);
+	motorRight1.Config_kD(slots::Turning, 0.02);
 
     motorLeft1.SelectProfileSlot(slots::Forward, PIDind::primary);
     motorLeft1.SelectProfileSlot(slots::Turning, PIDind::aux);
@@ -164,12 +164,15 @@ double Drivebase::GetGyroHeading()
 
 void Drivebase::DriveForward(double distance){
     distance /= kScaleFactor;
-    motorRight1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
     motorLeft1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
+    motorRight1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
 }
 
 void Drivebase::Turn(double degrees){
-    
+    //17000 per turn
+    double pulses = (degrees / 360.0) * 17000.0;
+    motorLeft1.Set(ControlMode::Position, -pulses);
+    motorRight1.Set(ControlMode::Position, pulses);
 }
 
 // SmartDash updater

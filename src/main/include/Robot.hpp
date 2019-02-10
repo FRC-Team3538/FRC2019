@@ -31,6 +31,8 @@ class Robot : public frc::TimedRobot {
   LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
 
   const double deadband = 0.1;
+  bool forwardOneShot = false;
+  bool turnOneShot = false;
 
   double Deadband(double input, double deadband);
   void UpdateSD();
