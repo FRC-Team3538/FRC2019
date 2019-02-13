@@ -36,7 +36,7 @@ private:
 
   double prevError_rotation = 0;
 
-  #define KP_ROTATION (0.007)
+  #define KP_ROTATION (0.0075)
   #define KI_ROTATION (0.0001)
   #define KD_ROTATION (0.00075)
 

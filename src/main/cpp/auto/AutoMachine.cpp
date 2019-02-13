@@ -32,11 +32,9 @@ void AutoMachine::Run()
     {
     case 0:
     {
-        //double fwd = 10;90,45,120
-        //double rot = 0.00;
-        //IO.drivebase.Arcade(fwd, rot);
-        IO.drivebase.DriveForward(100);
-        if (m_autoTimer.Get() > 3.0)
+
+        IO.drivebase.DriveForward(0);
+        if (m_autoTimer.Get() > 0.0)
         {
             NextState();
         }
@@ -44,11 +42,8 @@ void AutoMachine::Run()
     }
     case 1:
     {
-        double fwd = 0.00;
-        double rot = 0.15;
-        IO.drivebase.Arcade(fwd, rot);
-        //IO.drivebase.Turn(45);
-        if (m_autoTimer.Get() > 1.0)
+        IO.drivebase.Turn(45);
+        if (m_autoTimer.Get() > 10.0)
         {
             IO.drivebase.ResetEncoders();
             NextState();
@@ -57,10 +52,8 @@ void AutoMachine::Run()
     }
     case 2:
     {
-        //double fwd = 10;90,45,120
-        //double rot = 0.00;
-        //IO.drivebase.Arcade(fwd, rot);
-        IO.drivebase.DriveForward(90);
+
+        IO.drivebase.DriveForward(0);
         if (m_autoTimer.Get() > 3.0)
         {
             NextState();

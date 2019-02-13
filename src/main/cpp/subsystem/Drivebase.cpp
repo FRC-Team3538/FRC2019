@@ -178,21 +178,17 @@ void Drivebase::Turn(double degrees){
 
 		// For linear drive function
 		double heading = degrees;
-        if(heading > 180){
-            heading -= 360;
-
-
-
-
-            
-        }
+        // if(heading > 180){
+        //     heading -= 360;
+        // }
 
 		// Use Gyro to drive straight
-		double gyroAngle = GetGyroHeading();
+		double gyroAngle = GetGyroHeading() > 180 ? (GetGyroHeading()) - 360 : (GetGyroHeading());
+
 		double error_rot = gyroAngle - heading;
 
-        if (std::abs(error_rot) < 15) {
-			sumError_rotation += error_rot / 0.02;
+        if (std::abs(error_rot) < 20) {
+			sumError_rotation += (error_rot / 0.02);
 		} else {
 			sumError_rotation = 0;
 		}
@@ -201,7 +197,7 @@ void Drivebase::Turn(double degrees){
 		double dError_rot = (error_rot - prevError_rotation) / 0.02; // [Inches/second]
 		prevError_rotation = error_rot;
 
-		double driveCommandRotation = error_rot * KP_ROTATION + KD_ROTATION * dError_rot + sumError_rotation * KI_ROTATION;
+		double driveCommandRotation = (error_rot * KP_ROTATION) + (KD_ROTATION * dError_rot) + (sumError_rotation * KI_ROTATION);
 
 		// dooo it!
 		motorLeft1.Set(-driveCommandRotation);
@@ -227,7 +223,7 @@ void Drivebase::UpdateSmartdash()
 
     SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
 
-    SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
+    SmartDashboard::PutNumber("GyroFused", GetGyroHeading() > 360 ? GetGyroHeading() - 360 : GetGyroHeading());
 
     SmartDashboard::PutNumber("TARGETrAUX", motorRight1.GetClosedLoopTarget(PIDind::aux));
     SmartDashboard::PutNumber("TARGETrPRIM", motorRight1.GetClosedLoopTarget(PIDind::primary));
