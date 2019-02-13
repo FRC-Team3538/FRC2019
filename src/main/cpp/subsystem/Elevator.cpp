@@ -56,7 +56,7 @@ void Elevator::Set(double speed)
     motor1.Set(speed);
     /*double pos = GetDistance();
 
-    /if ((GetSwitchUpper() || pos > kMax) && speed > 0.0) 
+    if ((GetSwitchUpper() || pos > kMax) && speed > 0.0) 
     {
         motor1.Set(0.0);
     } 
@@ -99,13 +99,37 @@ double Elevator::GetDistance()
 void Elevator::SetPosition(double pos)
 {
     //motor1.Set(ControlMode::Position, pos / kScaleFactor);
+    targetPos = pos;
+}
+
+void Elevator::ActivateGantry() 
+{
+    solenoidPTO.Set(true);
+}
+
+void Elevator::DeactivateGantry() 
+{
+    solenoidPTO.Set(false);
+}
+
+void Elevator::ActivateSensorOverride()
+{
+    sensorOverride = true;
+}
+
+void Elevator::DeactivateSensorOverride()
+{
+    sensorOverride = false;
 }
 
 void Elevator::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("Elevator CMD", motor1.GetSensorCollection().GetQuadraturePosition());
+
+    SmartDashboard::PutBoolean(" Elevator Sensor Override", sensorOverride);
     
-    SmartDashboard::PutNumber("Elevator Distance", GetDistance());
+    SmartDashboard::PutNumber("Elevator Pos", GetDistance());
+    SmartDashboard::PutNumber("Elevator Pos Target", targetPos);
 
     SmartDashboard::PutBoolean("Limit Switch Upper", GetSwitchUpper());
     SmartDashboard::PutBoolean("Limit Switch Lower", GetSwitchLower());

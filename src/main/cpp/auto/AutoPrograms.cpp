@@ -2,6 +2,7 @@
 
 // Include all auto programs [List 1 of 3]
 #include "auto/AutoLineCross.hpp"
+#include "auto/AutoMachine.hpp"
 
 
 // Constructor requires a reference to the robot map
@@ -10,7 +11,7 @@ AutoPrograms::AutoPrograms(robotmap &IO) : IO(IO) {
     // SmartDash Chooser [List 2 of 3]
     m_chooser.SetDefaultOption("0 - None", "0 - None");
     m_chooser.AddOption(AutoLineCross::GetName(), AutoLineCross::GetName());
-
+    m_chooser.AddOption(AutoMachine::GetName(), AutoMachine::GetName());
 }
 
 // Initialize the selected auto program
@@ -27,6 +28,10 @@ void AutoPrograms::Init()
     if (name == AutoLineCross::GetName())
     {
         m_autoProgram = new AutoLineCross(IO);
+    }
+    else if (name == AutoMachine::GetName()) 
+    {
+        m_autoProgram = new AutoMachine(IO);
     }
 }
 

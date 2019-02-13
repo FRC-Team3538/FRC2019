@@ -34,6 +34,12 @@ private:
   enum PIDind{primary = 0, aux};
   enum slots{Forward = 0, Turning, Slot2, Slot3};
 
+  double prevError_rotation = 0;
+
+  #define KP_ROTATION (0.007)
+  #define KI_ROTATION (0.0001)
+  #define KD_ROTATION (0.00075)
+
 public:
   // Default Constructor
   Drivebase();
@@ -41,7 +47,6 @@ public:
   // Actions
   void Arcade(double forward, double rotate);
   void Stop();
-
   void SetHighGear();
   void SetLowGear();
 

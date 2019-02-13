@@ -82,9 +82,6 @@ void Wrist::SetAngle(double angle)
     wristPosTarget = angle / kScale;
     //double currentAngle = GetAngle();
     motor1.Set(ControlMode::Position, wristPosTarget);
-
-
-    
 }
                                                                  
 double Wrist::GetAngle()
@@ -97,14 +94,20 @@ double Wrist::GetAngle()
     // return deg;
 }
 
+void Wrist::ActivateSensorOverride()
+{
+    sensorOverride = true;
+}
+
+void Wrist::DeactivateSensorOverride()
+{
+    sensorOverride = false;
+}
+
 void Wrist::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("Wrist Motor", motor1.Get());
     SmartDashboard::PutNumber("Wrist Angle", GetAngle());
-
-    
-    // SmartDashboard::PutNumber("TARGET", motor1.GetClosedLoopTarget());
-    // SmartDashboard::PutNumber("ERROR", motor1.GetClosedLoopError());
-    // SmartDashboard::PutNumber("POS", motor1.GetSelectedSensorPosition());
-
+    SmartDashboard::PutNumber("Wrist Angle Target", wristPosTarget);
+    SmartDashboard::PutBoolean("Wrist Sensor Override", sensorOverride);
 }

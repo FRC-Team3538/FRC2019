@@ -14,6 +14,11 @@ void FrontClimber::Deploy()
     SolenoidDeploy.Set(true);
 }
 
+bool FrontClimber::isDeployed()
+{
+    return SolenoidDeploy.Get();
+}
+
 void FrontClimber::Retract()
 {
     SolenoidDeploy.Set(false);

@@ -21,6 +21,7 @@ class Wrist
     const double kScale = (1.0/4096.0) * 360.0 * (1.0/2.0);
 
     double prevError = 0;
+    bool sensorOverride = false;
 
   public:
     double wristPosTarget;
@@ -32,6 +33,9 @@ class Wrist
 
     bool GetSwitchUpper();
     bool GetSwitchLower();
+
+    void ActivateSensorOverride();
+    void DeactivateSensorOverride();
 
     double GetAngle();
     void ResetAngle();
