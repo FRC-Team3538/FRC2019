@@ -82,41 +82,41 @@ void Robot::TeleopPeriodic()
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
-      forward = IO.ds.DriverXB.GetY(GenericHID::kLeftHand);
-      rotate = IO.ds.DriverXB.GetX(GenericHID::kRightHand);
-      strafe = IO.ds.DriverXB.GetX(GenericHID::kLeftHand);
-      forwardR = IO.ds.DriverXB.GetY(GenericHID::kRightHand);
-      leftTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kLeftHand);
-      rightTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
-      leftBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kLeftHand);
-      rightBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kRightHand);
-      btnACrossDr = IO.ds.DriverXB.GetAButton();
-      btnBCircleDr = IO.ds.DriverXB.GetBButton();
-      btnXSquareDr = IO.ds.DriverXB.GetXButton();
-      btnYTriangleDr = IO.ds.DriverXB.GetYButton();
-      btnUpDr = IO.ds.DriverXB.GetPOV() == 315 || IO.ds.DriverXB.GetPOV() == 0 || IO.ds.DriverXB.GetPOV() == 45;
-      btnRightDr = IO.ds.DriverXB.GetPOV() == 45 || IO.ds.DriverXB.GetPOV() == 90 || IO.ds.DriverXB.GetPOV() == 135;
-      btnLeftDr = IO.ds.DriverXB.GetPOV() == 225 || IO.ds.DriverXB.GetPOV() == 270 || IO.ds.DriverXB.GetPOV() == 315;
-      btnDownDr = IO.ds.DriverXB.GetPOV() == 135 || IO.ds.DriverXB.GetPOV() == 180 || IO.ds.DriverXB.GetPOV() == 225;
-      btnBackDr = IO.ds.DriverXB.GetBackButton();
-      btnStartDr = IO.ds.DriverXB.GetStartButton();
+    forward = IO.ds.DriverXB.GetY(GenericHID::kLeftHand);
+    rotate = IO.ds.DriverXB.GetX(GenericHID::kRightHand);
+    strafe = IO.ds.DriverXB.GetX(GenericHID::kLeftHand);
+    forwardR = IO.ds.DriverXB.GetY(GenericHID::kRightHand);
+    leftTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kLeftHand);
+    rightTrigDr = IO.ds.DriverXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
+    leftBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kLeftHand);
+    rightBumpDr = IO.ds.DriverXB.GetBumper(GenericHID::kRightHand);
+    btnACrossDr = IO.ds.DriverXB.GetAButton();
+    btnBCircleDr = IO.ds.DriverXB.GetBButton();
+    btnXSquareDr = IO.ds.DriverXB.GetXButton();
+    btnYTriangleDr = IO.ds.DriverXB.GetYButton();
+    btnUpDr = IO.ds.DriverXB.GetPOV() == 315 || IO.ds.DriverXB.GetPOV() == 0 || IO.ds.DriverXB.GetPOV() == 45;
+    btnRightDr = IO.ds.DriverXB.GetPOV() == 45 || IO.ds.DriverXB.GetPOV() == 90 || IO.ds.DriverXB.GetPOV() == 135;
+    btnLeftDr = IO.ds.DriverXB.GetPOV() == 225 || IO.ds.DriverXB.GetPOV() == 270 || IO.ds.DriverXB.GetPOV() == 315;
+    btnDownDr = IO.ds.DriverXB.GetPOV() == 135 || IO.ds.DriverXB.GetPOV() == 180 || IO.ds.DriverXB.GetPOV() == 225;
+    btnBackDr = IO.ds.DriverXB.GetBackButton();
+    btnStartDr = IO.ds.DriverXB.GetStartButton();
 
-      leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
-      rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
-      leftOpY = IO.ds.OperatorXB.GetY(GenericHID::kLeftHand);
-      rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
-      leftBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
-      rightBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
-      btnYTriangleOp = IO.ds.OperatorXB.GetYButton();
-      btnACrossOp = IO.ds.OperatorXB.GetAButton();
-      btnBCircleOp = IO.ds.OperatorXB.GetBButton();
-      btnXSquareOp = IO.ds.OperatorXB.GetXButton();
-      btnUpOp = IO.ds.OperatorXB.GetPOV() == 315 || IO.ds.OperatorXB.GetPOV() == 0 || IO.ds.OperatorXB.GetPOV() == 45;
-      btnRightOp = IO.ds.OperatorXB.GetPOV() == 45 || IO.ds.OperatorXB.GetPOV() == 90 || IO.ds.OperatorXB.GetPOV() == 135;
-      btnLeftOp = IO.ds.OperatorXB.GetPOV() == 225 || IO.ds.OperatorXB.GetPOV() == 270 || IO.ds.OperatorXB.GetPOV() == 315;
-      btnDownOp = IO.ds.OperatorXB.GetPOV() == 135 || IO.ds.OperatorXB.GetPOV() == 180 || IO.ds.OperatorXB.GetPOV() == 225;
-      btnBackOp = IO.ds.OperatorXB.GetBackButton();
-      btnStartOp = IO.ds.OperatorXB.GetStartButton();
+    leftTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kLeftHand);
+    rightTrigOp = IO.ds.OperatorXB.GetTriggerAxis(GenericHID::kRightHand); //Negative
+    leftOpY = IO.ds.OperatorXB.GetY(GenericHID::kLeftHand);
+    rightOpY = IO.ds.OperatorXB.GetY(GenericHID::kRightHand);
+    leftBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kLeftHand);
+    rightBumpOp = IO.ds.OperatorXB.GetBumper(GenericHID::kRightHand);
+    btnYTriangleOp = IO.ds.OperatorXB.GetYButton();
+    btnACrossOp = IO.ds.OperatorXB.GetAButton();
+    btnBCircleOp = IO.ds.OperatorXB.GetBButton();
+    btnXSquareOp = IO.ds.OperatorXB.GetXButton();
+    btnUpOp = IO.ds.OperatorXB.GetPOV() == 315 || IO.ds.OperatorXB.GetPOV() == 0 || IO.ds.OperatorXB.GetPOV() == 45;
+    btnRightOp = IO.ds.OperatorXB.GetPOV() == 45 || IO.ds.OperatorXB.GetPOV() == 90 || IO.ds.OperatorXB.GetPOV() == 135;
+    btnLeftOp = IO.ds.OperatorXB.GetPOV() == 225 || IO.ds.OperatorXB.GetPOV() == 270 || IO.ds.OperatorXB.GetPOV() == 315;
+    btnDownOp = IO.ds.OperatorXB.GetPOV() == 135 || IO.ds.OperatorXB.GetPOV() == 180 || IO.ds.OperatorXB.GetPOV() == 225;
+    btnBackOp = IO.ds.OperatorXB.GetBackButton();
+    btnStartOp = IO.ds.OperatorXB.GetStartButton();
   }
   double OpIntakeCommand = (rightTrigOp - leftTrigOp);
   bool hatchPresets;
@@ -146,41 +146,58 @@ void Robot::TeleopPeriodic()
   // else{
   //   IO.drivebase.Arcade(forward, rotate);
   // }
-if(forward != 0 || rotate != 0){
-  IO.drivebase.Arcade(forward, rotate);
-}
-else if(btnUpDr || btnDownDr || btnRightDr || btnLeftDr){
-  if((btnUpDr||btnDownDr) && !forwardOneShot){
-    IO.drivebase.ResetEncoders();
-    forwardOneShot = true;
+  if (forward != 0 || rotate != 0)
+  {
+    IO.drivebase.Arcade(forward, rotate);
   }
-  else if(btnUpDr){
-    IO.drivebase.DriveForward(12);
-  }
-  else if(btnDownDr){
-    IO.drivebase.DriveForward(-12);
-  }
-  else{
-    forwardOneShot = false;
-  }
+  else if (btnUpDr || btnDownDr || btnRightDr || btnLeftDr)
+  {
+    if(btnRightDr){
+      IO.drivebase.Turn(45);
+    }
+    else if(btnLeftDr){
+      IO.drivebase.Turn(0);
+    }
+    // if ((btnUpDr || btnDownDr) && !forwardOneShot)
+    // {
+    //   IO.drivebase.ResetEncoders();
+    //   forwardOneShot = true;
+    // }
+    // else if (btnUpDr)
+    // {
+    //   IO.drivebase.DriveForward(12);
+    // }
+    // else if (btnDownDr)
+    // {
+     //   IO.drivebase.DriveForward(-12);
+    // }
+    // else
+    // {
+    //   forwardOneShot = false;
+    // }
 
-  if((btnRightDr||btnLeftDr) && !turnOneShot){
-    IO.drivebase.ResetEncoders();
-    turnOneShot = true;
+    // if ((btnRightDr || btnLeftDr) && !turnOneShot)
+    // {
+    //   IO.drivebase.ResetEncoders();
+    //   turnOneShot = true;
+    // }
+    // else if (btnLeftDr)
+    // {
+    //   IO.drivebase.Turn(45);
+    // }
+    // else if (btnRightDr)
+    // {
+    //   IO.drivebase.Turn(-45);
+    // }
+    // else
+    // {
+    //   turnOneShot = false;
+    // }
   }
-  else if(btnLeftDr){
-    IO.drivebase.Turn(45);
+  else
+  {
+    IO.drivebase.Arcade(0, 0);
   }
-  else if(btnRightDr){
-    IO.drivebase.Turn(-45);
-  }
-  else{
-    turnOneShot = false;
-  }
-}
-else{
-  IO.drivebase.Arcade(0, 0);
-}
   if (leftBumpDr)
   {
     IO.drivebase.SetLowGear();
@@ -201,85 +218,106 @@ else{
   {
     IO.wrist.ResetAngle();
   }
-  if (leftBumpOp == true) {
-     IO.wrist.SetAngle(90);
-  } 
+  if (leftBumpOp == true)
+  {
+    IO.wrist.SetAngle(90);
+  }
 
   //Cargo Manip
   IO.cargoManip.Set(OpIntakeCommand);
 
   //Cargo Intake
-  if (rightBumpOp) {
+  if (rightBumpOp)
+  {
     IO.cargoIntake.Deploy();
     IO.cargoIntake.Set(1.0);
   }
-  if (leftBumpOp) {
+  if (leftBumpOp)
+  {
     IO.cargoIntake.Retract();
     IO.cargoIntake.Set(0.0);
   }
 
   //Hatch Manip
-  if (btnACrossOp) {
+  if (btnACrossOp)
+  {
     IO.hatchManip.Clamp();
     hatchPresets == true;
   }
-  if (btnBCircleOp) {
+  if (btnBCircleOp)
+  {
     IO.hatchManip.Unclamp();
   }
-  if (btnXSquareOp) {
+  if (btnXSquareOp)
+  {
     IO.hatchManip.Eject();
   }
-  if (btnYTriangleOp) {
+  if (btnYTriangleOp)
+  {
     IO.hatchManip.Retract();
   }
-  
+
   //Front Climber
-  if (btnXSquareDr) {
+  if (btnXSquareDr)
+  {
     IO.frontClimber.Deploy();
     IO.elevator.ActivateGantry();
   }
-  if (btnYTriangleDr) {
+  if (btnYTriangleDr)
+  {
     IO.frontClimber.Retract();
     IO.elevator.DeactivateGantry();
   }
-  if (IO.frontClimber.isDeployed() == true) {
+  if (IO.frontClimber.isDeployed() == true)
+  {
     IO.frontClimber.Set(forward);
-  } 
+  }
 
   //Sensor Override
-  if (btnStartDr == true || btnStartOp == true){
+  if (btnStartDr == true || btnStartOp == true)
+  {
     IO.elevator.ActivateSensorOverride();
     IO.wrist.ActivateSensorOverride();
   }
-  if (btnBackDr == true || btnBackOp == true) {
+  if (btnBackDr == true || btnBackOp == true)
+  {
     IO.elevator.DeactivateSensorOverride();
     IO.wrist.DeactivateSensorOverride();
   }
 
   //Presets
-  if (hatchPresets == true){
-    if (btnUpOp == true) {
-        IO.elevator.SetPosition(100); //high rocket
+  if (hatchPresets == true)
+  {
+    if (btnUpOp == true)
+    {
+      IO.elevator.SetPosition(100); //high rocket
     }
-    if (btnDownOp == true) {
-        IO.elevator.SetPosition(50); //middle rocket
+    if (btnDownOp == true)
+    {
+      IO.elevator.SetPosition(50); //middle rocket
     }
-    if (btnRightOp == true) {
-        IO.elevator.SetPosition(25); //cargo ship and low rocket
+    if (btnRightOp == true)
+    {
+      IO.elevator.SetPosition(25); //cargo ship and low rocket
     }
   }
-  else {
-    if (btnUpOp == true) {
-        IO.elevator.SetPosition(100); //high rocket
+  else
+  {
+    if (btnUpOp == true)
+    {
+      IO.elevator.SetPosition(100); //high rocket
     }
-    if (btnDownOp == true) {
-        IO.elevator.SetPosition(50); //middle rocket
+    if (btnDownOp == true)
+    {
+      IO.elevator.SetPosition(50); //middle rocket
     }
-    if (btnRightOp == true) {
-        IO.elevator.SetPosition(25); //low rocket
+    if (btnRightOp == true)
+    {
+      IO.elevator.SetPosition(25); //low rocket
     }
-    if (btnLeftOp == true) {
-        IO.elevator.SetPosition(40); //cargo ship
+    if (btnLeftOp == true)
+    {
+      IO.elevator.SetPosition(40); //cargo ship
     }
   }
 }

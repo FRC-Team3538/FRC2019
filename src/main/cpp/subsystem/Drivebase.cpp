@@ -169,10 +169,43 @@ void Drivebase::DriveForward(double distance){
 }
 
 void Drivebase::Turn(double degrees){
-    //17000 per turn
-    double pulses = (degrees / 360.0) * 17000.0;
-    motorLeft1.Set(ControlMode::Position, (pulses * -1));
-    motorRight1.Set(ControlMode::Position, pulses);
+
+		// else if (autoSettleTimer.Get() > settlingTime)
+
+		// 	autoSettleTimer.Reset();
+		// if (abs(error_rot) > ROTATION_TOLERANCE)
+
+		// // Allow for the robot to settle into position
+
+        motorRight1.Set( driveCommandRotation);
+		motorLeft1.Set(-driveCommandRotation);
+		// dooo it!
+		double driveCommandRotation = error_rot * KP_ROTATION + KD_ROTATION * dError_rot + sumError_rotation * KI_ROTATION;
+
+		double dError_rot = (error_rot - prevError_rotation) / 0.02; // [Inches/second]
+		prevError_rotation = error_rot;
+
+		// D Control
+
+		}
+			sumError_rotation = 0;
+		} else {
+        if (std::abs(error_rot) < 15) {
+			sumError_rotation += error_rot / 0.02;
+
+		double error_rot = gyroAngle - heading;
+		double gyroAngle = GetGyroHeading();
+		// Use Gyro to drive straight
+
+		double heading = degrees;
+		// For linear drive function
+
+        double sumError_rotation = 0;
+
+    // motorRight1.Set(ControlMode::Position, pulses);
+    // motorLeft1.Set(ControlMode::Position, -pulses);
+    // double pulses = (degrees / 360.0) * 17000.0;
+    // //17000 per turn
 }
 
 // SmartDash updater
