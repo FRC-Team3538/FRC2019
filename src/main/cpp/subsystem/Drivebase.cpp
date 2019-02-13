@@ -171,7 +171,7 @@ void Drivebase::DriveForward(double distance){
 void Drivebase::Turn(double degrees){
     //17000 per turn
     double pulses = (degrees / 360.0) * 17000.0;
-    motorLeft1.Set(ControlMode::Position, -pulses);
+    motorLeft1.Set(ControlMode::Position, (pulses * -1));
     motorRight1.Set(ControlMode::Position, pulses);
 }
 

@@ -31,6 +31,7 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+  IO.drivebase.ResetEncoders();
   autoPrograms.Init();
 }
 
