@@ -14,9 +14,13 @@
 #include "robotmap.hpp"
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <opencv2/videoio.hpp>
+#include <subsystem/Vision.hpp>
+using namespace cv;
 
-class Robot : public frc::TimedRobot {
- public:
+class Robot : public frc::TimedRobot
+{
+public:
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;
@@ -25,8 +29,9 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
 
- private:
+private:
   robotmap IO;
+  Vision vision;
   AutoPrograms autoPrograms{IO};
   LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
 
@@ -36,6 +41,6 @@ class Robot : public frc::TimedRobot {
 
   double Deadband(double input, double deadband);
   void UpdateSD();
-  
-  
+
+  bool AutoTarget(bool Go);  
 };
