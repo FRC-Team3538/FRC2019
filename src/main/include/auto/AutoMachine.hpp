@@ -29,5 +29,7 @@ class AutoMachine: public AutoInterface {
 
     // Auto Program Logic
     void Run();
+
+    void UpdateSmartdash();
     
 };

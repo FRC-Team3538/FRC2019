@@ -14,6 +14,7 @@
 void Robot::RobotInit()
 {
   IO.wrist.ResetAngle();
+
 }
 
 /**
@@ -32,6 +33,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   IO.drivebase.ResetEncoders();
+  IO.drivebase.ResetGyro();
   autoPrograms.Init();
 }
 
@@ -40,7 +42,10 @@ void Robot::AutonomousPeriodic()
   autoPrograms.Run();
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() 
+{
+
+}
 
 void Robot::TeleopPeriodic()
 {
@@ -200,7 +205,8 @@ void Robot::TeleopPeriodic()
   }
   if (leftBumpDr)
   {
-    IO.drivebase.SetLowGear();
+    IO.drivebase.ResetGyro();
+    //IO.drivebase.SetLowGear();
   }
 
   if (rightBumpDr)

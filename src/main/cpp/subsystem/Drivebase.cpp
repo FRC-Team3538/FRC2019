@@ -1,4 +1,5 @@
 #include "subsystem/Drivebase.hpp"
+#include "frc/Timer.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -58,13 +59,13 @@ Drivebase::Drivebase()
 
     motorLeft1.ConfigNominalOutputForward(0);
     motorLeft1.ConfigNominalOutputReverse(0);
-    motorLeft1.ConfigPeakOutputForward(1);
-    motorLeft1.ConfigPeakOutputReverse(-1);
+    motorLeft1.ConfigPeakOutputForward(0.45);
+    motorLeft1.ConfigPeakOutputReverse(-0.45);
 
     motorRight1.ConfigNominalOutputForward(0);
     motorRight1.ConfigNominalOutputReverse(0);
-    motorRight1.ConfigPeakOutputForward(1);
-    motorRight1.ConfigPeakOutputReverse(-1);
+    motorRight1.ConfigPeakOutputForward(0.45);
+    motorRight1.ConfigPeakOutputReverse(-0.45);
 
     // motorLeft1.ConfigSetParameter()
 
@@ -86,10 +87,10 @@ Drivebase::Drivebase()
     motorLeft1.Config_kF(slots::Turning, 0.0);
 	motorLeft1.Config_kP(slots::Turning, 0.25); //.25
 	motorLeft1.Config_kI(slots::Turning, 0.0001);
-	motorLeft1.Config_kD(slots::Turning, 0.02); //.02
+	motorLeft1.Config_kD(slots::Turning, 0.25); //.02
 
     motorRight1.Config_kF(slots::Turning, 0.0);
-	motorRight1.Config_kP(slots::Turning, 0.25);
+	motorRight1.Config_kP(slots::Turning, 0.30);
 	motorRight1.Config_kI(slots::Turning, 0.0001);
 	motorRight1.Config_kD(slots::Turning, 0.02);
 
@@ -155,17 +156,21 @@ double Drivebase::GetEncoderPositionRight()
 void Drivebase::ResetGyro()
 {
     navx.ZeroYaw();
+    //navx.ResetDisplacement();
+    //navx.Reset();
+    std::cout << "reset" << std::endl;
 }
 
 double Drivebase::GetGyroHeading()
 {
-    return navx.GetFusedHeading();
+    double yaw = navx.GetYaw();
+    return (yaw > 180) ? (yaw - 360) : (yaw) ;
 }
 
 void Drivebase::DriveForward(double distance){
     distance /= kScaleFactor;
-    motorLeft1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
-    motorRight1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
+    motorLeft1.Set(ControlMode::Position, distance /*, DemandType::DemandType_AuxPID, 0*/);
+    motorRight1.Set(ControlMode::Position, distance /*, DemandType::DemandType_AuxPID, 0*/);
 }
 
 void Drivebase::Turn(double degrees){
@@ -178,21 +183,17 @@ void Drivebase::Turn(double degrees){
 
 		// For linear drive function
 		double heading = degrees;
-        if(heading > 180){
-            heading -= 360;
-
-
-
-
-            
-        }
+        // if(heading > 180){
+        //     heading -= 360;
+        // }
 
 		// Use Gyro to drive straight
-		double gyroAngle = GetGyroHeading();
+		double gyroAngle = GetGyroHeading() > 180 ? (GetGyroHeading()) - 360 : (GetGyroHeading());
+
 		double error_rot = gyroAngle - heading;
 
-        if (std::abs(error_rot) < 15) {
-			sumError_rotation += error_rot / 0.02;
+        if (std::abs(error_rot) < 20) {
+			sumError_rotation += (error_rot / 0.02);
 		} else {
 			sumError_rotation = 0;
 		}
@@ -201,18 +202,25 @@ void Drivebase::Turn(double degrees){
 		double dError_rot = (error_rot - prevError_rotation) / 0.02; // [Inches/second]
 		prevError_rotation = error_rot;
 
-		double driveCommandRotation = error_rot * KP_ROTATION + KD_ROTATION * dError_rot + sumError_rotation * KI_ROTATION;
+		double driveCommandRotation = (error_rot * KP_ROTATION) + (KD_ROTATION * dError_rot) + (sumError_rotation * KI_ROTATION);
 
 		// dooo it!
 		motorLeft1.Set(-driveCommandRotation);
         motorRight1.Set( driveCommandRotation);
 
-
+        int ROTATION_TOLERANCE = 5;
+        double settlingTime = 1.5;  
+        Timer autoSettleTimer;      
 		// // Allow for the robot to settle into position
-		// if (abs(error_rot) > ROTATION_TOLERANCE)
-		// 	autoSettleTimer.Reset();
+		if (abs(error_rot) > ROTATION_TOLERANCE)
+		{ 
+            autoSettleTimer.Reset();
+            autoSettleTimer.Start();
+        }
+		else if (autoSettleTimer.Get() > settlingTime)
+        {
 
-		// else if (autoSettleTimer.Get() > settlingTime)
+        }
 
 }
 

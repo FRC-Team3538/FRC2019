@@ -1,6 +1,9 @@
 #include "auto/AutoMachine.hpp"
 
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
+
 // Name for Smart Dash Chooser
 std::string AutoMachine::GetName()
 {
@@ -27,16 +30,15 @@ void AutoMachine::NextState(){
 // Execute the program
 void AutoMachine::Run()
 {
+    UpdateSmartdash();
     
     switch (m_state)
     {
     case 0:
     {
-        //double fwd = 10;90,45,120
-        //double rot = 0.00;
-        //IO.drivebase.Arcade(fwd, rot);
-        IO.drivebase.DriveForward(100);
-        if (m_autoTimer.Get() > 3.0)
+        int encdist = 55;
+        IO.drivebase.DriveForward(encdist);
+        if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
         {
             NextState();
         }
@@ -44,11 +46,9 @@ void AutoMachine::Run()
     }
     case 1:
     {
-        double fwd = 0.00;
-        double rot = 0.15;
-        IO.drivebase.Arcade(fwd, rot);
-        //IO.drivebase.Turn(45);
-        if (m_autoTimer.Get() > 1.0)
+        int gangle = -50;
+        IO.drivebase.Turn(gangle);
+        if (std::abs(IO.drivebase.GetGyroHeading() - gangle) < 5)
         {
             IO.drivebase.ResetEncoders();
             NextState();
@@ -57,12 +57,21 @@ void AutoMachine::Run()
     }
     case 2:
     {
-        //double fwd = 10;90,45,120
-        //double rot = 0.00;
-        //IO.drivebase.Arcade(fwd, rot);
-        IO.drivebase.DriveForward(90);
-        if (m_autoTimer.Get() > 3.0)
+        int encdist = 70;
+        IO.drivebase.DriveForward(encdist);
+        if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
         {
+            NextState();
+        }
+        break;
+    }
+    case 3:
+    {
+        int gangle = -25;
+        IO.drivebase.Turn(gangle);
+        if (std::abs(IO.drivebase.GetGyroHeading() - gangle) < 5)
+        {
+            IO.drivebase.ResetEncoders();
             NextState();
         }
         break;
@@ -70,4 +79,13 @@ void AutoMachine::Run()
     default:
         IO.drivebase.Stop();
     }
+
+}
+
+
+// SmartDash updater
+void AutoMachine::UpdateSmartdash()
+{
+    SmartDashboard::PutNumber("auto state", m_state);
+
 }
