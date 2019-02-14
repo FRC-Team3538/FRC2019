@@ -42,7 +42,7 @@ void AutoMachine::Run()
     }
     case 1:
     {
-        IO.drivebase.Turn(45);
+        IO.drivebase.Turn(-45);
         if (m_autoTimer.Get() > 10.0)
         {
             IO.drivebase.ResetEncoders();

@@ -223,7 +223,7 @@ void Drivebase::UpdateSmartdash()
 
     SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
 
-    SmartDashboard::PutNumber("GyroFused", GetGyroHeading() > 360 ? GetGyroHeading() - 360 : GetGyroHeading());
+    SmartDashboard::PutNumber("GyroFused", ((GetGyroHeading() > 180) ? (GetGyroHeading() - 360) : (GetGyroHeading())));
 
     SmartDashboard::PutNumber("TARGETrAUX", motorRight1.GetClosedLoopTarget(PIDind::aux));
     SmartDashboard::PutNumber("TARGETrPRIM", motorRight1.GetClosedLoopTarget(PIDind::primary));
