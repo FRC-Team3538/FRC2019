@@ -1,4 +1,5 @@
 #include "subsystem/Drivebase.hpp"
+#include "frc/Timer.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -58,13 +59,13 @@ Drivebase::Drivebase()
 
     motorLeft1.ConfigNominalOutputForward(0);
     motorLeft1.ConfigNominalOutputReverse(0);
-    motorLeft1.ConfigPeakOutputForward(1);
-    motorLeft1.ConfigPeakOutputReverse(-1);
+    motorLeft1.ConfigPeakOutputForward(0.45);
+    motorLeft1.ConfigPeakOutputReverse(-0.45);
 
     motorRight1.ConfigNominalOutputForward(0);
     motorRight1.ConfigNominalOutputReverse(0);
-    motorRight1.ConfigPeakOutputForward(1);
-    motorRight1.ConfigPeakOutputReverse(-1);
+    motorRight1.ConfigPeakOutputForward(0.45);
+    motorRight1.ConfigPeakOutputReverse(-0.45);
 
     // motorLeft1.ConfigSetParameter()
 
@@ -86,10 +87,10 @@ Drivebase::Drivebase()
     motorLeft1.Config_kF(slots::Turning, 0.0);
 	motorLeft1.Config_kP(slots::Turning, 0.25); //.25
 	motorLeft1.Config_kI(slots::Turning, 0.0001);
-	motorLeft1.Config_kD(slots::Turning, 0.02); //.02
+	motorLeft1.Config_kD(slots::Turning, 0.25); //.02
 
     motorRight1.Config_kF(slots::Turning, 0.0);
-	motorRight1.Config_kP(slots::Turning, 0.25);
+	motorRight1.Config_kP(slots::Turning, 0.30);
 	motorRight1.Config_kI(slots::Turning, 0.0001);
 	motorRight1.Config_kD(slots::Turning, 0.02);
 
@@ -155,17 +156,21 @@ double Drivebase::GetEncoderPositionRight()
 void Drivebase::ResetGyro()
 {
     navx.ZeroYaw();
+    //navx.ResetDisplacement();
+    //navx.Reset();
+    std::cout << "reset" << std::endl;
 }
 
 double Drivebase::GetGyroHeading()
 {
-    return navx.GetFusedHeading();
+    double yaw = navx.GetYaw();
+    return (yaw > 180) ? (yaw - 360) : (yaw) ;
 }
 
 void Drivebase::DriveForward(double distance){
     distance /= kScaleFactor;
-    motorLeft1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
-    motorRight1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
+    motorLeft1.Set(ControlMode::Position, distance /*, DemandType::DemandType_AuxPID, 0*/);
+    motorRight1.Set(ControlMode::Position, distance /*, DemandType::DemandType_AuxPID, 0*/);
 }
 
 void Drivebase::Turn(double degrees){
@@ -203,12 +208,19 @@ void Drivebase::Turn(double degrees){
 		motorLeft1.Set(-driveCommandRotation);
         motorRight1.Set( driveCommandRotation);
 
-
+        int ROTATION_TOLERANCE = 5;
+        double settlingTime = 1.5;  
+        Timer autoSettleTimer;      
 		// // Allow for the robot to settle into position
-		// if (abs(error_rot) > ROTATION_TOLERANCE)
-		// 	autoSettleTimer.Reset();
+		if (abs(error_rot) > ROTATION_TOLERANCE)
+		{ 
+            autoSettleTimer.Reset();
+            autoSettleTimer.Start();
+        }
+		else if (autoSettleTimer.Get() > settlingTime)
+        {
 
-		// else if (autoSettleTimer.Get() > settlingTime)
+        }
 
 }
 
@@ -223,7 +235,7 @@ void Drivebase::UpdateSmartdash()
 
     SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
 
-    SmartDashboard::PutNumber("GyroFused", GetGyroHeading() > 360 ? GetGyroHeading() - 360 : GetGyroHeading());
+    SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
 
     SmartDashboard::PutNumber("TARGETrAUX", motorRight1.GetClosedLoopTarget(PIDind::aux));
     SmartDashboard::PutNumber("TARGETrPRIM", motorRight1.GetClosedLoopTarget(PIDind::primary));
