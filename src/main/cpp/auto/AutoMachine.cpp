@@ -1,8 +1,6 @@
 #include "auto/AutoMachine.hpp"
 
-
 #include <frc/smartdashboard/SmartDashboard.h>
-
 
 // Name for Smart Dash Chooser
 std::string AutoMachine::GetName()
@@ -21,7 +19,8 @@ AutoMachine::AutoMachine(robotmap &IO) : IO(IO)
 }
 
 //State Machine
-void AutoMachine::NextState(){
+void AutoMachine::NextState()
+{
     m_state++;
     m_autoTimer.Reset();
     m_autoTimer.Start();
@@ -31,7 +30,7 @@ void AutoMachine::NextState(){
 void AutoMachine::Run()
 {
     UpdateSmartdash();
-    
+
     switch (m_state)
     {
     case 0:
@@ -76,16 +75,36 @@ void AutoMachine::Run()
         }
         break;
     }
+    case 4:
+    {
+        //Auto Box Transform
+        IO.vision.Run();
+        double error = IO.vision.data.cmd;
+        IO.vision.CVT = true;
+        if (IO.vision.data.data)
+        {
+            if (IO.vision.data.distance >= 70)
+            {
+                IO.drivebase.Arcade(0, 0);
+            }
+            else
+            {
+                IO.drivebase.Arcade(-0.15, IO.vision.data.cmd);
+            }
+        }
+        if ((std::abs(error) < 0.05) && (IO.vision.data.distance >= 70))
+        {
+            NextState();
+        }
+    }
     default:
         IO.drivebase.Stop();
+        IO.vision.CVT = false;
     }
-
 }
-
 
 // SmartDash updater
 void AutoMachine::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("auto state", m_state);
-
 }

@@ -13,7 +13,7 @@
 void Robot::RobotInit()
 {
   IO.wrist.ResetAngle();
-  vision.Init();
+  IO.vision.Init();
 }
 
 /**
@@ -34,7 +34,7 @@ void Robot::RobotPeriodic()
     btnBackDr = IO.ds.DriverXB.GetBackButton();
   }
 
-  vision.CVMode(btnBackDr);
+  IO.vision.CVMode(btnBackDr);
   AutoTarget(btnBackDr);
 
   UpdateSD();
@@ -366,7 +366,8 @@ void Robot::UpdateSD()
 }
 
 bool Robot::AutoTarget(bool Go){
-  double error = vision.Run();
+  IO.vision.Run();
+  double error =  IO.vision.data.cmd;
 
   if(Go){
     if(error == -1){

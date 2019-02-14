@@ -8,6 +8,7 @@
 #include <subsystem/HatchManip.hpp>
 #include <subsystem/CargoIntake.hpp>
 #include <subsystem/FrontClimber.hpp>
+#include <subsystem/Vision.hpp>
 
 class robotmap
 {
@@ -20,4 +21,5 @@ class robotmap
     HatchManip hatchManip;
     CargoIntake cargoIntake;
     FrontClimber frontClimber;
+    Vision vision;
 };

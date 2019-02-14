@@ -3,6 +3,7 @@
 #include <string>
 
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/livewindow/LiveWindow.h>
 #include <frc/XboxController.h>
 #include "PS4Controller.hpp"
@@ -25,6 +26,7 @@ class DS
 		const std::string sXBX = "Xbox";
 
     DS();
+    void SmartDash();
     private:
 
 };

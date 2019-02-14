@@ -7,3 +7,6 @@ DS::DS()
 	chooseController.AddOption(sXBX, sXBX);
 	frc::SmartDashboard::PutData("Selected Controller", &chooseController);
 }
+void DS::SmartDash() {
+	frc::SmartDashboard::PutData("Selected Controller", &chooseController);
+}

@@ -2,13 +2,13 @@
 
 Vision::Vision()
 {
-	// camera.SetFPS(20);
-	// camera.SetResolution(160, 120);
-	// camera.SetExposureManual(15); //20 worked well
-	// camera.SetWhiteBalanceManual(4500);
-	// camera.SetBrightness(-300);
+	camera.SetFPS(20);
+	camera.SetResolution(160, 120);
+	camera.SetExposureManual(15); //20 worked well
+	camera.SetWhiteBalanceManual(4500);
+	camera.SetBrightness(-300);
 }
-double Vision::Run()
+void Vision::Run()
 {
 	time.Start();
 	time.Reset();
@@ -162,10 +162,7 @@ double Vision::Run()
 		// 	cout << "F: " << time.Get() << endl;
 		// 	return error;
 		// }
-		if(abs(distance) > 70){
-			return -1;
-		}
-		else if ((position.x > 0))
+		if ((position.x > 0))
 		{
 			const double kD = 0.0001;
 			const double kP = 0.007; 
@@ -174,7 +171,10 @@ double Vision::Run()
 			prevError = error;
 			double cmd = error * kP + deltaError * kD;
 			cout << "F: " << time.Get() << endl;
-			return cmd;
+			data.distance = distance;
+			data.cmd = cmd;
+			data.data = true;
+
 		}
 	}
 
@@ -184,7 +184,6 @@ double Vision::Run()
 	// 	outputStreamStd.PutFrame(frame0/**VP.GetHslThresholdOutput()*/);
 	// }
 
-	return 0.0;
 }
 void Vision::Init()
 {
@@ -193,7 +192,6 @@ void Vision::Init()
 	outputStreamStd = CameraServer::GetInstance()->PutVideo("Gray", 160, 120);
 	camera.SetFPS(20);
 	camera.SetResolution(160, 120);
-	;
 }
 void Vision::CVMode(bool On)
 {
