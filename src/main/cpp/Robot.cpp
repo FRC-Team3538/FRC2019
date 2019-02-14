@@ -6,15 +6,14 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.hpp"
-
 #include <iostream>
-
+#include <frc/Threads.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit()
 {
   IO.wrist.ResetAngle();
-
+  vision.Init();
 }
 
 /**
@@ -27,6 +26,17 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+
+  bool btnBackDr = IO.ds.DriverPS.GetScreenShotButton();
+  
+  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
+  {
+    btnBackDr = IO.ds.DriverXB.GetBackButton();
+  }
+
+  vision.CVMode(btnBackDr);
+  AutoTarget(btnBackDr);
+
   UpdateSD();
 }
 
@@ -75,8 +85,8 @@ void Robot::TeleopPeriodic()
   bool leftBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kLeftHand);
   bool rightBumpOp = IO.ds.OperatorPS.GetBumper(GenericHID::kRightHand);
   bool btnACrossOp = IO.ds.OperatorPS.GetCrossButton();
-  bool btnYTriangleOp = IO.ds.OperatorPS.GetTriangleButton();
   bool btnBCircleOp = IO.ds.OperatorPS.GetCircleButton();
+  bool btnYTriangleOp = IO.ds.OperatorPS.GetTriangleButton();
   bool btnXSquareOp = IO.ds.OperatorPS.GetSquareButton();
   bool btnUpOp = IO.ds.OperatorPS.GetUPButton();
   bool btnRightOp = IO.ds.OperatorPS.GetRightButton();
@@ -127,11 +137,12 @@ void Robot::TeleopPeriodic()
   bool hatchPresets;
 
   //Deadbands
+  SmartDashboard::PutNumber("rotate1", rotate);
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
+  OpIntakeCommand = Deadband(OpIntakeCommand, deadband);
   leftOpY = Deadband(leftOpY, deadband);
   rightOpY = Deadband(rightOpY, deadband);
-  OpIntakeCommand = Deadband(OpIntakeCommand, deadband);
 
   //Scaling
   OpIntakeCommand *= 0.7;
@@ -352,6 +363,23 @@ void Robot::UpdateSD()
   IO.frontClimber.UpdateSmartdash();
   autoPrograms.SmartDash();
   IO.ds.SmartDash();
+}
+
+bool Robot::AutoTarget(bool Go){
+  double error = vision.Run();
+
+  if(Go){
+    if(error == -1){
+      IO.drivebase.Arcade(0, 0);
+    }
+    else{
+      IO.drivebase.Arcade(-0.15, error);
+    }
+  }
+  if(abs(error) < 0.05){
+    return true;
+  }
+  //std::cout << error << endl;
 }
 
 #ifndef RUNNING_FRC_TESTS
