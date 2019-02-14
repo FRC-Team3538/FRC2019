@@ -75,27 +75,37 @@ void AutoMachine::Run()
         }
         break;
     }
-    case 4:
+    case 4:{
+        int encdist = 36;
+        IO.drivebase.DriveForward(encdist);
+        if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
+        {
+            NextState();
+        }
+        break;
+    }
+    case 5:
     {
         //Auto Box Transform
-        IO.vision.Run();
-        double error = IO.vision.data.cmd;
-        IO.vision.CVT = true;
-        if (IO.vision.data.data)
+        Vision::returnData visionData = IO.vision.Run();
+        double error = visionData.cmd;
+        IO.vision.CVMode(true);
+        if (visionData.data)
         {
-            if (IO.vision.data.distance >= 70)
+            if (visionData.distance >= 70)
             {
                 IO.drivebase.Arcade(0, 0);
             }
             else
             {
-                IO.drivebase.Arcade(-0.15, IO.vision.data.cmd);
+                IO.drivebase.Arcade(-0.15, visionData.cmd);
             }
         }
-        if ((std::abs(error) < 0.05) && (IO.vision.data.distance >= 70))
+        if ((std::abs(error) < 0.05) && (visionData.distance >= 70))
         {
             NextState();
         }
+        break;
     }
     default:
         IO.drivebase.Stop();

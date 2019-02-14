@@ -8,7 +8,8 @@ Vision::Vision()
 	camera.SetWhiteBalanceManual(4500);
 	camera.SetBrightness(-300);
 }
-void Vision::Run()
+
+Vision::returnData Vision::Run()
 {
 	time.Start();
 	time.Reset();
@@ -174,7 +175,7 @@ void Vision::Run()
 			data.distance = distance;
 			data.cmd = cmd;
 			data.data = true;
-
+			return data;
 		}
 	}
 
@@ -183,7 +184,7 @@ void Vision::Run()
 	// 	cs::CvSource outputStreamStd = CameraServer::GetInstance()->PutVideo("HSLThresh", 160, 120);
 	// 	outputStreamStd.PutFrame(frame0/**VP.GetHslThresholdOutput()*/);
 	// }
-
+	return data;
 }
 void Vision::Init()
 {
