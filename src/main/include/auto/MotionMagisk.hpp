@@ -1,12 +1,12 @@
 #include "Waypoints.hpp"
 #include "AutoInterface.hpp"
 #include "robotmap.hpp"
-#include "Notifier.h"
+#include "frc/Notifier.h"
 
 class MotionMagisk
 {
   public:
-    Waypoints Waypoints;
+    Waypoints waypoints;
     MotionProfileStatus _status;
     TalonSRX &_talon;
 
@@ -167,7 +167,7 @@ class MotionMagisk
 
             /* Get the motion profile status every loop */
             _talon.GetMotionProfileStatus(_status);
-            _heading = _talon.GetActiveTrajectoryHeading();
+            _heading = _talon.GetActiveTrajectoryPosition();
             _pos = _talon.GetActiveTrajectoryPosition();
             _vel = _talon.GetActiveTrajectoryVelocity();
 
@@ -184,10 +184,10 @@ class MotionMagisk
     void startFilling()
     {
         /* since this example only has one talon, just update that one */
-        startFilling(Waypoints.kMotionProfile, Waypoints.kMotionProfileSz);
+        startFilling(waypoints.kMotionProfile, waypoints.kMotionProfileSz);
     }
 
-    void startFilling(double profile[][3], int totalCnt)
+    void startFilling(double profile[291][3], int totalCnt)
     {
         TrajectoryPoint point;
         _talon.ClearMotionProfileTrajectories();

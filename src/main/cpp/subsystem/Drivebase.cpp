@@ -47,14 +47,14 @@ Drivebase::Drivebase()
     motorRight1.SetSensorPhase(true);
 
     motorLeft1.Config_kF(slots::Forward, 0.0);
-	motorLeft1.Config_kP(slots::Forward, 0.1); //0.5
-	motorLeft1.Config_kI(slots::Forward, 0.0);
-	motorLeft1.Config_kD(slots::Forward, 0.04);
+    motorLeft1.Config_kP(slots::Forward, 0.1); //0.5
+    motorLeft1.Config_kI(slots::Forward, 0.0);
+    motorLeft1.Config_kD(slots::Forward, 0.04);
 
     motorRight1.Config_kF(slots::Forward, 0.0);
-	motorRight1.Config_kP(slots::Forward, 0.1);
-	motorRight1.Config_kI(slots::Forward, 0.0);
-	motorRight1.Config_kD(slots::Forward, 0.04);
+    motorRight1.Config_kP(slots::Forward, 0.1);
+    motorRight1.Config_kI(slots::Forward, 0.0);
+    motorRight1.Config_kD(slots::Forward, 0.04);
 
     motorLeft1.ConfigNominalOutputForward(0);
     motorLeft1.ConfigNominalOutputReverse(0);
@@ -84,14 +84,14 @@ Drivebase::Drivebase()
     motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::SensorSum, PIDind::aux);
 
     motorLeft1.Config_kF(slots::Turning, 0.0);
-	motorLeft1.Config_kP(slots::Turning, 0.25); //.25
-	motorLeft1.Config_kI(slots::Turning, 0.0001);
-	motorLeft1.Config_kD(slots::Turning, 0.02); //.02
+    motorLeft1.Config_kP(slots::Turning, 0.25); //.25
+    motorLeft1.Config_kI(slots::Turning, 0.0001);
+    motorLeft1.Config_kD(slots::Turning, 0.02); //.02
 
     motorRight1.Config_kF(slots::Turning, 0.0);
-	motorRight1.Config_kP(slots::Turning, 0.25);
-	motorRight1.Config_kI(slots::Turning, 0.0001);
-	motorRight1.Config_kD(slots::Turning, 0.02);
+    motorRight1.Config_kP(slots::Turning, 0.25);
+    motorRight1.Config_kI(slots::Turning, 0.0001);
+    motorRight1.Config_kD(slots::Turning, 0.02);
 
     motorLeft1.SelectProfileSlot(slots::Forward, PIDind::primary);
     motorLeft1.SelectProfileSlot(slots::Turning, PIDind::aux);
@@ -106,6 +106,14 @@ Drivebase::Drivebase()
     motorLeft1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::primary);
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::aux);
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::primary);
+
+    motorLeft1.ConfigMotionProfileTrajectoryPeriod(10, 30); //Our profile uses 10 ms timing
+    /* status 10 provides the trajectory target for motion profile AND motion magic */
+    motorLeft1.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10, 30);
+
+    motorRight1.ConfigMotionProfileTrajectoryPeriod(10, 30); //Our profile uses 10 ms timing
+    /* status 10 provides the trajectory target for motion profile AND motion magic */
+    motorRight1.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10, 30);
 }
 
 // Arcade Drive
@@ -162,54 +170,57 @@ double Drivebase::GetGyroHeading()
     return navx.GetFusedHeading();
 }
 
-void Drivebase::DriveForward(double distance){
+void Drivebase::DriveForward(double distance)
+{
     distance /= kScaleFactor;
     motorLeft1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
     motorRight1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
 }
 
-void Drivebase::Turn(double degrees){
+void Drivebase::Turn(double degrees)
+{
     // //17000 per turn
     // double pulses = (degrees / 360.0) * 17000.0;
     // motorLeft1.Set(ControlMode::Position, -pulses);
     // motorRight1.Set(ControlMode::Position, pulses);
 
-        double sumError_rotation = 0;
+    double sumError_rotation = 0;
 
-		// For linear drive function
-		double heading = degrees;
-        // if(heading > 180){
-        //     heading -= 360;
-        // }
+    // For linear drive function
+    double heading = degrees;
+    // if(heading > 180){
+    //     heading -= 360;
+    // }
 
-		// Use Gyro to drive straight
-		double gyroAngle = GetGyroHeading() > 180 ? (GetGyroHeading()) - 360 : (GetGyroHeading());
+    // Use Gyro to drive straight
+    double gyroAngle = GetGyroHeading() > 180 ? (GetGyroHeading()) - 360 : (GetGyroHeading());
 
-		double error_rot = gyroAngle - heading;
+    double error_rot = gyroAngle - heading;
 
-        if (std::abs(error_rot) < 20) {
-			sumError_rotation += (error_rot / 0.02);
-		} else {
-			sumError_rotation = 0;
-		}
+    if (std::abs(error_rot) < 20)
+    {
+        sumError_rotation += (error_rot / 0.02);
+    }
+    else
+    {
+        sumError_rotation = 0;
+    }
 
-		// D Control
-		double dError_rot = (error_rot - prevError_rotation) / 0.02; // [Inches/second]
-		prevError_rotation = error_rot;
+    // D Control
+    double dError_rot = (error_rot - prevError_rotation) / 0.02; // [Inches/second]
+    prevError_rotation = error_rot;
 
-		double driveCommandRotation = (error_rot * KP_ROTATION) + (KD_ROTATION * dError_rot) + (sumError_rotation * KI_ROTATION);
+    double driveCommandRotation = (error_rot * KP_ROTATION) + (KD_ROTATION * dError_rot) + (sumError_rotation * KI_ROTATION);
 
-		// dooo it!
-		motorLeft1.Set(-driveCommandRotation);
-        motorRight1.Set( driveCommandRotation);
+    // dooo it!
+    motorLeft1.Set(-driveCommandRotation);
+    motorRight1.Set(driveCommandRotation);
 
+    // // Allow for the robot to settle into position
+    // if (abs(error_rot) > ROTATION_TOLERANCE)
+    // 	autoSettleTimer.Reset();
 
-		// // Allow for the robot to settle into position
-		// if (abs(error_rot) > ROTATION_TOLERANCE)
-		// 	autoSettleTimer.Reset();
-
-		// else if (autoSettleTimer.Get() > settlingTime)
-
+    // else if (autoSettleTimer.Get() > settlingTime)
 }
 
 // SmartDash updater
