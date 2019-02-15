@@ -61,7 +61,7 @@
     "utility": "cpp",
     "numeric": "cpp"
   },
-  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+  "C_Cpp.intelliSenseEngineFallback": "Disabled",
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
   "C_Cpp.errorSquiggles": "Disabled"
 }

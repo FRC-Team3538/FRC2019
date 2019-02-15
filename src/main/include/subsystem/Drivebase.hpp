@@ -59,6 +59,6 @@ public:
 
   void UpdateSmartdash();
 
-  void DriveForward(double distance, double currentLimit);
+  void DriveForward(double distance, double currentLimit = 1.0);
   void Turn (double degrees);
 };

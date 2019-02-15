@@ -7,7 +7,7 @@
 #include <cameraserver/CameraServer.h>
 #include <iostream>
 #include <math.h>
-#include <frc/smartDashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Timer.h>
 
 using namespace frc;
