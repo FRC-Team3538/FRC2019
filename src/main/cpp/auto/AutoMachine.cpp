@@ -56,7 +56,7 @@ void AutoMachine::Run()
     }
     case 2:
     {
-        int encdist = 60;
+        int encdist = 65;
         IO.drivebase.DriveForward(encdist, 1);
         if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
         {
