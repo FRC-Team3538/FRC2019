@@ -36,9 +36,9 @@ private:
 
   double prevError_rotation = 0;
 
-  #define KP_ROTATION (0.0090) //0.0075
+  #define KP_ROTATION (0.012) //0.0075
   #define KI_ROTATION (0.0000) //0.0001
-  #define KD_ROTATION (0.00000) //0.00075
+  #define KD_ROTATION (0.0001) //0.00075
 
 public:
   // Default Constructor
@@ -59,6 +59,6 @@ public:
 
   void UpdateSmartdash();
 
-  void DriveForward(double distance);
+  void DriveForward(double distance, double currentLimit);
   void Turn (double degrees);
 };

@@ -36,7 +36,7 @@ void AutoMachine::Run()
     case 0:
     {
         int encdist = 55;
-        IO.drivebase.DriveForward(encdist);
+        IO.drivebase.DriveForward(encdist, 0.45);
         if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
         {
             NextState();
@@ -56,8 +56,8 @@ void AutoMachine::Run()
     }
     case 2:
     {
-        int encdist = 70;
-        IO.drivebase.DriveForward(encdist);
+        int encdist = 60;
+        IO.drivebase.DriveForward(encdist, 1);
         if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
         {
             NextState();
@@ -75,9 +75,10 @@ void AutoMachine::Run()
         }
         break;
     }
-    case 4:{
+    case 4:
+    {
         int encdist = 36;
-        IO.drivebase.DriveForward(encdist);
+        IO.drivebase.DriveForward(encdist, 1);
         if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
         {
             NextState();
@@ -87,19 +88,12 @@ void AutoMachine::Run()
     case 5:
     {
         //Auto Box Transform
+        IO.vision.CVMode(true);
         Vision::returnData visionData = IO.vision.Run();
         double error = visionData.cmd;
-        IO.vision.CVMode(true);
         if (visionData.data)
         {
-            if (visionData.distance >= 70)
-            {
-                IO.drivebase.Arcade(0, 0);
-            }
-            else
-            {
-                IO.drivebase.Arcade(-0.15, visionData.cmd);
-            }
+            IO.drivebase.Arcade(0.15, -error);
         }
         if ((std::abs(error) < 0.05) && (visionData.distance >= 70))
         {

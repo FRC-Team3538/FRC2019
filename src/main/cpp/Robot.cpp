@@ -210,6 +210,9 @@ void Robot::TeleopPeriodic()
     //   turnOneShot = false;
     // }
   }
+  else if(btnBackDr){
+
+  }
   else
   {
     IO.drivebase.Arcade(0, 0);
@@ -366,15 +369,15 @@ void Robot::UpdateSD()
 }
 
 bool Robot::AutoTarget(bool Go){
-  IO.vision.Run();
-  double error =  IO.vision.data.cmd;
+  Vision::returnData dataDrop = IO.vision.Run();
+  double error = dataDrop.cmd;
 
   if(Go){
-    if(error == -1){
+    if(dataDrop.distance >= 70){
       IO.drivebase.Arcade(0, 0);
     }
     else{
-      IO.drivebase.Arcade(-0.15, error);
+      IO.drivebase.Arcade(0.15, -error);
     }
   }
   if(abs(error) < 0.05){

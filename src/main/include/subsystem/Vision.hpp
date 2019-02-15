@@ -23,9 +23,9 @@ private:
   int imNum = 1;
 
 public:
-  cs::UsbCamera cam0 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 0", 0);
-  cs::VideoSink server = CameraServer::GetInstance()->GetServer();
-  cs::CvSink sink0;
+  // cs::UsbCamera cam0 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 0", 0);
+  // cs::VideoSink server = CameraServer::GetInstance()->GetServer();
+  // cs::CvSink sink0;
   cs::UsbCamera camera;
   cs::CvSink cvSink;
   cs::CvSource outputStreamStd;

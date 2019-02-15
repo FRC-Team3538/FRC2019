@@ -59,13 +59,13 @@ Drivebase::Drivebase()
 
     motorLeft1.ConfigNominalOutputForward(0);
     motorLeft1.ConfigNominalOutputReverse(0);
-    motorLeft1.ConfigPeakOutputForward(0.45);
-    motorLeft1.ConfigPeakOutputReverse(-0.45);
+    motorLeft1.ConfigPeakOutputForward(1);
+    motorLeft1.ConfigPeakOutputReverse(-1);
 
     motorRight1.ConfigNominalOutputForward(0);
     motorRight1.ConfigNominalOutputReverse(0);
-    motorRight1.ConfigPeakOutputForward(0.45);
-    motorRight1.ConfigPeakOutputReverse(-0.45);
+    motorRight1.ConfigPeakOutputForward(1);
+    motorRight1.ConfigPeakOutputReverse(-1);
 
     // motorLeft1.ConfigSetParameter()
 
@@ -167,7 +167,16 @@ double Drivebase::GetGyroHeading()
     return (yaw > 180) ? (yaw - 360) : (yaw) ;
 }
 
-void Drivebase::DriveForward(double distance){
+void Drivebase::DriveForward(double distance, double currentLimit){
+    motorLeft1.ConfigNominalOutputForward(0);
+    motorLeft1.ConfigNominalOutputReverse(0);
+    motorLeft1.ConfigPeakOutputForward(currentLimit);
+    motorLeft1.ConfigPeakOutputReverse(-currentLimit);
+
+    motorRight1.ConfigNominalOutputForward(0);
+    motorRight1.ConfigNominalOutputReverse(0);
+    motorRight1.ConfigPeakOutputForward(currentLimit);
+    motorRight1.ConfigPeakOutputReverse(-currentLimit);
     distance /= kScaleFactor;
     motorLeft1.Set(ControlMode::Position, distance /*, DemandType::DemandType_AuxPID, 0*/);
     motorRight1.Set(ControlMode::Position, distance /*, DemandType::DemandType_AuxPID, 0*/);
