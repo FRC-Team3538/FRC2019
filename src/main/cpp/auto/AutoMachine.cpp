@@ -1,6 +1,6 @@
-#include "auto/AutoMachine.hpp"
 
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "auto/AutoMachine.hpp"
 
 // Name for Smart Dash Chooser
 std::string AutoMachine::GetName()
@@ -91,7 +91,7 @@ void AutoMachine::Run()
         IO.vision.CVMode(true);
         Vision::returnData visionData = IO.vision.Run();
         double error = visionData.cmd;
-        if (visionData.data)
+        if (visionData.data && error != -3.14)
         {
             IO.drivebase.Arcade(0.15, -error);
         }

@@ -373,7 +373,7 @@ bool Robot::AutoTarget(bool Go){
   double error = dataDrop.cmd;
 
   if(Go){
-    if(dataDrop.distance >= 70){
+    if(dataDrop.distance >= 70 || error == -3.14){
       IO.drivebase.Arcade(0, 0);
     }
     else{
