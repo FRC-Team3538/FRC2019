@@ -11,6 +11,16 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+// Robot() : _talon(Constants::kTalonID), _vic(Constants::kVictorFollower), _example(_talon)
+// {
+// }
+
+void Robot::DisabledPeriodic()
+{
+  IO.drivebase.magiskL1->reset();
+  IO.drivebase.magiskR1->reset();
+}
+
 void Robot::RobotInit()
 {
   IO.wrist.ResetAngle();
@@ -27,6 +37,10 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   UpdateSD();
+  IO.drivebase.magiskL1->control();
+	IO.drivebase.magiskL1->PeriodicTask();
+  IO.drivebase.magiskR1->control();
+	IO.drivebase.magiskR1->PeriodicTask();
 }
 
 void Robot::AutonomousInit()
@@ -152,10 +166,12 @@ void Robot::TeleopPeriodic()
   }
   else if (btnUpDr || btnDownDr || btnRightDr || btnLeftDr)
   {
-    if(btnRightDr){
+    if (btnRightDr)
+    {
       IO.drivebase.Turn(45);
     }
-    else if(btnLeftDr){
+    else if (btnLeftDr)
+    {
       IO.drivebase.Turn(0);
     }
     // if ((btnUpDr || btnDownDr) && !forwardOneShot)
@@ -169,7 +185,7 @@ void Robot::TeleopPeriodic()
     // }
     // else if (btnDownDr)
     // {
-     //   IO.drivebase.DriveForward(-12);
+    //   IO.drivebase.DriveForward(-12);
     // }
     // else
     // {

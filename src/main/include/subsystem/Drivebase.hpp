@@ -4,6 +4,7 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include <iostream>
+#include <auto/MotionMagisk.hpp>
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace ctre::phoenix::motorcontrol;
@@ -13,7 +14,15 @@ class Drivebase
 {
 private:
   // Hardware setup
-  enum motors{L1 = 0, L2, L3, R1, R2, R3};
+  enum motors
+  {
+    L1 = 0,
+    L2,
+    L3,
+    R1,
+    R2,
+    R3
+  };
 
   WPI_TalonSRX motorLeft1{motors::L1};
   WPI_VictorSPX motorLeft2{motors::L2};
@@ -28,17 +37,31 @@ private:
   AHRS navx{SPI::Port::kMXP, 200};
 
   // Encoder Scale Factor (Inches)/(Pulse)
-  const double kScaleFactor = (1.0/4096.0) * 6 * 3.1415;
+  const double kScaleFactor = (1.0 / 4096.0) * 6 * 3.1415;
 
-  enum kRemote{Remote0 = 0, Remote1};
-  enum PIDind{primary = 0, aux};
-  enum slots{Forward = 0, Turning, Slot2, Slot3};
+  enum kRemote
+  {
+    Remote0 = 0,
+    Remote1
+  };
+  enum PIDind
+  {
+    primary = 0,
+    aux
+  };
+  enum slots
+  {
+    Forward = 0,
+    Turning,
+    Slot2,
+    Slot3
+  };
 
   double prevError_rotation = 0;
 
-  #define KP_ROTATION (0.0075)
-  #define KI_ROTATION (0.0001)
-  #define KD_ROTATION (0.00075)
+#define KP_ROTATION (0.0075)
+#define KI_ROTATION (0.0001)
+#define KD_ROTATION (0.00075)
 
 public:
   // Default Constructor
@@ -60,5 +83,17 @@ public:
   void UpdateSmartdash();
 
   void DriveForward(double distance);
-  void Turn (double degrees);
+  void Turn(double degrees);
+
+  void work(bool Work);
+
+  void setProfileSpd();
+
+  SetValueMotionProfile LeftMotPro();
+  SetValueMotionProfile RightMotPro();
+
+  //Magisk
+  MotionMagisk *magiskL1 = new MotionMagisk( motorLeft1 );
+  MotionMagisk *magiskR1 = new MotionMagisk( motorRight1 );
+
 };

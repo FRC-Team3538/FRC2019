@@ -8,7 +8,6 @@
 #include <subsystem/HatchManip.hpp>
 #include <subsystem/CargoIntake.hpp>
 #include <subsystem/FrontClimber.hpp>
-#include <auto/MotionMagisk.hpp>
 
 class robotmap
 {
@@ -21,5 +20,4 @@ class robotmap
     HatchManip hatchManip;
     CargoIntake cargoIntake;
     FrontClimber frontClimber;
-    MotionMagisk magisk;
 };

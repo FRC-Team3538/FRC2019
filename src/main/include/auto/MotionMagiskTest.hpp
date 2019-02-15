@@ -2,33 +2,36 @@
 
 #include <string>
 
-#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/Timer.h>
 
+#include "AutoInterface.hpp"
 #include "robotmap.hpp"
-#include "auto/AutoInterface.hpp"
 
-class AutoPrograms
-{
+#include <smartdashboard/SmartDashboard.h>
 
-  private:
+class MotionMagiskTest: public AutoInterface {
+ public:
+    // Name of this program, used by SmartDash
+    static std::string GetName();
+
+ private:
     // Get a referance to the robotmap
-    robotmap &IO;
+    robotmap& IO;
 
-    // Selected Auto Program
-    AutoInterface* m_autoProgram;
+    // State Variables
+    int m_state;   
+    Timer m_autoTimer;
 
-    // SmartDash Chooser
-    SendableChooser<std::string> m_chooser;
+    void NextState();
 
-  public:
+    bool oneShot = false;
+
+ public:
     // Constructor requires a reference to the RobotMap
-    AutoPrograms() = delete;
-    AutoPrograms(robotmap &);
+    MotionMagiskTest() = delete;
+    MotionMagiskTest(robotmap& );
 
-    // Choose a program to Initialize
-    void Init();
-
-    // Run the selected program
+    // Auto Program Logic
     void Run();
-    void SmartDash();
+    
 };

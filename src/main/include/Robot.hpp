@@ -24,6 +24,7 @@ class Robot : public frc::TimedRobot {
   void TeleopInit() override;
   void TeleopPeriodic() override;
   void TestPeriodic() override;
+  void DisabledPeriodic() override;
 
  private:
   robotmap IO;

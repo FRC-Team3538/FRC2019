@@ -1,14 +1,15 @@
+#pragma once
 #include "Waypoints.hpp"
 #include "AutoInterface.hpp"
-#include "robotmap.hpp"
 #include "frc/Notifier.h"
+#include <ctre/Phoenix.h>
 
 class MotionMagisk
 {
   public:
     Waypoints waypoints;
     MotionProfileStatus _status;
-    TalonSRX &_talon;
+    TalonSRX & _talon;
 
     double _pos = 0, _vel = 0, _heading = 0;
     int _state = 0;
@@ -187,7 +188,7 @@ class MotionMagisk
         startFilling(waypoints.kMotionProfile, waypoints.kMotionProfileSz);
     }
 
-    void startFilling(double profile[291][3], int totalCnt)
+    void startFilling(const double profile[291][3], const int totalCnt)
     {
         TrajectoryPoint point;
         _talon.ClearMotionProfileTrajectories();
