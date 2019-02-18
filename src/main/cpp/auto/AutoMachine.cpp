@@ -33,33 +33,33 @@ void AutoMachine::Run()
     case 0:
     {
 
-        IO.drivebase.DriveForward(0);
-        if (m_autoTimer.Get() > 0.0)
-        {
-            NextState();
-        }
-        break;
-    }
-    case 1:
-    {
-        IO.drivebase.Turn(-45);
+        IO.drivebase.DriveForward(48);
         if (m_autoTimer.Get() > 10.0)
         {
-            IO.drivebase.ResetEncoders();
             NextState();
         }
         break;
     }
-    case 2:
-    {
+    // case 1:
+    // {
+    //     IO.drivebase.Turn(-45);
+    //     if (m_autoTimer.Get() > 10.0)
+    //     {
+    //         IO.drivebase.ResetEncoders();
+    //         NextState();
+    //     }
+    //     break;
+    // }
+    // case 2:
+    // {
 
-        IO.drivebase.DriveForward(0);
-        if (m_autoTimer.Get() > 3.0)
-        {
-            NextState();
-        }
-        break;
-    }
+    //     IO.drivebase.DriveForward(0);
+    //     if (m_autoTimer.Get() > 3.0)
+    //     {
+    //         NextState();
+    //     }
+    //     break;
+    // }
     default:
         IO.drivebase.Stop();
     }

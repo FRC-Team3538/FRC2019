@@ -4,6 +4,8 @@
 #include "frc/Notifier.h"
 #include <ctre/Phoenix.h>
 
+//from Astralis import Magisk;
+
 class MotionMagisk
 {
   public:
