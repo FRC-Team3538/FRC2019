@@ -47,7 +47,7 @@ private:
   enum PIDind
   {
     primary = 0,
-    aux
+    aux = 1
   };
   enum slots
   {
@@ -89,11 +89,14 @@ public:
 
   void setProfileSpd();
 
+  bool forwardOneShot = false;
+  double forAngle;
+
   SetValueMotionProfile LeftMotPro();
   SetValueMotionProfile RightMotPro();
 
   //Magisk
-  MotionMagisk *magiskL1 = new MotionMagisk( motorLeft1 );
-  MotionMagisk *magiskR1 = new MotionMagisk( motorRight1 );
-
+  MotionMagisk * magiskL1 = new MotionMagisk( motorLeft1 );
+  MotionMagisk * magiskR1 = new MotionMagisk( motorRight1 );
+  PigeonIMU * Hoothoot = new PigeonIMU(0);
 };

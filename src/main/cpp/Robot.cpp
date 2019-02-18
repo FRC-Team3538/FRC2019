@@ -17,6 +17,7 @@
 
 void Robot::DisabledPeriodic()
 {
+  IO.drivebase.ResetEncoders();
   IO.drivebase.magiskL1->reset();
   IO.drivebase.magiskR1->reset();
 }

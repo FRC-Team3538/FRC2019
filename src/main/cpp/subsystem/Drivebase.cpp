@@ -46,12 +46,12 @@ Drivebase::Drivebase()
     motorLeft1.SetSensorPhase(true);
     motorRight1.SetSensorPhase(true);
 
-    motorLeft1.Config_kF(slots::Forward, 0.076);
+    motorLeft1.Config_kF(slots::Forward, 0.0);//0.076
     motorLeft1.Config_kP(slots::Forward, 0.06); //0.1
     motorLeft1.Config_kI(slots::Forward, 0.0);
     motorLeft1.Config_kD(slots::Forward, 0.04);
 
-    motorRight1.Config_kF(slots::Forward, 0.076);
+    motorRight1.Config_kF(slots::Forward, 0.0);
     motorRight1.Config_kP(slots::Forward, 0.06);
     motorRight1.Config_kI(slots::Forward, 0.0);
     motorRight1.Config_kD(slots::Forward, 0.04);
@@ -69,19 +69,22 @@ Drivebase::Drivebase()
     // motorLeft1.ConfigSetParameter()
 
     //Remote Sensor
-    motorLeft1.ConfigRemoteFeedbackFilter(motors::R1, RemoteSensorSource::RemoteSensorSource_TalonSRX_SelectedSensor, Remote0);
-    motorRight1.ConfigRemoteFeedbackFilter(motors::L1, RemoteSensorSource::RemoteSensorSource_TalonSRX_SelectedSensor, Remote0);
+    // motorLeft1.ConfigRemoteFeedbackFilter(motors::R1, RemoteSensorSource::RemoteSensorSource_TalonSRX_SelectedSensor, Remote0);
+    // motorRight1.ConfigRemoteFeedbackFilter(motors::L1, RemoteSensorSource::RemoteSensorSource_TalonSRX_SelectedSensor, Remote0);
+    motorLeft1.ConfigRemoteFeedbackFilter(0, RemoteSensorSource::RemoteSensorSource_GadgeteerPigeon_Yaw, Remote0);
+    motorRight1.ConfigRemoteFeedbackFilter(0, RemoteSensorSource::RemoteSensorSource_GadgeteerPigeon_Yaw, Remote0);
 
-    motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff1, FeedbackDevice::QuadEncoder);
-    motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff0, FeedbackDevice::RemoteSensor0);
-    motorRight1.ConfigSensorTerm(SensorTerm::SensorTerm_Sum0, FeedbackDevice::QuadEncoder);
-    motorRight1.ConfigSensorTerm(SensorTerm::SensorTerm_Sum1, FeedbackDevice::RemoteSensor0);
+    // motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff1, FeedbackDevice::QuadEncoder);
+    // motorLeft1.ConfigSensorTerm(SensorTerm::SensorTerm_Diff0, FeedbackDevice::RemoteSensor1);
+    // motorRight1.ConfigSensorTerm(SensorTerm::SensorTerm_Sum0, FeedbackDevice::QuadEncoder);
+    // motorRight1.ConfigSensorTerm(SensorTerm::SensorTerm_Sum1, FeedbackDevice::RemoteSensor1);
+    
 
     motorLeft1.ConfigAuxPIDPolarity(true);
     motorRight1.ConfigAuxPIDPolarity(true);
 
-    motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::SensorDifference, PIDind::aux);
-    motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::SensorSum, PIDind::aux);
+    motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::RemoteSensor0, PIDind::aux);
+    motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::RemoteSensor0, PIDind::aux);
 
     motorLeft1.Config_kF(slots::Turning, 0.0);
     motorLeft1.Config_kP(slots::Turning, 0.25); //.25
@@ -162,59 +165,69 @@ double Drivebase::GetEncoderPositionRight()
 // Gyro
 void Drivebase::ResetGyro()
 {
-    navx.ZeroYaw();
+    Hoothoot->SetCompassAngle(0.0);
+    //navx.ZeroYaw();
 }
 
 double Drivebase::GetGyroHeading()
 {
-    return navx.GetFusedHeading();
+    double robotHeading = Hoothoot->GetFusedHeading();
+    if(robotHeading > 180){
+        Hoothoot->SetCompassAngle(robotHeading - 360);
+    }
+    else if(robotHeading < -180){
+        Hoothoot->SetCompassAngle(robotHeading + 360);
+    }
+    robotHeading = Hoothoot->GetFusedHeading();
+    return robotHeading;
+    //return navx.GetFusedHeading();
 }
 
 void Drivebase::DriveForward(double distance)
 {
     distance /= kScaleFactor;
-    motorLeft1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
-    motorRight1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, 0);
+    motorLeft1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, -168);
+    motorRight1.Set(ControlMode::Position, distance, DemandType::DemandType_AuxPID, -168);
 }
 
 void Drivebase::Turn(double degrees)
 {
     // //17000 per turn
-    // double pulses = (degrees / 360.0) * 17000.0;
-    // motorLeft1.Set(ControlMode::Position, -pulses);
-    // motorRight1.Set(ControlMode::Position, pulses);
+    //double pulses = (degrees / 360.0) * 17000.0;
+    //motorLeft1.Set(ControlMode::Position, -pulses);
+    //motorRight1.Set(ControlMode::Position, pulses);
 
     double sumError_rotation = 0;
 
     // For linear drive function
-    double heading = degrees;
-    // if(heading > 180){
-    //     heading -= 360;
+    // double heading = degrees;
+    // // if(heading > 180){
+    // //     heading -= 360;
+    // // }
+
+    // // Use Gyro to drive straight
+    // double gyroAngle = GetGyroHeading();
+
+    // double error_rot = gyroAngle - heading;
+
+    // if (std::abs(error_rot) < 20)
+    // {
+    //     sumError_rotation += (error_rot / 0.02);
+    // }
+    // else
+    // {
+    //     sumError_rotation = 0;
     // }
 
-    // Use Gyro to drive straight
-    double gyroAngle = GetGyroHeading() > 180 ? (GetGyroHeading()) - 360 : (GetGyroHeading());
+    // // D Control
+    // double dError_rot = (error_rot - prevError_rotation) / 0.02; // [Inches/second]
+    // prevError_rotation = error_rot;
 
-    double error_rot = gyroAngle - heading;
+    // double driveCommandRotation = (error_rot * KP_ROTATION) + (KD_ROTATION * dError_rot) + (sumError_rotation * KI_ROTATION);
 
-    if (std::abs(error_rot) < 20)
-    {
-        sumError_rotation += (error_rot / 0.02);
-    }
-    else
-    {
-        sumError_rotation = 0;
-    }
-
-    // D Control
-    double dError_rot = (error_rot - prevError_rotation) / 0.02; // [Inches/second]
-    prevError_rotation = error_rot;
-
-    double driveCommandRotation = (error_rot * KP_ROTATION) + (KD_ROTATION * dError_rot) + (sumError_rotation * KI_ROTATION);
-
-    // dooo it!
-    motorLeft1.Set(-driveCommandRotation);
-    motorRight1.Set(driveCommandRotation);
+    // // dooo it!
+    // motorLeft1.Set(-driveCommandRotation);
+    // motorRight1.Set(driveCommandRotation);
 
     // // Allow for the robot to settle into position
     // if (abs(error_rot) > ROTATION_TOLERANCE)
@@ -252,7 +265,7 @@ void Drivebase::UpdateSmartdash()
 
     SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
 
-    SmartDashboard::PutNumber("GyroFused", ((GetGyroHeading() > 180) ? (GetGyroHeading() - 360) : (GetGyroHeading())));
+    SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
 
     SmartDashboard::PutNumber("TARGETrAUX", motorRight1.GetClosedLoopTarget(PIDind::aux));
     SmartDashboard::PutNumber("TARGETrPRIM", motorRight1.GetClosedLoopTarget(PIDind::primary));
