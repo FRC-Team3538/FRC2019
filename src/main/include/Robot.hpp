@@ -36,6 +36,7 @@ private:
   const double deadband = 0.1;
   bool forwardOneShot = false;
   bool turnOneShot = false;
+  bool Runs = false;
 
   double Deadband(double input, double deadband);
   void UpdateSD();

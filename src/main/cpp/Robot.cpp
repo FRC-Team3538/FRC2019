@@ -28,14 +28,14 @@ void Robot::RobotPeriodic()
 {
 
   bool btnBackDr = IO.ds.DriverPS.GetScreenShotButton();
-  
+
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
     btnBackDr = IO.ds.DriverXB.GetBackButton();
   }
 
-  IO.vision.CVMode(btnBackDr);
-  AutoTarget(btnBackDr);
+  // IO.vision.CVMode(btnBackDr);
+  // AutoTarget(btnBackDr);a\
 
   UpdateSD();
 }
@@ -52,9 +52,8 @@ void Robot::AutonomousPeriodic()
   autoPrograms.Run();
 }
 
-void Robot::TeleopInit() 
+void Robot::TeleopInit()
 {
-
 }
 
 void Robot::TeleopPeriodic()
@@ -133,7 +132,8 @@ void Robot::TeleopPeriodic()
     btnBackOp = IO.ds.OperatorXB.GetBackButton();
     btnStartOp = IO.ds.OperatorXB.GetStartButton();
   }
-  double OpIntakeCommand = (rightTrigOp - leftTrigOp);
+  double OpIntakeCommand = -(rightTrigOp - leftTrigOp);
+  double DrClimbCommand = (rightTrigDr - leftTrigDr);
   bool hatchPresets;
 
   //Deadbands
@@ -145,7 +145,7 @@ void Robot::TeleopPeriodic()
   rightOpY = Deadband(rightOpY, deadband);
 
   //Scaling
-  OpIntakeCommand *= 0.7;
+  OpIntakeCommand *= 1;
   leftOpY *= -1;
   rotate *= 0.8;
 
@@ -168,10 +168,12 @@ void Robot::TeleopPeriodic()
   }
   else if (btnUpDr || btnDownDr || btnRightDr || btnLeftDr)
   {
-    if(btnRightDr){
+    if (btnRightDr)
+    {
       IO.drivebase.Turn(45);
     }
-    else if(btnLeftDr){
+    else if (btnLeftDr)
+    {
       IO.drivebase.Turn(0);
     }
     // if ((btnUpDr || btnDownDr) && !forwardOneShot)
@@ -185,7 +187,7 @@ void Robot::TeleopPeriodic()
     // }
     // else if (btnDownDr)
     // {
-     //   IO.drivebase.DriveForward(-12);
+    //   IO.drivebase.DriveForward(-12);
     // }
     // else
     // {
@@ -210,8 +212,8 @@ void Robot::TeleopPeriodic()
     //   turnOneShot = false;
     // }
   }
-  else if(btnBackDr){
-
+  else if (btnBackDr)
+  {
   }
   else
   {
@@ -244,7 +246,7 @@ void Robot::TeleopPeriodic()
   }
 
   //Cargo Manip
-  IO.cargoManip.Set(OpIntakeCommand);
+// IO.cargoManip.Set(OpIntakeCommand);
 
   //Cargo Intake
   if (rightBumpOp)
@@ -258,41 +260,23 @@ void Robot::TeleopPeriodic()
     IO.cargoIntake.Set(0.0);
   }
 
-  //Hatch Manip
-  if (btnACrossOp)
-  {
-    IO.hatchManip.Clamp();
-    hatchPresets == true;
-  }
-  if (btnBCircleOp)
-  {
-    IO.hatchManip.Unclamp();
-  }
+  //Front Climber
   if (btnXSquareOp)
   {
-    IO.hatchManip.Eject();
+    //IO.frontClimber.Deploy();
+    Runs = true;
+    IO.elevator.ActivateGantry();
   }
   if (btnYTriangleOp)
   {
-    IO.hatchManip.Retract();
-  }
-
-  //Front Climber
-  if (btnXSquareDr)
-  {
-    IO.frontClimber.Deploy();
-    IO.elevator.ActivateGantry();
-  }
-  if (btnYTriangleDr)
-  {
-    IO.frontClimber.Retract();
+    Runs = false;
+    //IO.frontClimber.Retract();
     IO.elevator.DeactivateGantry();
   }
-  if (IO.frontClimber.isDeployed() == true)
+  if (Runs)
   {
-    IO.frontClimber.Set(forward);
+    IO.frontClimber.Set(OpIntakeCommand);
   }
-
   //Sensor Override
   if (btnStartDr == true || btnStartOp == true)
   {
@@ -341,6 +325,7 @@ void Robot::TeleopPeriodic()
     }
   }
 }
+
 void Robot::TestPeriodic() {}
 
 double Robot::Deadband(double input, double deadband)
@@ -368,19 +353,24 @@ void Robot::UpdateSD()
   IO.ds.SmartDash();
 }
 
-bool Robot::AutoTarget(bool Go){
+bool Robot::AutoTarget(bool Go)
+{
   Vision::returnData dataDrop = IO.vision.Run();
   double error = dataDrop.cmd;
 
-  if(Go){
-    if(dataDrop.distance >= 70 || error == -3.14){
+  if (Go)
+  {
+    if (dataDrop.distance >= 70 || error == -3.14)
+    {
       IO.drivebase.Arcade(0, 0);
     }
-    else{
+    else
+    {
       IO.drivebase.Arcade(0.15, -error);
     }
   }
-  if(abs(error) < 0.05){
+  if (abs(error) < 0.05)
+  {
     return true;
   }
   //std::cout << error << endl;
