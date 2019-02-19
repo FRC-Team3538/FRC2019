@@ -7,7 +7,7 @@
 #include "AutoInterface.hpp"
 #include "robotmap.hpp"
 
-#include <smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 class MotionMagiskTest: public AutoInterface {
  public:

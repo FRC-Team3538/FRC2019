@@ -46,12 +46,12 @@ Drivebase::Drivebase()
     motorLeft1.SetSensorPhase(true);
     motorRight1.SetSensorPhase(true);
 
-    motorLeft1.Config_kF(slots::Forward, 0.0);//0.076
+    motorLeft1.Config_kF(slots::Forward, 0.076);//0.076
     motorLeft1.Config_kP(slots::Forward, 0.06); //0.1
     motorLeft1.Config_kI(slots::Forward, 0.0);
     motorLeft1.Config_kD(slots::Forward, 0.04);
 
-    motorRight1.Config_kF(slots::Forward, 0.0);
+    motorRight1.Config_kF(slots::Forward, 0.076);
     motorRight1.Config_kP(slots::Forward, 0.06);
     motorRight1.Config_kI(slots::Forward, 0.0);
     motorRight1.Config_kD(slots::Forward, 0.04);

@@ -4,7 +4,8 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include <iostream>
-#include <auto/MotionMagisk.hpp>
+#include <auto/MotionMagiskLeft.hpp>
+#include <auto/MotionMagiskRight.hpp>
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace ctre::phoenix::motorcontrol;
@@ -96,7 +97,7 @@ public:
   SetValueMotionProfile RightMotPro();
 
   //Magisk
-  MotionMagisk * magiskL1 = new MotionMagisk( motorLeft1 );
-  MotionMagisk * magiskR1 = new MotionMagisk( motorRight1 );
+  MotionMagiskLeft * magiskL1 = new MotionMagiskLeft( motorLeft1 );
+  MotionMagiskRight * magiskR1 = new MotionMagiskRight( motorRight1 );
   PigeonIMU * Hoothoot = new PigeonIMU(0);
 };
