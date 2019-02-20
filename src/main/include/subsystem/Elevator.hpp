@@ -14,8 +14,11 @@ class Elevator
     WPI_TalonSRX motor1 {6};
     WPI_VictorSPX motor2 {7};
 
-    DigitalInput LimitSwitchLower {0};
-		DigitalInput LimitSwitchUpper {1};
+    DigitalInput LimitSwitchELower {0};
+    DigitalInput LimitSwitchELower2 {1};
+		DigitalInput LimitSwitchEUpper {2};
+    DigitalInput LimitSwitchGanLeft {3};
+    DigitalInput LimitSwitchGanRight {4};
 
     Solenoid solenoidPTO{1};
 
@@ -38,7 +41,10 @@ class Elevator
     void Stop();
 
     bool GetSwitchUpper();
-    bool GetSwitchLower();
+    bool GetSwitchLower1();
+    bool GetSwitchLower2();
+    bool GetGanSwitchLeft();
+    bool GetGanSwitchRight();
 
     void ActivateSensorOverride();
     void DeactivateSensorOverride();

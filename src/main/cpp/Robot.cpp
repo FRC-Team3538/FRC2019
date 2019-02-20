@@ -147,7 +147,7 @@ void Robot::TeleopPeriodic()
   //Scaling
   OpIntakeCommand *= 1;
   leftOpY *= -1;
-  rotate *= 0.8;
+  //rotate *= 0.8;
 
   //Drive
 
@@ -277,6 +277,7 @@ void Robot::TeleopPeriodic()
   {
     IO.frontClimber.Set(OpIntakeCommand);
   }
+
   //Sensor Override
   if (btnStartDr == true || btnStartOp == true)
   {
@@ -288,6 +289,7 @@ void Robot::TeleopPeriodic()
     IO.elevator.DeactivateSensorOverride();
     IO.wrist.DeactivateSensorOverride();
   }
+
 
   //Presets
   if (hatchPresets == true)

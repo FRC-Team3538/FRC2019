@@ -53,7 +53,23 @@ void Elevator::Stop()
 // Positive Speed is Up
 void Elevator::Set(double speed)
 {
-    motor1.Set(speed);
+    if(speed < 0.0)
+    {
+        if(GetGanSwitchLeft() && GetGanSwitchRight())
+        {
+            motor1.Set(speed);
+        }
+        else
+        {
+            Stop();
+        }
+    }
+    else
+    {
+        motor1.Set(speed);
+    }
+    
+    
     /*double pos = GetDistance();
 
     if ((GetSwitchUpper() || pos > kMax) && speed > 0.0) 
@@ -75,12 +91,26 @@ void Elevator::Set(double speed)
 // Limit Switches
 bool Elevator::GetSwitchUpper()
 {
-    return LimitSwitchUpper.Get();
+    return LimitSwitchEUpper.Get();
 }
 
-bool Elevator::GetSwitchLower()
+bool Elevator::GetSwitchLower1()
 {
-    return LimitSwitchUpper.Get();
+    return LimitSwitchELower.Get();
+}
+
+bool Elevator::GetSwitchLower2()
+{
+    return LimitSwitchELower2.Get();
+}
+
+bool Elevator::GetGanSwitchLeft()
+{
+    return LimitSwitchGanLeft.Get();
+}
+bool Elevator::GetGanSwitchRight()
+{
+    return LimitSwitchGanRight.Get();
 }
 
 // Encoder Reset
@@ -132,5 +162,11 @@ void Elevator::UpdateSmartdash()
     SmartDashboard::PutNumber("Elevator Pos Target", targetPos);
 
     SmartDashboard::PutBoolean("Limit Switch Upper", GetSwitchUpper());
-    SmartDashboard::PutBoolean("Limit Switch Lower", GetSwitchLower());
+    SmartDashboard::PutBoolean("Limit Switch Lower", GetSwitchLower1());
+    SmartDashboard::PutBoolean("Limit Switch Lower", GetSwitchLower2());
+    SmartDashboard::PutBoolean("Limit Switch Gan Left", GetGanSwitchLeft());
+    SmartDashboard::PutBoolean("Limit Switch Gan Right", GetGanSwitchRight());
+
+    SmartDashboard::PutBoolean("PTO Solenoid", solenoidPTO.Get());
+    
 }
