@@ -7,17 +7,27 @@ HatchManip::HatchManip()
 {
     // Default State
     clamp.Set(false);
-    eject.Set(false);
+    deploy.Set(false);
+    floorIntake.Set(false);
 }
 
-void HatchManip::Eject()
+void HatchManip::Deploy()
 {
-    eject.Set(true);
+    deploy.Set(true);
 }
 
 void HatchManip::Retract()
 {
-    eject.Set(false);
+    deploy.Set(false);
+}
+
+void HatchManip::FloorIntakeDown()
+{
+    floorIntake.Set(true);
+}
+void HatchManip::FloorIntakeUp()
+{
+    floorIntake.Set(false);
 }
 
 void HatchManip::Clamp()
@@ -33,6 +43,7 @@ void HatchManip::Unclamp()
 
 void HatchManip::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("Hatch Clamp", clamp.Get());
-    SmartDashboard::PutNumber("Hatch Eject", eject.Get());
+    SmartDashboard::PutBoolean("Hatch Clamp", clamp.Get());
+    SmartDashboard::PutBoolean("Hatch Deploy", deploy.Get());
+    SmartDashboard::PutBoolean("Hatch Floor", floorIntake.Get());
 }

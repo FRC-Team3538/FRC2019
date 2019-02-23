@@ -17,11 +17,12 @@ class Wrist
 
     // Soft Limits
     const double kMin = 5;
-    const double kMax = -110;
+    const double kMax = -135;
     const double kScale = (1.0/4096.0) * 360.0 * (1.0/2.0);
 
     double prevError = 0;
     bool sensorOverride = false;
+    bool oneShot = false;
 
   public:
     double wristPosTarget;
@@ -38,10 +39,8 @@ class Wrist
     void DeactivateSensorOverride();
 
     double GetAngle();
-    void ResetAngle();
+    void ResetEnc();
     void SetAngle(double angle);
 
     void UpdateSmartdash();
-
-    bool oneShot = false;
 };

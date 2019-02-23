@@ -37,23 +37,40 @@ void Wrist::Stop()
 // Positive speed is up
 void Wrist::SetSpeed(double speed)
 {
-    /*double pos = GetAngle();
-
-    if ((pos > kMax || GetSwitchUpper() ) && speed > 0.0) {
-        motor1.Set(0.0);
-    }
-    else if ((pos < kMin || GetSwitchLower() ) && speed < 0.0) {
-        motor1.Set(0.0);
-    } 
-    else
+    if (sensorOverride)
     {
         motor1.Set(speed);
-    }*/
-    if(speed != 0.0){
-        motor1.Set(speed);
+        return;
+    }
+
+    if(speed != 0.0)
+    {
+        double pos = GetAngle();
+
+        if ((pos > kMax || GetSwitchUpper() ) && speed > 0.0) {
+            motor1.Set(0.0);
+        }
+        else if ((pos < kMin || GetSwitchLower() ) && speed < 0.0) {
+            motor1.Set(0.0);
+            ResetEnc();
+        } 
+        else if (pos < 15)
+        {
+            motor1.Set(speed * 0.3);
+        }
+        else if (pos > 110)
+        {
+            motor1.Set(speed * 0.3);
+        }
+        else
+        {
+            motor1.Set(speed);
+        }
+
         oneShot = false;
     }
-    else if (!oneShot){
+    else if (!oneShot)
+    {
         SetAngle(GetAngle());
         oneShot = true;
     }
@@ -71,27 +88,26 @@ bool Wrist::GetSwitchLower()
     return LimitSwitchUpper.Get();
 }
 
-void Wrist::ResetAngle()
-{
-    motor1.SetSelectedSensorPosition(0);
-}
-
 // Closed loop control
 void Wrist::SetAngle(double angle)
 {
+    if (sensorOverride)
+    {
+        return;
+    }
+
     wristPosTarget = angle / kScale;
-    //double currentAngle = GetAngle();
     motor1.Set(ControlMode::Position, wristPosTarget);
 }
                                                                  
 double Wrist::GetAngle()
 {
-    //return motor1.GetSensorCollection().GetQuadraturePosition() * kScale;
     return motor1.GetSelectedSensorPosition(0) * kScale;
+}
 
-    // double rots = motor1.GetSensorCollection().GetQuadraturePosition() / kScale;
-    // double deg = rots * 360.0;
-    // return deg;
+void Wrist::ResetEnc()
+{
+    motor1.SetSelectedSensorPosition(0.0);
 }
 
 void Wrist::ActivateSensorOverride()

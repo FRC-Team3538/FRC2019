@@ -12,7 +12,7 @@
 
 void Robot::RobotInit()
 {
-  IO.wrist.ResetAngle();
+  IO.wrist.ResetEnc();
   IO.vision.Init();
 }
 
@@ -93,6 +93,7 @@ void Robot::TeleopPeriodic()
   bool btnDownOp = IO.ds.OperatorPS.GetDownButton();
   bool btnBackOp = IO.ds.OperatorPS.GetScreenShotButton();
   bool btnStartOp = IO.ds.OperatorPS.GetOptionsButton();
+  bool btnPSOp = IO.ds.OperatorPS.GetPSButtonPressed();
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
@@ -132,198 +133,150 @@ void Robot::TeleopPeriodic()
     btnBackOp = IO.ds.OperatorXB.GetBackButton();
     btnStartOp = IO.ds.OperatorXB.GetStartButton();
   }
-  double OpIntakeCommand = -(rightTrigOp - leftTrigOp);
-  double DrClimbCommand = (rightTrigDr - leftTrigDr);
-  bool hatchPresets;
 
   //Deadbands
   SmartDashboard::PutNumber("rotate1", rotate);
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
-  OpIntakeCommand = Deadband(OpIntakeCommand, deadband);
   leftOpY = Deadband(leftOpY, deadband);
   rightOpY = Deadband(rightOpY, deadband);
 
   //Scaling
-  OpIntakeCommand *= 1;
   leftOpY *= -1;
   //rotate *= 0.8;
 
-  //Drive
-
-  // if (btnUpDr)
-  // {
-  //   IO.drivebase.DriveForward(96);
-  // }
-  // else if (btnDownDr)
-  // {
-  //   IO.drivebase.DriveForward(0);
-  // }
-  // else{
-  //   IO.drivebase.Arcade(forward, rotate);
-  // }
-  if (forward != 0 || rotate != 0)
+  //
+  // Driver
+  //
+  IO.drivebase.Arcade(forward, rotate);
+  
+  if (leftBumpDr || leftBumpOp)
   {
-    IO.drivebase.Arcade(forward, rotate);
-  }
-  else if (btnUpDr || btnDownDr || btnRightDr || btnLeftDr)
-  {
-    if (btnRightDr)
-    {
-      IO.drivebase.Turn(45);
-    }
-    else if (btnLeftDr)
-    {
-      IO.drivebase.Turn(0);
-    }
-    // if ((btnUpDr || btnDownDr) && !forwardOneShot)
-    // {
-    //   IO.drivebase.ResetEncoders();
-    //   forwardOneShot = true;
-    // }
-    // else if (btnUpDr)
-    // {
-    //   IO.drivebase.DriveForward(12);
-    // }
-    // else if (btnDownDr)
-    // {
-    //   IO.drivebase.DriveForward(-12);
-    // }
-    // else
-    // {
-    //   forwardOneShot = false;
-    // }
-
-    // if ((btnRightDr || btnLeftDr) && !turnOneShot)
-    // {
-    //   IO.drivebase.ResetEncoders();
-    //   turnOneShot = true;
-    // }
-    // else if (btnLeftDr)
-    // {
-    //   IO.drivebase.Turn(45);
-    // }
-    // else if (btnRightDr)
-    // {
-    //   IO.drivebase.Turn(-45);
-    // }
-    // else
-    // {
-    //   turnOneShot = false;
-    // }
-  }
-  else if (btnBackDr)
-  {
-  }
-  else
-  {
-    IO.drivebase.Arcade(0, 0);
-  }
-  if (leftBumpDr)
-  {
-    IO.drivebase.ResetGyro();
-    //IO.drivebase.SetLowGear();
+    IO.cargoManip.Set(-1.0);
   }
 
-  if (rightBumpDr)
+  if (rightBumpDr || rightBumpOp)
   {
-    IO.drivebase.SetHighGear();
+    IO.cargoManip.Set(0.5);
+    IO.wrist.SetAngle(45);
+    IO.elevator.SetPosition(5);
   }
+
+  if (btnStartDr)
+  {
+    //sensor enable
+  }
+
+  if (btnBackDr)
+  {
+    //sensor disable
+  }
+
+  //
+  //Operator
+  //
+  if (btnPSOp)
+  {
+    IO.elevator.ToggleGantry();
+  }
+
+  IO.frontClimber.Set(rightTrigOp - leftTrigOp);
+
+  if (btnStartOp)
+  {
+    IO.elevator.ActivateSensorOverride();
+    IO.wrist.ActivateSensorOverride();
+  }
+
+  if (btnBackOp)
+  {
+    IO.elevator.DeactivateSensorOverride();
+    IO.wrist.DeactivateSensorOverride();
+  }
+
+  if (btnBCircleOp) 
+  {
+    IO.hatchManip.Clamp();
+    hatchPresets = true;
+  }
+  if (btnACrossOp) 
+  {
+    IO.hatchManip.Unclamp();
+    hatchPresets = false;
+  }
+  if (btnYTriangleOp) 
+  {
+    IO.elevator.SetPosition(18);
+    IO.wrist.SetAngle(0);
+    IO.hatchManip.Deploy();
+  }
+  if (btnXSquareOp) 
+  {
+    IO.elevator.SetPosition(5);
+    IO.wrist.SetAngle(110);
+    IO.hatchManip.FloorIntakeDown();
+  }
+
 
   //Elevator
   IO.elevator.Set(leftOpY);
 
   //Wrist
   IO.wrist.SetSpeed(-rightOpY);
-
-  if (rightBumpOp)
-  {
-    IO.wrist.ResetAngle();
-  }
-  if (leftBumpOp == true)
-  {
-    IO.wrist.SetAngle(90);
-  }
-
-  //Cargo Manip
-// IO.cargoManip.Set(OpIntakeCommand);
-
-  //Cargo Intake
-  if (rightBumpOp)
-  {
-    IO.cargoIntake.Deploy();
-    IO.cargoIntake.Set(1.0);
-  }
-  if (leftBumpOp)
-  {
-    IO.cargoIntake.Retract();
-    IO.cargoIntake.Set(0.0);
-  }
-
-  //Front Climber
-  if (btnXSquareOp)
-  {
-    //IO.frontClimber.Deploy();
-    Runs = true;
-    IO.elevator.ActivateGantry();
-  }
-  if (btnYTriangleOp)
-  {
-    Runs = false;
-    //IO.frontClimber.Retract();
-    IO.elevator.DeactivateGantry();
-  }
-  if (Runs)
-  {
-    IO.frontClimber.Set(OpIntakeCommand);
-  }
-
-  //Sensor Override
-  if (btnStartDr == true || btnStartOp == true)
-  {
-    IO.elevator.ActivateSensorOverride();
-    IO.wrist.ActivateSensorOverride();
-  }
-  if (btnBackDr == true || btnBackOp == true)
-  {
-    IO.elevator.DeactivateSensorOverride();
-    IO.wrist.DeactivateSensorOverride();
-  }
-
-
+ 
   //Presets
-  if (hatchPresets == true)
+  if (hatchPresets)
   {
-    if (btnUpOp == true)
+    if (btnUpOp)
     {
-      IO.elevator.SetPosition(100); //high rocket
+      //high rocket
+      IO.elevator.SetPosition(100); 
+      IO.wrist.SetAngle(0);
     }
-    if (btnDownOp == true)
+    if (btnDownOp)
     {
-      IO.elevator.SetPosition(50); //middle rocket
+      //middle rocket
+      IO.elevator.SetPosition(50); 
+      IO.wrist.SetAngle(0);
     }
-    if (btnRightOp == true)
+    if (btnRightOp)
     {
-      IO.elevator.SetPosition(25); //cargo ship and low rocket
+      //low rocket
+      IO.elevator.SetPosition(25); 
+      IO.wrist.SetAngle(0);
+    }
+    if (btnLeftOp)
+    {
+      //cargo ship
+      IO.elevator.SetPosition(25);
+      IO.wrist.SetAngle(0); 
     }
   }
   else
   {
-    if (btnUpOp == true)
+    if (btnUpOp)
     {
-      IO.elevator.SetPosition(100); //high rocket
+      //high rocket
+      IO.elevator.SetPosition(100); 
+      IO.wrist.SetAngle(0);
     }
-    if (btnDownOp == true)
+    if (btnDownOp)
     {
-      IO.elevator.SetPosition(50); //middle rocket
+      //middle rocket
+      IO.elevator.SetPosition(50);
+      IO.wrist.SetAngle(0); 
     }
-    if (btnRightOp == true)
+    if (btnRightOp)
     {
-      IO.elevator.SetPosition(25); //low rocket
+      //low rocket
+      IO.elevator.SetPosition(25); 
+      IO.wrist.SetAngle(0);
     }
-    if (btnLeftOp == true)
+    if (btnLeftOp)
     {
-      IO.elevator.SetPosition(40); //cargo ship
+      //cargo ship
+      IO.elevator.SetPosition(40); 
+      IO.wrist.SetAngle(30);
     }
   }
 }

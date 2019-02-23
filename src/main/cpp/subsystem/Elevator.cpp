@@ -53,55 +53,75 @@ void Elevator::Stop()
 // Positive Speed is Up
 void Elevator::Set(double speed)
 {
-    if(speed < 0.0)
+    if (sensorOverride)
     {
-        if(GetGanSwitchLeft() && GetGanSwitchRight())
+        motor1.Set(speed);
+        return;
+    }
+
+    if (solenoidPTO.Get())
+    {
+        if(speed < 0.0)
         {
-            motor1.Set(speed);
+            if(GetGanSwitchLeft() && GetGanSwitchRight())
+            {
+                motor1.Set(speed);
+            }
+            else
+            {
+                Stop();
+            }
         }
         else
         {
-            Stop();
+            motor1.Set(speed);
         }
     }
     else
     {
-        motor1.Set(speed);
-    }
-    
-    
-    /*double pos = GetDistance();
+        if(speed != 0.0)
+        {
+            double pos = GetDistance();
 
-    if ((GetSwitchUpper() || pos > kMax) && speed > 0.0) 
-    {
-        motor1.Set(0.0);
-    } 
-    else if ((GetSwitchLower() || pos < kMin) && speed < 0.0) 
-    {   
-        // Zero the encoder on the lower switch
-        motor1.Set(0.0);
-        ResetEnc();
-    } 
-    else 
-    {
-        motor1.Set(speed);
-    }*/
+            if ((pos > kMax || GetElvSwitchUpper() ) && speed > 0.0) {
+                motor1.Set(0.0);
+            }
+            else if ((pos < kMin || GetElvSwitchLower() ) && speed < 0.0) {
+                motor1.Set(0.0);
+                ResetEnc();
+            } 
+            else if (pos < 15)
+            {
+                motor1.Set(speed * 0.3);
+            }
+            else if (pos > 110)
+            {
+                motor1.Set(speed * 0.3);
+            }
+            else
+            {
+                motor1.Set(speed);
+            }
+
+            oneShot = false;
+        }
+        else if (!oneShot)
+        {
+            SetPosition(GetDistance());
+            oneShot = true;
+        }
+    }
 }
 
 // Limit Switches
-bool Elevator::GetSwitchUpper()
+bool Elevator::GetElvSwitchUpper()
 {
-    return LimitSwitchEUpper.Get();
+    return LimitElvSwitchUpper.Get();
 }
 
-bool Elevator::GetSwitchLower1()
+bool Elevator::GetElvSwitchLower()
 {
-    return LimitSwitchELower.Get();
-}
-
-bool Elevator::GetSwitchLower2()
-{
-    return LimitSwitchELower2.Get();
+    return LimitElvSwitchLower.Get();
 }
 
 bool Elevator::GetGanSwitchLeft()
@@ -128,7 +148,12 @@ double Elevator::GetDistance()
 // Closed loop control, inches from bottom
 void Elevator::SetPosition(double pos)
 {
-    //motor1.Set(ControlMode::Position, pos / kScaleFactor);
+    if (sensorOverride)
+    {
+        return;
+    }
+
+    motor1.Set(ControlMode::Position, pos / kScaleFactor);
     targetPos = pos;
 }
 
@@ -140,6 +165,11 @@ void Elevator::ActivateGantry()
 void Elevator::DeactivateGantry() 
 {
     solenoidPTO.Set(false);
+}
+
+void Elevator::ToggleGantry() 
+{
+    solenoidPTO.Set(!solenoidPTO.Get());
 }
 
 void Elevator::ActivateSensorOverride()
@@ -161,9 +191,8 @@ void Elevator::UpdateSmartdash()
     SmartDashboard::PutNumber("Elevator Pos", GetDistance());
     SmartDashboard::PutNumber("Elevator Pos Target", targetPos);
 
-    SmartDashboard::PutBoolean("Limit Switch Upper", GetSwitchUpper());
-    SmartDashboard::PutBoolean("Limit Switch Lower", GetSwitchLower1());
-    SmartDashboard::PutBoolean("Limit Switch Lower", GetSwitchLower2());
+    SmartDashboard::PutBoolean("Limit Switch Upper", GetElvSwitchUpper());
+    SmartDashboard::PutBoolean("Limit Switch Lower", GetElvSwitchLower());
     SmartDashboard::PutBoolean("Limit Switch Gan Left", GetGanSwitchLeft());
     SmartDashboard::PutBoolean("Limit Switch Gan Right", GetGanSwitchRight());
 

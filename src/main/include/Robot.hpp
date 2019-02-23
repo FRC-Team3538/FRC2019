@@ -34,12 +34,10 @@ private:
   LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
 
   const double deadband = 0.1;
-  bool forwardOneShot = false;
-  bool turnOneShot = false;
-  bool Runs = false;
+  bool hatchPresets = true;
 
   double Deadband(double input, double deadband);
   void UpdateSD();
 
-  bool AutoTarget(bool Go);  
+  bool AutoTarget(bool Go); 
 };

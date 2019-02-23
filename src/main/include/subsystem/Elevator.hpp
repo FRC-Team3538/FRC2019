@@ -14,11 +14,10 @@ class Elevator
     WPI_TalonSRX motor1 {6};
     WPI_VictorSPX motor2 {7};
 
-    DigitalInput LimitSwitchELower {0};
-    DigitalInput LimitSwitchELower2 {1};
-		DigitalInput LimitSwitchEUpper {2};
-    DigitalInput LimitSwitchGanLeft {3};
-    DigitalInput LimitSwitchGanRight {4};
+    DigitalInput LimitElvSwitchLower {0};
+		DigitalInput LimitElvSwitchUpper {1};
+    DigitalInput LimitSwitchGanLeft {2};
+    DigitalInput LimitSwitchGanRight {3};
 
     Solenoid solenoidPTO{1};
 
@@ -31,6 +30,7 @@ class Elevator
 
     double targetPos = 0;
     bool sensorOverride = false;
+    bool oneShot = false;
 
   public:
     // Default Constructor
@@ -40,9 +40,8 @@ class Elevator
     void Set(double speed);
     void Stop();
 
-    bool GetSwitchUpper();
-    bool GetSwitchLower1();
-    bool GetSwitchLower2();
+    bool GetElvSwitchUpper();
+    bool GetElvSwitchLower();
     bool GetGanSwitchLeft();
     bool GetGanSwitchRight();
 
@@ -51,6 +50,7 @@ class Elevator
 
     void ActivateGantry();
     void DeactivateGantry();
+    void ToggleGantry();
 
     void ResetEnc();
     double GetDistance();

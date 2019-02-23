@@ -246,6 +246,7 @@ void Drivebase::UpdateSmartdash()
 
     SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
 
+/*
     SmartDashboard::PutNumber("TARGETrAUX", motorRight1.GetClosedLoopTarget(PIDind::aux));
     SmartDashboard::PutNumber("TARGETrPRIM", motorRight1.GetClosedLoopTarget(PIDind::primary));
     SmartDashboard::PutNumber("ERRORrAUX", motorRight1.GetClosedLoopError(PIDind::aux));
@@ -258,4 +259,5 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutNumber("ERRORlPRIM", motorLeft1.GetClosedLoopError(PIDind::primary));
     SmartDashboard::PutNumber("POSlAUX", motorLeft1.GetSelectedSensorPosition(PIDind::aux));
     SmartDashboard::PutNumber("POSlPRIM", motorLeft1.GetSelectedSensorPosition(PIDind::primary));
+*/
 }

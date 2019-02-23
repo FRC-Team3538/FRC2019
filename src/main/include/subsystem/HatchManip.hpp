@@ -9,16 +9,20 @@ class HatchManip
   private:
   
     // Hardware setup
-    Solenoid clamp{2};
-    Solenoid eject{3};
+    Solenoid clamp {4};
+    Solenoid deploy {5};
+    Solenoid floorIntake {6};
 
   public:
     // Default Constructor
     HatchManip();
 
     // Actions
-    void Eject();
+    void Deploy();
     void Retract();
+
+    void FloorIntakeDown();
+    void FloorIntakeUp();
 
     void Clamp();
     void Unclamp();
