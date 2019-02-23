@@ -12,6 +12,7 @@
 
 void Robot::RobotInit()
 {
+  IO.elevator.ResetEnc();
   IO.wrist.ResetEnc();
   IO.vision.Init();
 }
@@ -149,7 +150,6 @@ void Robot::TeleopPeriodic()
   }
 
   //Deadbands
-  SmartDashboard::PutNumber("rotate1", rotate);
   forward = Deadband(forward, deadband);
   rotate = Deadband(rotate, deadband);
   leftOpY = Deadband(leftOpY, deadband);
@@ -164,14 +164,16 @@ void Robot::TeleopPeriodic()
   //
   IO.drivebase.Arcade(forward, rotate);
   
+
+  // Manip Intake / Eject
   if (leftBumpDr || leftBumpOp)
   {
-    IO.cargoManip.Set(-1.0);
+    IO.cargoManip.Set(-0.7);
   }
   else if (rightBumpDr || rightBumpOp)
   {
     IO.cargoManip.Set(0.5);
-    IO.wrist.SetAngle(45);
+    IO.wrist.SetAngle(85);
     IO.elevator.SetPosition(5);
 
     IO.hatchManip.FloorIntakeUp();
@@ -235,56 +237,58 @@ void Robot::TeleopPeriodic()
   //Presets
   if (hatchPresets)
   {
+    // Hatch
     if (btnUpOp)
     {
-      //high rocket
-      IO.elevator.SetPosition(100); 
-      IO.wrist.SetAngle(0);
-    }
-    if (btnDownOp)
-    {
-      //middle rocket
-      IO.elevator.SetPosition(50); 
-      IO.wrist.SetAngle(0);
-    }
-    if (btnRightOp)
-    {
-      //low rocket
-      IO.elevator.SetPosition(25); 
+      // High rocket
+      IO.elevator.SetPosition(60); 
       IO.wrist.SetAngle(0);
     }
     if (btnLeftOp)
     {
-      //cargo ship
-      IO.elevator.SetPosition(25);
+      // Mid Rocket
+      IO.elevator.SetPosition(34);
       IO.wrist.SetAngle(0); 
+    }
+    if (btnRightOp)
+    {
+      // Cargo Ship
+      IO.elevator.SetPosition(25); 
+      IO.wrist.SetAngle(0);
+    }
+    if (btnDownOp)
+    {
+      // Low rocket
+      IO.elevator.SetPosition(11); 
+      IO.wrist.SetAngle(0);
     }
   }
   else
   {
+    // Cargo
     if (btnUpOp)
     {
-      //high rocket
-      IO.elevator.SetPosition(100); 
-      IO.wrist.SetAngle(0);
-    }
-    if (btnDownOp)
-    {
-      //middle rocket
-      IO.elevator.SetPosition(50);
-      IO.wrist.SetAngle(0); 
-    }
-    if (btnRightOp)
-    {
-      //low rocket
-      IO.elevator.SetPosition(25); 
+      // High rocket
+      IO.elevator.SetPosition(60); 
       IO.wrist.SetAngle(0);
     }
     if (btnLeftOp)
     {
-      //cargo ship
-      IO.elevator.SetPosition(40); 
-      IO.wrist.SetAngle(30);
+      // Mid Rocket
+      IO.elevator.SetPosition(34); 
+      IO.wrist.SetAngle(0);
+    }
+    if (btnRightOp)
+    {
+      // CargoShip
+      IO.elevator.SetPosition(25);
+      IO.wrist.SetAngle(30); 
+    }
+    if (btnDownOp)
+    {
+      // Low rocket
+      IO.elevator.SetPosition(11); 
+      IO.wrist.SetAngle(0);
     }
   }
 }

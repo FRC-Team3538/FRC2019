@@ -22,7 +22,13 @@ class Elevator
     Solenoid solenoidPTO{1};
 
     // Scale Factor (Inches) / (Pulses)
-    const double kScaleFactor = (45.0 - 9.375) / (31196.0);
+    const double kScaleFactor = (54.0 - 7.0) / (17344.0);
+    /*
+        Inches     Pulses
+          7              0
+          54        17,344
+
+    */
 
     // Soft Limits
     const double kMin = 5.0;

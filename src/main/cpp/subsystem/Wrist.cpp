@@ -17,15 +17,14 @@ Wrist::Wrist()
     motor1.SetSelectedSensorPosition(absolutePosition);
 
     motor1.Config_kF(0, 0.0, 0);
-	motor1.Config_kP(0, 2.0, 0);
+	motor1.Config_kP(0, 1.0, 0);
 	motor1.Config_kI(0, 0.0, 0);
 	motor1.Config_kD(0, 0.0, 0);
 
     motor1.ConfigNominalOutputForward(0);
     motor1.ConfigNominalOutputReverse(0);
-    motor1.ConfigPeakOutputForward(0.3);
-    motor1.ConfigPeakOutputReverse(-0.4);
-    // TODO: Setup angle sensor
+    motor1.ConfigPeakOutputForward(0.4);
+    motor1.ConfigPeakOutputReverse(-0.5);
 }
 
 // Stop all motors
@@ -122,7 +121,8 @@ void Wrist::DeactivateSensorOverride()
 
 void Wrist::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("Wrist Motor", motor1.Get());
+    SmartDashboard::PutNumber("Wrist Motor CMD", motor1.Get());
+    SmartDashboard::PutNumber("Wrist Motor Raw", motor1.GetSelectedSensorPosition());
     SmartDashboard::PutNumber("Wrist Angle", GetAngle());
     SmartDashboard::PutNumber("Wrist Angle Target", wristPosTarget);
     SmartDashboard::PutBoolean("Wrist Sensor Override", sensorOverride);

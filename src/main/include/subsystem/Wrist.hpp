@@ -18,7 +18,11 @@ class Wrist
     // Soft Limits
     const double kMin = 5;
     const double kMax = -135;
-    const double kScale = (1.0/4096.0) * 360.0 * (1.0/2.0);
+
+    // Scale Factor (Degrees) / (Pulses)
+    const double kScale = (73.0 / 3116.0);
+
+     //3790 90
 
     double prevError = 0;
     bool sensorOverride = false;
