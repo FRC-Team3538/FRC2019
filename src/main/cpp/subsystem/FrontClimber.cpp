@@ -5,7 +5,7 @@
 // Configure Hardware Settings
 FrontClimber::FrontClimber()
 {
-    motor1.SetInverted(false);
+    motor1.SetInverted(true);
 }
 
 // Solenoid

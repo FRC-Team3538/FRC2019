@@ -242,7 +242,7 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutNumber("DriveEncL", GetEncoderPositionLeft());
     SmartDashboard::PutNumber("DriveEncR", GetEncoderPositionRight());
 
-    SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
+    //SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
 
     SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
 

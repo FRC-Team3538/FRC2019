@@ -5,8 +5,8 @@
 // Configure Hardware Settings
 CargoManip::CargoManip()
 {
-    motor1.SetInverted(false);
-    motor2.SetInverted(true);
+    motor1.SetInverted(true);
+    motor2.SetInverted(false);
 
     motor2.Follow(motor1);
 }

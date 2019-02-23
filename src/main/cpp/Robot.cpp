@@ -26,17 +26,31 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-
-  bool btnBackDr = IO.ds.DriverPS.GetScreenShotButton();
+  //
+  // Sensor Override
+  //
+  bool btnBackOp = IO.ds.OperatorPS.GetScreenShotButton();
+  bool btnStartOp = IO.ds.OperatorPS.GetOptionsButton();
 
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
-    btnBackDr = IO.ds.DriverXB.GetBackButton();
+    btnBackOp = IO.ds.OperatorXB.GetBackButton();
+    btnStartOp = IO.ds.OperatorXB.GetStartButton();
   }
 
-  // IO.vision.CVMode(btnBackDr);
-  // AutoTarget(btnBackDr);a\
+  if (btnBackOp)
+  {
+    IO.elevator.ActivateSensorOverride();
+    IO.wrist.ActivateSensorOverride();
+  }
 
+  if (btnStartOp)
+  {
+    IO.elevator.DeactivateSensorOverride();
+    IO.wrist.DeactivateSensorOverride();
+  }
+
+  // Update Smart Dash
   UpdateSD();
 }
 
@@ -154,12 +168,18 @@ void Robot::TeleopPeriodic()
   {
     IO.cargoManip.Set(-1.0);
   }
-
-  if (rightBumpDr || rightBumpOp)
+  else if (rightBumpDr || rightBumpOp)
   {
     IO.cargoManip.Set(0.5);
     IO.wrist.SetAngle(45);
     IO.elevator.SetPosition(5);
+
+    IO.hatchManip.FloorIntakeUp();
+    IO.hatchManip.Retract();
+  }
+  else 
+  {
+    IO.cargoManip.Set(0.0);
   }
 
   if (btnStartDr)
@@ -181,18 +201,6 @@ void Robot::TeleopPeriodic()
   }
 
   IO.frontClimber.Set(rightTrigOp - leftTrigOp);
-
-  if (btnStartOp)
-  {
-    IO.elevator.ActivateSensorOverride();
-    IO.wrist.ActivateSensorOverride();
-  }
-
-  if (btnBackOp)
-  {
-    IO.elevator.DeactivateSensorOverride();
-    IO.wrist.DeactivateSensorOverride();
-  }
 
   if (btnBCircleOp) 
   {
