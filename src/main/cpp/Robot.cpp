@@ -15,7 +15,6 @@ void Robot::RobotInit()
   IO.elevator.ResetEnc();
   IO.wrist.ResetEnc();
   IO.drivebase.ResetEncoders();
-  IO.wrist.ResetAngle();
   IO.drivebase.ResetGyro();
   IO.vision.Init();
 }

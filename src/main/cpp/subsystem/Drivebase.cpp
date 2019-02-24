@@ -185,7 +185,7 @@ void Drivebase::DriveForward(double distance, double currentLimit)
 
     if (!oneShotAngle)
     {
-        forwardHeading = GetGyroHeading() + 1;
+        forwardHeading = GetGyroHeading();
         oneShotAngle = true;
     }
 
