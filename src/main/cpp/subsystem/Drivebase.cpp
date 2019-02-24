@@ -1,6 +1,7 @@
 #include "subsystem/Drivebase.hpp"
 #include "frc/Timer.h"
 
+#include <ctre/Phoenix.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 Drivebase::Drivebase()
@@ -26,6 +27,8 @@ Drivebase::Drivebase()
     motorRight1.SetInverted(false);
     motorRight2.SetInverted(false);
     motorRight3.SetInverted(false);
+
+    DeactivateSensorOverride();
 
     // master > slaves
     motorLeft2.Follow(motorLeft1);
@@ -231,6 +234,18 @@ void Drivebase::Turn(double degrees){
 
         }
 
+}
+
+void Drivebase::ActivateSensorOverride()
+{
+    motorLeft1.ConfigPeakCurrentLimit(200);
+    motorRight1.ConfigPeakCurrentLimit(200);
+}
+
+void Drivebase::DeactivateSensorOverride()
+{
+    motorLeft1.ConfigPeakCurrentLimit(60);
+    motorRight1.ConfigPeakCurrentLimit(60);
 }
 
 // SmartDash updater

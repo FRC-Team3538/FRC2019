@@ -9,8 +9,8 @@ class HatchManip
   private:
   
     // Hardware setup
-    Solenoid clamp {4};
-    Solenoid deploy {5};
+    Solenoid deploy {4};
+    Solenoid clamp {5};
     Solenoid floorIntake {6};
 
   public:

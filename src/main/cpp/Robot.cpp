@@ -64,7 +64,21 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-  autoPrograms.Run();
+  bool btnPSDr = IO.ds.DriverPS.GetPSButtonPressed();
+
+  if (btnPSDr) 
+  {
+    stopAuton = true;
+  }
+
+  if (stopAuton) 
+  {
+    TeleopPeriodic();
+  }
+  else 
+  {
+    autoPrograms.Run();
+  }
 }
 
 void Robot::TeleopInit()
@@ -91,6 +105,7 @@ void Robot::TeleopPeriodic()
   bool btnDownDr = IO.ds.DriverPS.GetDownButton();
   bool btnBackDr = IO.ds.DriverPS.GetScreenShotButton();
   bool btnStartDr = IO.ds.DriverPS.GetOptionsButton();
+  bool btnPSDr = IO.ds.DriverPS.GetPSButtonPressed();
 
   double leftTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kLeftHand);
   double rightTrigOp = IO.ds.OperatorPS.GetTriggerAxis(GenericHID::kRightHand); //Negative
@@ -186,7 +201,7 @@ void Robot::TeleopPeriodic()
 
   if (btnStartDr)
   {
-    //sensor enable
+    
   }
 
   if (btnBackDr)

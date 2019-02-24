@@ -44,11 +44,16 @@ public:
   // Default Constructor
   Drivebase();
 
+  bool sensorOverride = false;
+  
   // Actions
   void Arcade(double forward, double rotate);
   void Stop();
   void SetHighGear();
   void SetLowGear();
+  
+  void ActivateSensorOverride();
+  void DeactivateSensorOverride();
 
   void ResetEncoders();
   double GetEncoderPositionLeft();
