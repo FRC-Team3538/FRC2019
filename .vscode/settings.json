@@ -59,7 +59,8 @@
     "tuple": "cpp",
     "typeinfo": "cpp",
     "utility": "cpp",
-    "numeric": "cpp"
+    "numeric": "cpp",
+    "bitset": "cpp"
   },
   "C_Cpp.intelliSenseEngineFallback": "Disabled",
   "C_Cpp.default.configurationProvider": "vscode-wpilib",

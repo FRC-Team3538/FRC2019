@@ -167,8 +167,8 @@ Vision::returnData Vision::Run()
 		{
 			// const double kD = 0.0001;
 			// const double kP = 0.007; 
-			const double kP = 0.001;
-			const double kD = 0.0001;
+			const double kP = 0.005;
+			const double kD = 0.0002;
 			double error = (position.x - 80.0);
 			double deltaError = (error - prevError) / 0.02;
 			prevError = error;

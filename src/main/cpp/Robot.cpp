@@ -14,6 +14,9 @@ void Robot::RobotInit()
 {
   IO.elevator.ResetEnc();
   IO.wrist.ResetEnc();
+  IO.drivebase.ResetEncoders();
+  IO.wrist.ResetAngle();
+  IO.drivebase.ResetGyro();
   IO.vision.Init();
 }
 
@@ -44,6 +47,8 @@ void Robot::RobotPeriodic()
     IO.elevator.ActivateSensorOverride();
     IO.wrist.ActivateSensorOverride();
   }
+  // AutoTarget(btnBackDr);
+  // IO.vision.CVMode(btnBackDr);
 
   if (btnStartOp)
   {

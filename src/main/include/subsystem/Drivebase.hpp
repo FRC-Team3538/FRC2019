@@ -35,17 +35,28 @@ private:
   enum slots{Forward = 0, Turning, Slot2, Slot3};
 
   double prevError_rotation = 0;
+  double prevError_forward = 0;
+  double sumError_forward = 0;
+  double prevError_rot = 0;
+  double sumError_rotation = 0;
 
-  #define KP_ROTATION (0.012) //0.0075
+  bool oneShotAngle = false;
+
+  #define KP_ROTATION (0.012) //0.012   0.05
   #define KI_ROTATION (0.0000) //0.0001
-  #define KD_ROTATION (0.0001) //0.00075
+  #define KD_ROTATION (0.0001) //0.0001  0.0005
+
+  #define KP_FORWARD (0.012)
+  #define KI_FORWARD (0.0)
+  #define KD_FORWARD (0.0)
+
 
 public:
   // Default Constructor
   Drivebase();
 
   bool sensorOverride = false;
-  
+  double forwardHeading;
   // Actions
   void Arcade(double forward, double rotate);
   void Stop();
@@ -61,9 +72,12 @@ public:
 
   void ResetGyro();
   double GetGyroHeading();
+  void GlobalReset();
 
   void UpdateSmartdash();
 
   void DriveForward(double distance, double currentLimit = 1.0);
   void Turn (double degrees);
+
+  PigeonIMU * Hoothoot = new PigeonIMU(0);
 };
