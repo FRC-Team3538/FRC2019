@@ -46,10 +46,10 @@ void Wrist::SetSpeed(double speed)
     {
         double pos = GetAngle();
 
-        if (( GetSwitchUpper() ) && speed > 0.0) {
+        if ((/*pos > kMax ||*/ GetSwitchUpper() ) && speed > 0.0) {
             motor1.Set(0.0);
         }
-        else if (( GetSwitchLower() ) && speed < 0.0) {
+        else if ((/*pos < kMin ||*/ GetSwitchLower() ) && speed < 0.0) {
             motor1.Set(0.0);
             ResetEnc();
         } 
@@ -84,7 +84,7 @@ bool Wrist::GetSwitchUpper()
 
 bool Wrist::GetSwitchLower()
 {
-    return LimitSwitchUpper.Get();
+    return LimitSwitchLower.Get();
 }
 
 // Closed loop control
@@ -126,4 +126,5 @@ void Wrist::UpdateSmartdash()
     SmartDashboard::PutNumber("Wrist Angle", GetAngle());
     SmartDashboard::PutNumber("Wrist Angle Target", wristPosTarget);
     SmartDashboard::PutBoolean("Wrist Sensor Override", sensorOverride);
+    SmartDashboard::PutBoolean("Wrist Limit Switch Lower", GetSwitchLower());
 }

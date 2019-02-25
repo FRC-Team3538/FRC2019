@@ -39,7 +39,7 @@ Elevator::Elevator()
 
     /* set closed loop gains in slot0 */
     motor1.Config_kF(kPIDLoopIdx, 0.0);
-    motor1.Config_kP(kPIDLoopIdx, 0.1);
+    motor1.Config_kP(kPIDLoopIdx, 0.15);
     motor1.Config_kI(kPIDLoopIdx, 0.0);
     motor1.Config_kD(kPIDLoopIdx, 0.0);
 }
@@ -85,10 +85,10 @@ void Elevator::Set(double speed)
         {
             double pos = GetDistance();
 
-            if ((/*pos > kMax ||*/ GetElvSwitchUpper() ) && speed > 0.0) {
-                motor1.Set(ControlMode::PercentOutput, 0.0);
-            }
-            else if (( GetElvSwitchLower() ) && speed < 0.0) {
+            //     motor1.Set(ControlMode::PercentOutput, 0.0);
+            // if ((/*pos > kMax ||*/ GetElvSwitchUpper() ) && speed > 0.0) {
+            // }
+            if ((/*pos < kMin ||*/ GetElvSwitchLower() ) && speed < 0.0) {
                 motor1.Set(ControlMode::PercentOutput, 0.0);
                 ResetEnc();
             } 
@@ -109,7 +109,7 @@ void Elevator::Set(double speed)
         }
         else if (!oneShot)
         {
-            SetPosition(GetDistance());
+            SetPosition(GetDistance() + 3.0);
             oneShot = true;
         }
     }
