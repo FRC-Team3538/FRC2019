@@ -46,21 +46,21 @@ void Wrist::SetSpeed(double speed)
     {
         double pos = GetAngle();
 
-        if ((pos > kMax || GetSwitchUpper() ) && speed > 0.0) {
+        if (( GetSwitchUpper() ) && speed > 0.0) {
             motor1.Set(0.0);
         }
-        else if ((pos < kMin || GetSwitchLower() ) && speed < 0.0) {
+        else if (( GetSwitchLower() ) && speed < 0.0) {
             motor1.Set(0.0);
             ResetEnc();
         } 
-        else if (pos < 15)
-        {
-            motor1.Set(speed * 0.3);
-        }
-        else if (pos > 110)
-        {
-            motor1.Set(speed * 0.3);
-        }
+        // else if (pos < 15)
+        // {
+        //     motor1.Set(speed * 0.3);
+        // }
+        // else if (pos > 110)
+        // {
+        //     motor1.Set(speed * 0.3);
+        // }
         else
         {
             motor1.Set(speed);

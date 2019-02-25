@@ -34,7 +34,7 @@ private:
   LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
 
   const double deadband = 0.1;
-  bool hatchPresets = true;
+  bool hatchPresets = false;
   bool stopAuton;
 
   double Deadband(double input, double deadband);

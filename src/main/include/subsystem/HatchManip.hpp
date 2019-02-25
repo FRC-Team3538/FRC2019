@@ -9,8 +9,8 @@ class HatchManip
   private:
   
     // Hardware setup
-    Solenoid deploy {4};
-    Solenoid clamp {5};
+    Solenoid deploy {5};
+    Solenoid clamp {4};
     Solenoid floorIntake {6};
 
   public:
@@ -26,6 +26,8 @@ class HatchManip
 
     void Clamp();
     void Unclamp();
+
+    bool Deployed();
 
     void UpdateSmartdash();
 };

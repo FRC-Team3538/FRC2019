@@ -70,16 +70,16 @@ void Robot::AutonomousPeriodic()
 {
   bool btnPSDr = IO.ds.DriverPS.GetPSButtonPressed();
 
-  if (btnPSDr) 
+  if (btnPSDr)
   {
     stopAuton = true;
   }
 
-  if (stopAuton) 
+  if (stopAuton)
   {
     TeleopPeriodic();
   }
-  else 
+  else
   {
     autoPrograms.Run();
   }
@@ -182,7 +182,6 @@ void Robot::TeleopPeriodic()
   // Driver
   //
   IO.drivebase.Arcade(forward, rotate);
-  
 
   // Manip Intake / Eject
   if (leftBumpDr || leftBumpOp)
@@ -198,19 +197,19 @@ void Robot::TeleopPeriodic()
     IO.hatchManip.FloorIntakeUp();
     IO.hatchManip.Retract();
   }
-  else 
+  else
   {
     IO.cargoManip.Set(0.0);
   }
 
   if (btnStartDr)
   {
-    
+    IO.drivebase.DeactivateSensorOverride();
   }
 
   if (btnBackDr)
   {
-    //sensor disable
+    IO.drivebase.ActivateSensorOverride();
   }
 
   //
@@ -223,62 +222,56 @@ void Robot::TeleopPeriodic()
 
   IO.frontClimber.Set(rightTrigOp - leftTrigOp);
 
-  if (btnBCircleOp) 
+  if (btnBCircleOp)
   {
     IO.hatchManip.Clamp();
-    hatchPresets = true;
   }
-  if (btnACrossOp) 
+  if (btnACrossOp)
   {
     IO.hatchManip.Unclamp();
-    hatchPresets = false;
   }
-  if (btnYTriangleOp) 
+  if (btnYTriangleOp)
   {
-    IO.elevator.SetPosition(18);
     IO.wrist.SetAngle(0);
     IO.hatchManip.Deploy();
   }
-  if (btnXSquareOp) 
+  if (btnXSquareOp)
   {
-    IO.elevator.SetPosition(5);
-    IO.wrist.SetAngle(110);
-    IO.hatchManip.FloorIntakeDown();
+    IO.hatchManip.Retract();
   }
-
 
   //Elevator
   IO.elevator.Set(leftOpY);
 
   //Wrist
   IO.wrist.SetSpeed(-rightOpY);
- 
-  //Presets
+  hatchPresets = IO.hatchManip.Deployed();
+  //Presets 
   if (hatchPresets)
   {
     // Hatch
     if (btnUpOp)
     {
       // High rocket
-      IO.elevator.SetPosition(60); 
+      IO.elevator.SetPosition(74);
       IO.wrist.SetAngle(0);
     }
     if (btnLeftOp)
     {
       // Mid Rocket
-      IO.elevator.SetPosition(34);
-      IO.wrist.SetAngle(0); 
+      IO.elevator.SetPosition(50);
+      IO.wrist.SetAngle(0);
     }
     if (btnRightOp)
     {
       // Cargo Ship
-      IO.elevator.SetPosition(25); 
+      IO.elevator.SetPosition(20);
       IO.wrist.SetAngle(0);
     }
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(11); 
+      IO.elevator.SetPosition(20);
       IO.wrist.SetAngle(0);
     }
   }
@@ -288,30 +281,30 @@ void Robot::TeleopPeriodic()
     if (btnUpOp)
     {
       // High rocket
-      IO.elevator.SetPosition(60); 
+      IO.elevator.SetPosition(74);
       IO.wrist.SetAngle(0);
     }
     if (btnLeftOp)
     {
       // Mid Rocket
-      IO.elevator.SetPosition(34); 
+      IO.elevator.SetPosition(40);
       IO.wrist.SetAngle(0);
     }
     if (btnRightOp)
     {
+
       // CargoShip
-      IO.elevator.SetPosition(25);
-      IO.wrist.SetAngle(30); 
+      IO.elevator.SetPosition(35);
+      IO.wrist.SetAngle(30);
     }
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(11); 
+      IO.elevator.SetPosition(18);
       IO.wrist.SetAngle(0);
     }
   }
 }
-
 void Robot::TestPeriodic() {}
 
 double Robot::Deadband(double input, double deadband)

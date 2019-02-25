@@ -21,6 +21,11 @@ void HatchManip::Retract()
     deploy.Set(false);
 }
 
+bool HatchManip::Deployed()
+{
+    return deploy.Get();
+}
+
 void HatchManip::FloorIntakeDown()
 {
     floorIntake.Set(true);

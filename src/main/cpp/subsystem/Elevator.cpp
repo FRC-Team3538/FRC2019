@@ -85,21 +85,21 @@ void Elevator::Set(double speed)
         {
             double pos = GetDistance();
 
-            if ((pos > kMax || GetElvSwitchUpper() ) && speed > 0.0) {
+            if ((/*pos > kMax ||*/ GetElvSwitchUpper() ) && speed > 0.0) {
                 motor1.Set(ControlMode::PercentOutput, 0.0);
             }
-            else if ((pos < kMin || GetElvSwitchLower() ) && speed < 0.0) {
+            else if (( GetElvSwitchLower() ) && speed < 0.0) {
                 motor1.Set(ControlMode::PercentOutput, 0.0);
                 ResetEnc();
             } 
-            else if (pos < 15)
-            {
-                motor1.Set(ControlMode::PercentOutput, speed * 0.3);
-            }
-            else if (pos > 65)
-            {
-                motor1.Set(ControlMode::PercentOutput, speed * 0.3);
-            }
+            // else if (pos < 15)
+            // {
+            //     motor1.Set(ControlMode::PercentOutput, speed * 0.3);
+            // }
+            // else if (pos > 65)
+            // {
+            //     motor1.Set(ControlMode::PercentOutput, speed * 0.3);
+            // }
             else
             {
                 motor1.Set(ControlMode::PercentOutput, speed);
@@ -118,12 +118,12 @@ void Elevator::Set(double speed)
 // Limit Switches
 bool Elevator::GetElvSwitchUpper()
 {
-    return LimitElvSwitchUpper.Get();
+    return !LimitElvSwitchUpper.Get();
 }
 
 bool Elevator::GetElvSwitchLower()
 {
-    return LimitElvSwitchLower.Get();
+    return !LimitElvSwitchLower.Get();
 }
 
 bool Elevator::GetGanSwitchLeft()
