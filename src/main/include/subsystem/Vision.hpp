@@ -8,6 +8,7 @@
 #include <iostream>
 #include <math.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/Timer.h>
 
 using namespace frc;
@@ -22,12 +23,17 @@ private:
   double centerX = 0.0;
   int imNum = 1;
 
+	SendableChooser<std::string> chooseCam;
+	const std::string camera0 = "Cam0";
+	const std::string camera1 = "Cam1";
+
 public:
-  // cs::UsbCamera cam0 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 0", 0);
-  // cs::VideoSink server = CameraServer::GetInstance()->GetServer();
-  // cs::CvSink sink0;
-  cs::UsbCamera camera;
+  cs::UsbCamera cam0 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 0", 0);
+  cs::UsbCamera cam1 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 1", 1);
+
+  cs::CvSink sink0;
   cs::CvSink cvSink;
+
   cs::CvSource outputStreamStd;
   std::string path = "/u/vision" + std::to_string(imNum) + ".jpg";
   bool CVT = false;
@@ -63,4 +69,6 @@ public:
   std::vector<contourData> contourDataVector;
 
   Vision();
+
+  void UpdateSmartdash();
 };

@@ -5,7 +5,7 @@
 // Name for Smart Dash Chooser
 std::string AutoCargo::GetName()
 {
-    return "4 - AutoCargo";
+    return "3 - AutoCargo";
 }
 
 // Initialization
@@ -38,16 +38,16 @@ void AutoCargo::Run()
     {
     case 0:
     {
-        std::cout << "HEADINGV1 " << heading << std::endl;
         IO.drivebase.ResetEncoders();
         NextState();
         break;
     }
     case 1:
     {
-        double encdist = 195.0;
+        const double encdist = 195.0;
         IO.drivebase.DriveForward(encdist, 0.95);
-        if((IO.drivebase.GetEncoderPositionRight() + IO.drivebase.GetEncoderPositionLeft()) / 2 >= 30){
+        if ((IO.drivebase.GetEncoderPositionRight() + IO.drivebase.GetEncoderPositionLeft()) / 2 >= 30)
+        {
             IO.drivebase.forwardHeading = 30;
         }
         if ((std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist + 6) < 3) && (std::abs(IO.drivebase.GetEncoderPositionRight() - encdist - 6) < 3))
@@ -56,30 +56,9 @@ void AutoCargo::Run()
         }
         break;
     }
-    // case 0:
-    // {
-    //     int encdist = 212;
-    //     IO.drivebase.DriveForward(encdist);
-    //     if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
-    //     {
-    //         NextState();
-    //     }
-    //     break;
-    // }
-    // case 1:
-    // {
-    //     int gangle = 90;
-    //     IO.drivebase.Turn(gangle);
-    //     if (std::abs(IO.drivebase.GetGyroHeading() - gangle) < 5)
-    //     {
-    //         IO.drivebase.ResetEncoders();
-    //         NextState();
-    //     }
-    //     break;
-    // }
     case 2:
     {
-        int gangle = -90;
+        const int gangle = -90;
         IO.drivebase.Turn(gangle);
         if (std::abs(IO.drivebase.GetGyroHeading() - gangle) < 5)
         {
@@ -90,41 +69,73 @@ void AutoCargo::Run()
     }
     case 3:
     {
-        IO.vision.CVMode(true);
-        Vision::returnData dataDrop = IO.vision.Run();
-        double error = dataDrop.cmd;
-
-        if (dataDrop.distance >= 70 || error == -3.14)
+        const double encdist = 20.0;
+        IO.drivebase.DriveForward(encdist, 0.95);
+        if ((std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 3) && (std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 3))
+            ;
         {
-            IO.drivebase.Arcade(0, 0);
-        }
-        else
-        {
-            IO.drivebase.Arcade(0.3, -error);
-        }
-        if((std::abs(error) < 0.05) && dataDrop.distance >=70)
-        {
-            IO.vision.CVMode(false);
             NextState();
         }
         break;
     }
-    // case 4:
+    case 4:
+    {
+        const double elevHeight = 35.0;
+        const double wristAngle = 30.0;
+        IO.elevator.SetPosition(elevHeight);
+        IO.wrist.SetAngle(wristAngle);
+        if ((std::abs(IO.wrist.GetAngle() - wristAngle) < 3) && (std::abs(IO.elevator.GetDistance() - elevHeight) < 2))
+            ;
+        {
+            NextState();
+        }
+        break;
+    }
+    case 5:
+    {
+        const double elevHeight = 0.0;
+        const double wristAngle = 0.0;
+        const double encdist = -10;
+        IO.wrist.SetAngle(wristAngle);
+        IO.drivebase.DriveForward(encdist);
+        if (IO.wrist.GetAngle() < 20)
+        {
+            IO.elevator.SetPosition(elevHeight);
+        }
+        if ((std::abs(IO.wrist.GetAngle() - wristAngle) < 3) && (std::abs(IO.elevator.GetDistance() - elevHeight) < 2))
+            ;
+        {
+            NextState();
+        }
+        break;
+    }
+    case 6:
+    {
+        const int gangle = -200;
+        IO.drivebase.Turn(gangle);
+        if (std::abs(IO.drivebase.GetGyroHeading() - gangle) < 5)
+        {
+            NextState();
+        }
+        break;
+    }
+    // case 3:
     // {
-    //     //Vision stuff here?
-    //     //Richards vision stuff will go here eventually
-    //     if (true)
+    //     IO.vision.CVMode(true);
+    //     Vision::returnData dataDrop = IO.vision.Run();
+    //     double error = dataDrop.cmd;
+
+    //     if (dataDrop.distance >= 70 || error == -3.14)
     //     {
-    //         NextState();
+    //         IO.drivebase.Arcade(0, 0);
     //     }
-    //     break;
-    // }
-    // case 5:
-    // {
-    //     int encdist = 30;
-    //     IO.drivebase.DriveForward(encdist);
-    //     if (std::abs(IO.drivebase.GetEncoderPositionLeft() - encdist) < 5 && std::abs(IO.drivebase.GetEncoderPositionRight() - encdist) < 5)
+    //     else
     //     {
+    //         IO.drivebase.Arcade(0.3, -error);
+    //     }
+    //     if((std::abs(error) < 0.05) && dataDrop.distance >=70)
+    //     {
+    //         IO.vision.CVMode(false);
     //         NextState();
     //     }
     //     break;

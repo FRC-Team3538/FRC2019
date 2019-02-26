@@ -2,38 +2,62 @@
 
 Vision::Vision()
 {
-	camera.SetFPS(20);
-	camera.SetResolution(160, 120);
-	camera.SetExposureManual(15); //20 worked well
-	camera.SetWhiteBalanceManual(4500);
-	camera.SetBrightness(-300);
+	// NOOP
+}
+
+void Vision::Init()
+{
+	cam0.SetFPS(20);
+	cam0.SetResolution(160, 120);
+
+	cam1.SetFPS(20);
+	cam1.SetResolution(160, 120);
+
+	cvSink = CameraServer::GetInstance()->GetVideo("Camera 0");
+
+	outputStreamStd = CameraServer::GetInstance()->PutVideo("Vision", 160, 120);
+
+	chooseCam.SetDefaultOption(camera0, camera0);
+	chooseCam.AddOption(camera1, camera1);
+	frc::SmartDashboard::PutData("Selected Camera", &chooseCam);
 }
 
 Vision::returnData Vision::Run()
 {
+	auto cam = cam0;
+	if (chooseCam.GetSelected() == camera1)
+	{
+		cam = cam1;
+	}
+
 	time.Start();
 	time.Reset();
 
+	cam.SetFPS(20);
+
 	if (CVT)
 	{
-		camera.SetExposureManual(15); //20 worked well
-		camera.SetBrightness(-300);
-		camera.SetWhiteBalanceManual(4500);
+		cam.SetExposureManual(15); //20 worked well
+		cam.SetBrightness(-300);
+		cam.SetWhiteBalanceManual(4500);
 	}
 	else
 	{
-		camera.SetExposureAuto();
-		camera.SetWhiteBalanceAuto();
-		camera.SetBrightness(40);
+		cam.SetExposureAuto();
+		cam.SetWhiteBalanceAuto();
+		cam.SetBrightness(40);
 	}
 
-	cv::Mat source;
-	cvSink.GrabFrame(source);
-	if (CVT && !source.empty())
+	if (CVT)
 	{
+		cv::Mat source;
+		cvSink.GrabFrame(source);
+		if (source.empty())
+		{
+			return data;
+		}
 		VP.Process(source);
 
-		SmartDashboard::PutNumber("TimeA", time.Get());
 		cout << "A: " << time.Get() << endl;
 		contourDataVector.clear();
 		contourNum = 0;
@@ -48,17 +72,16 @@ Vision::returnData Vision::Run()
 			contourData cD;
 			fitLine(contour, line, CV_DIST_L2, 0, 0.01, 0.01);
 			double lineAngle = vectorAngle(line);
-			SmartDashboard::PutNumber("Angle Line" + to_string(contourNum), lineAngle);
 			cD.x = centers[contourNum].x;
 			cD.angle = lineAngle;
 			cD.numero = contourNum;
 			convexHull(Mat(contours[contourNum]), hulls[contourNum], false);
-			cout << "ANGLE" << lineAngle << endl; 
+			cout << "ANGLE" << lineAngle << endl;
 			if (!(lineAngle < 50 || lineAngle > 130))
 			{
 				contourDataVector.push_back(cD);
 				DrawLine(line, source);
-				putText(source, to_string(contourNum), cvPoint((centers[contourNum].x + 10),(centers[contourNum].y + 5)), FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(255,255,255), 1, CV_AA);
+				putText(source, to_string(contourNum), cvPoint((centers[contourNum].x + 10), (centers[contourNum].y + 5)), FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(255, 255, 255), 1, CV_AA);
 			}
 			contourNum++;
 		}
@@ -124,37 +147,31 @@ Vision::returnData Vision::Run()
 		cv::Point position;
 		double distance;
 
-		if(centerContour > -1 && centerContourPair > -1){
+		if (centerContour > -1 && centerContourPair > -1)
+		{
 			distance = (contourDataVector[centerContourPair].x - contourDataVector[centerContour].x);
 			position.x = (contourDataVector[centerContourPair].x + contourDataVector[centerContour].x) / 2;
 			position.y = (centers[contourDataVector[centerContourPair].numero].y + centers[contourDataVector[centerContourPair].numero].y) / 2;
 			drawMarker(source, position, Scalar(255, 255, 255), 1, 10, 2);
 		}
 
-		SmartDashboard::PutNumber("TimeB", time.Get());
-
 		outputStreamStd.PutFrame(source);
 		imwrite(path, *VP.GetHslThresholdOutput());
-		cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
-		cv::Mat frame0;
-		cvSink.GrabFrame(frame0);
 
-		SmartDashboard::PutNumber("TimeC", time.Get());
+		cv::Mat frame0;
+		cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
+		cvSink.GrabFrame(frame0);
 
 		int imNum2 = imNum + 1;
 		imwrite("/u/vision" + std::to_string(imNum2) + ".jpg", frame0);
 		imNum += 2;
 		// double realCenter = 0;
 
-		SmartDashboard::PutNumber("TimeD", time.Get());
-
 		// for (auto c : centers)
 		// {
 		// 	realCenter += c.x;
 		// }
 		// realCenter /= centers.size();
-
-		SmartDashboard::PutNumber("TimeE", time.Get());
 
 		// if ((realCenter != 80) && (realCenter > 0))
 		// {
@@ -166,7 +183,7 @@ Vision::returnData Vision::Run()
 		if ((position.x > 0))
 		{
 			// const double kD = 0.0001;
-			// const double kP = 0.007; 
+			// const double kP = 0.007;
 			const double kP = 0.005;
 			const double kD = 0.0002;
 			double error = (position.x - 80.0);
@@ -188,14 +205,7 @@ Vision::returnData Vision::Run()
 	// }
 	return data;
 }
-void Vision::Init()
-{
-	camera = CameraServer::GetInstance()->StartAutomaticCapture(0);
-	cvSink = CameraServer::GetInstance()->GetVideo();
-	outputStreamStd = CameraServer::GetInstance()->PutVideo("Gray", 160, 120);
-	camera.SetFPS(20);
-	camera.SetResolution(160, 120);
-}
+
 void Vision::CVMode(bool On)
 {
 	CVT = On;
@@ -272,4 +282,8 @@ double Vision::vectorAngle(Vec4f vector)
 		angle -= 180;
 	}
 	return angle;
+}
+void Vision::UpdateSmartdash()
+{
+	frc::SmartDashboard::PutData("Selected Camera", &chooseCam);
 }

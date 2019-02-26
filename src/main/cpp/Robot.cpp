@@ -181,8 +181,12 @@ void Robot::TeleopPeriodic()
   //
   // Driver
   //
-  IO.drivebase.Arcade(forward, rotate);
-
+  IO.vision.CVMode(btnUpDr);
+  AutoTarget(btnUpDr);
+  if (!btnUpDr)
+  {
+    IO.drivebase.Arcade(forward, rotate);
+  }
   // Manip Intake / Eject
   if (leftBumpDr || leftBumpOp)
   {
@@ -246,7 +250,7 @@ void Robot::TeleopPeriodic()
   //Wrist
   IO.wrist.SetSpeed(-rightOpY);
   hatchPresets = IO.hatchManip.Deployed();
-  //Presets 
+  //Presets
   if (hatchPresets)
   {
     // Hatch
@@ -313,6 +317,14 @@ double Robot::Deadband(double input, double deadband)
   {
     return 0.0;
   }
+  else if (input > 0.95)
+  {
+    return 1.0;
+  }
+  else if (input < -0.95)
+  {
+    return -1.0;
+  }
   else
   {
     return input;
@@ -348,7 +360,7 @@ bool Robot::AutoTarget(bool Go)
       IO.drivebase.Arcade(0.15, -error);
     }
   }
-  if (abs(error) < 0.05)
+  if (abs(error) < 0.05 && dataDrop.distance >= 70)
   {
     return true;
   }
