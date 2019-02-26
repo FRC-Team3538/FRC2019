@@ -187,6 +187,7 @@ void Robot::TeleopPeriodic()
   {
     IO.drivebase.Arcade(forward, rotate);
   }
+
   // Manip Intake / Eject
   if (leftBumpDr || leftBumpOp)
   {
@@ -226,19 +227,24 @@ void Robot::TeleopPeriodic()
 
   IO.frontClimber.Set(rightTrigOp - leftTrigOp);
 
+  // Hatch Clamp
   if (btnBCircleOp)
   {
     IO.hatchManip.Clamp();
   }
+
   if (btnACrossOp)
   {
     IO.hatchManip.Unclamp();
   }
+
+  // Hatch Deploy
   if (btnYTriangleOp)
   {
     IO.wrist.SetAngle(0);
     IO.hatchManip.Deploy();
   }
+
   if (btnXSquareOp)
   {
     IO.hatchManip.Retract();
@@ -275,7 +281,7 @@ void Robot::TeleopPeriodic()
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(20);
+      IO.elevator.SetPosition(17);
       IO.wrist.SetAngle(0);
     }
   }
