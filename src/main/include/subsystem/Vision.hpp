@@ -24,8 +24,9 @@ private:
   int imNum = 1;
 
 	SendableChooser<std::string> chooseCam;
-	const std::string camera0 = "Cam0";
-	const std::string camera1 = "Cam1";
+	const std::string camera0 = "Vision";
+	const std::string camera1 = "Wideangle";
+  const std::string none = "None";
 
 public:
   cs::UsbCamera cam0 = CameraServer::GetInstance()->StartAutomaticCapture("Camera 0", 0);

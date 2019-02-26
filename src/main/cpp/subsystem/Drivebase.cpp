@@ -247,12 +247,14 @@ void Drivebase::GlobalReset(){
 
 void Drivebase::ActivateSensorOverride()
 {
+    sensorOverride = true;
     motorLeft1.ConfigPeakCurrentLimit(200);
     motorRight1.ConfigPeakCurrentLimit(200);
 }
 
 void Drivebase::DeactivateSensorOverride()
 {
+    sensorOverride = false;
     motorLeft1.ConfigPeakCurrentLimit(60);
     motorRight1.ConfigPeakCurrentLimit(60);
 }
@@ -266,7 +268,7 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutNumber("DriveEncL", GetEncoderPositionLeft());
     SmartDashboard::PutNumber("DriveEncR", GetEncoderPositionRight());
 
-    //SmartDashboard::PutBoolean("DriveShifter", solenoidShifter.Get());
+    SmartDashboard::PutBoolean("Drive Limits Disabled", sensorOverride);
 
     SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
 

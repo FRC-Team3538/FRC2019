@@ -12,12 +12,12 @@ void Vision::Init()
 
 	cam1.SetFPS(20);
 	cam1.SetResolution(160, 120);
-
-	cvSink = CameraServer::GetInstance()->GetVideo("Camera 0");
+	
 
 	outputStreamStd = CameraServer::GetInstance()->PutVideo("Vision", 160, 120);
 
-	chooseCam.SetDefaultOption(camera0, camera0);
+	chooseCam.SetDefaultOption(none, none);
+	chooseCam.AddOption(camera0, camera0);
 	chooseCam.AddOption(camera1, camera1);
 	frc::SmartDashboard::PutData("Selected Camera", &chooseCam);
 }
@@ -50,6 +50,7 @@ Vision::returnData Vision::Run()
 
 	if (CVT)
 	{
+		cvSink = cam == cam0 ? CameraServer::GetInstance()->GetVideo("Camera 0") : CameraServer::GetInstance()->GetVideo("Camera 1");
 		cv::Mat source;
 		cvSink.GrabFrame(source);
 		if (source.empty())
