@@ -256,6 +256,7 @@ void Robot::TeleopPeriodic()
   //Wrist
   IO.wrist.SetSpeed(-rightOpY);
   hatchPresets = IO.hatchManip.Deployed();
+
   //Presets
   if (hatchPresets)
   {
@@ -269,19 +270,19 @@ void Robot::TeleopPeriodic()
     if (btnLeftOp)
     {
       // Mid Rocket
-      IO.elevator.SetPosition(50);
+      IO.elevator.SetPosition(44);
       IO.wrist.SetAngle(0);
     }
     if (btnRightOp)
     {
       // Cargo Ship
-      IO.elevator.SetPosition(20);
+      IO.elevator.SetPosition(15);
       IO.wrist.SetAngle(0);
     }
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(17);
+      IO.elevator.SetPosition(15);
       IO.wrist.SetAngle(0);
     }
   }
@@ -291,13 +292,13 @@ void Robot::TeleopPeriodic()
     if (btnUpOp)
     {
       // High rocket
-      IO.elevator.SetPosition(74);
+      IO.elevator.SetPosition(71);
       IO.wrist.SetAngle(0);
     }
     if (btnLeftOp)
     {
       // Mid Rocket
-      IO.elevator.SetPosition(40);
+      IO.elevator.SetPosition(41);
       IO.wrist.SetAngle(0);
     }
     if (btnRightOp)
@@ -310,7 +311,7 @@ void Robot::TeleopPeriodic()
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(18);
+      IO.elevator.SetPosition(16);
       IO.wrist.SetAngle(0);
     }
   }
