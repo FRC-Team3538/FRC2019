@@ -12,7 +12,7 @@ using namespace frc;
 
 class DS
 {
-    public:
+  public:
     XboxController DriverXB{0};
     XboxController OperatorXB{1};
 
@@ -24,6 +24,13 @@ class DS
     SendableChooser<std::string> chooseController;
 		const std::string sPS4 = "PS4";
 		const std::string sXBX = "Xbox";
+
+    SendableChooser<std::string> chooseDriveLimit;
+    SendableChooser<std::string> chooseElevatorLimit;
+    SendableChooser<std::string> chooseWristLimit;
+		const std::string sLimit = "Limited";
+		const std::string sUnlimitted = "Unlimited";
+
 
     DS();
     void SmartDash();

@@ -16,11 +16,11 @@ class Wrist
 		DigitalInput LimitSwitchUpper {3};
 
     // Soft Limits
-    const double kMin = 5;
-    const double kMax = -135;
+    const double kMin = -135;
+    const double kMax = -5;
 
     // Scale Factor (Degrees) / (Pulses)
-    const double kScale = (73.0 / 3116.0);
+    const double kScale = (360 / 4096.0);
 
      //3790 90
 

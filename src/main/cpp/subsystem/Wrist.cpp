@@ -8,13 +8,13 @@ Wrist::Wrist()
     motor1.ConfigFactoryDefault();
 
     motor1.SetInverted(false);
-    motor1.SetSensorPhase(true);
+    motor1.SetSensorPhase(false);
     motor1.ConfigPeakCurrentLimit(5);
-    motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
-    motor1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
+    motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Absolute);
+    motor1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_2_Feedback0, 18);
 
-    int absolutePosition = motor1.GetSelectedSensorPosition(0) & 0xFFF;
-    motor1.SetSelectedSensorPosition(absolutePosition);
+    //int absolutePosition = motor1.GetSelectedSensorPosition(0) & 0xFFF;
+    //motor1.SetSelectedSensorPosition(absolutePosition);
 
     motor1.Config_kF(0, 0.0, 0);
 	motor1.Config_kP(0, 1.0, 0);
@@ -23,8 +23,15 @@ Wrist::Wrist()
 
     motor1.ConfigNominalOutputForward(0);
     motor1.ConfigNominalOutputReverse(0);
+
     motor1.ConfigPeakOutputForward(0.4);
-    motor1.ConfigPeakOutputReverse(-0.5);
+    motor1.ConfigPeakOutputReverse(-0.4); 
+
+    motor1.ConfigReverseSoftLimitThreshold(kMin / kScale);
+    motor1.ConfigForwardSoftLimitThreshold(kMax / kScale);
+
+    motor1.ConfigReverseSoftLimitEnable(true);
+    motor1.ConfigForwardSoftLimitEnable(true);
 }
 
 // Stop all motors
@@ -111,11 +118,18 @@ void Wrist::ResetEnc()
 
 void Wrist::ActivateSensorOverride()
 {
+
+    motor1.ConfigReverseSoftLimitEnable(false);
+    motor1.ConfigForwardSoftLimitEnable(false);
+
     sensorOverride = true;
 }
 
 void Wrist::DeactivateSensorOverride()
 {
+    motor1.ConfigReverseSoftLimitEnable(true);
+    motor1.ConfigForwardSoftLimitEnable(true);
+    
     sensorOverride = false;
 }
 
@@ -125,6 +139,6 @@ void Wrist::UpdateSmartdash()
     SmartDashboard::PutNumber("Wrist Motor Raw", motor1.GetSelectedSensorPosition());
     SmartDashboard::PutNumber("Wrist Angle", GetAngle());
     SmartDashboard::PutNumber("Wrist Angle Target", wristPosTarget);
-    SmartDashboard::PutBoolean("Wrist Sensor Override", sensorOverride);
+    SmartDashboard::PutBoolean("Wrist Sensor Disabled", sensorOverride);
     SmartDashboard::PutBoolean("Wrist Limit Switch Lower", GetSwitchLower());
 }

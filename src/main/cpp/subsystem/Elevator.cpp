@@ -190,7 +190,7 @@ void Elevator::UpdateSmartdash()
     //SmartDashboard::PutNumber("Elevator Raw", motor1.GetSensorCollection().GetQuadraturePosition()); // DO NOT USE!!!
     SmartDashboard::PutNumber("Elevator Raw", motor1.GetSelectedSensorPosition());
 
-    SmartDashboard::PutBoolean("Elevator Sensor Override", sensorOverride);
+    SmartDashboard::PutBoolean("Elevator Sensor Disabled", sensorOverride);
     
     SmartDashboard::PutNumber("Elevator Pos", GetDistance());
     SmartDashboard::PutNumber("Elevator Pos Target", targetPos);

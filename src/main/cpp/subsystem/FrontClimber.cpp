@@ -39,5 +39,5 @@ void FrontClimber::Set(double speed)
 void FrontClimber::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("FrontClimber CMD", motor1.Get());
-    SmartDashboard::PutNumber("FrontClimber Sol", SolenoidDeploy.Get());
+    // SmartDashboard::PutNumber("FrontClimber Sol", SolenoidDeploy.Get());
 }

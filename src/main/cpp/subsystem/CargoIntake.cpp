@@ -43,6 +43,6 @@ void CargoIntake::SolenoidToggle(){
 
 void CargoIntake::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("Cargo Intake CMD", motor1.Get());
-    SmartDashboard::PutNumber("Cargo Intake Sol", SolenoidDeploy.Get());
+    // SmartDashboard::PutNumber("Cargo Intake CMD", motor1.Get());
+    // SmartDashboard::PutNumber("Cargo Intake Sol", SolenoidDeploy.Get());
 }

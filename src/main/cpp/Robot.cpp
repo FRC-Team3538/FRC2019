@@ -13,7 +13,6 @@
 void Robot::RobotInit()
 {
   IO.elevator.ResetEnc();
-  IO.wrist.ResetEnc();
   IO.drivebase.ResetEncoders();
   IO.drivebase.ResetGyro();
   IO.vision.Init();
@@ -41,19 +40,41 @@ void Robot::RobotPeriodic()
     btnStartOp = IO.ds.OperatorXB.GetStartButton();
   }
 
-  if (btnBackOp)
-  {
-    IO.elevator.ActivateSensorOverride();
-    IO.wrist.ActivateSensorOverride();
-  }
-  // AutoTarget(btnBackDr);
-  // IO.vision.CVMode(btnBackDr);
+  
 
-  if (btnStartOp)
+  // Limits
+  if (IO.ds.chooseDriveLimit.GetSelected() == IO.ds.sUnlimitted)
   {
-    IO.elevator.DeactivateSensorOverride();
-    IO.wrist.DeactivateSensorOverride();
+      IO.drivebase.ActivateSensorOverride();
+  } 
+  else
+  {
+      IO.drivebase.DeactivateSensorOverride();
   }
+
+  if (IO.ds.chooseElevatorLimit.GetSelected() == IO.ds.sUnlimitted)
+  {
+      IO.elevator.ActivateSensorOverride();
+  } 
+  else
+  {
+      IO.elevator.DeactivateSensorOverride();
+  }
+
+  if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sUnlimitted)
+  {
+      IO.wrist.ActivateSensorOverride();
+
+      if(IO.ds.DriverPS.GetPSButton())
+      {
+        IO.wrist.ResetEnc();
+      }
+  } 
+  else
+  {
+      IO.wrist.DeactivateSensorOverride();
+  }
+  
 
   // Update Smart Dash
   UpdateSD();
@@ -178,6 +199,7 @@ void Robot::TeleopPeriodic()
   leftOpY *= -1;
   //rotate *= 0.8;
 
+
   //
   // Driver
   //
@@ -196,7 +218,7 @@ void Robot::TeleopPeriodic()
   else if (rightBumpDr || rightBumpOp)
   {
     IO.cargoManip.Set(0.5);
-    IO.wrist.SetAngle(85);
+    IO.wrist.SetAngle(-85);
     IO.elevator.SetPosition(5);
 
     IO.hatchManip.FloorIntakeUp();
@@ -207,15 +229,6 @@ void Robot::TeleopPeriodic()
     IO.cargoManip.Set(0.0);
   }
 
-  if (btnStartDr)
-  {
-    IO.drivebase.DeactivateSensorOverride();
-  }
-
-  if (btnBackDr)
-  {
-    IO.drivebase.ActivateSensorOverride();
-  }
 
   //
   //Operator
@@ -306,7 +319,7 @@ void Robot::TeleopPeriodic()
 
       // CargoShip
       IO.elevator.SetPosition(35);
-      IO.wrist.SetAngle(30);
+      IO.wrist.SetAngle(-30);
     }
     if (btnDownOp)
     {
