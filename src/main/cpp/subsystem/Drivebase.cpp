@@ -110,6 +110,7 @@ Drivebase::Drivebase()
     motorLeft1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::primary);
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::aux);
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::primary);
+
 }
 
 // Arcade Drive
@@ -250,6 +251,9 @@ void Drivebase::ActivateSensorOverride()
     sensorOverride = true;
     motorLeft1.ConfigPeakCurrentLimit(200);
     motorRight1.ConfigPeakCurrentLimit(200);
+
+    motorRight1.ConfigOpenloopRamp(0.0);
+    motorLeft1.ConfigOpenloopRamp(0.0);
 }
 
 void Drivebase::DeactivateSensorOverride()
@@ -257,6 +261,9 @@ void Drivebase::DeactivateSensorOverride()
     sensorOverride = false;
     motorLeft1.ConfigPeakCurrentLimit(60);
     motorRight1.ConfigPeakCurrentLimit(60);
+
+    motorRight1.ConfigOpenloopRamp(0.2);
+    motorLeft1.ConfigOpenloopRamp(0.2);
 }
 
 // SmartDash updater

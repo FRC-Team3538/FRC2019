@@ -29,6 +29,12 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+  // Zero Switches
+  if(IO.elevator.GetElvSwitchLower())
+  {
+    IO.elevator.ResetEnc();
+  }
+
   //
   // Sensor Override
   //
@@ -372,15 +378,25 @@ double Robot::Deadband(double input, double deadband)
 
 void Robot::UpdateSD()
 {
+  // Don't update smart dash every loop,
+  // it causes watchdog warnings
+  if((smartDashSkip++ < 10))
+  {
+    return;
+  }
+  smartDashSkip = 0;
+
+  // Critical
+  autoPrograms.SmartDash();
+  IO.ds.SmartDash();
+
+  // Optional
   IO.drivebase.UpdateSmartdash();
   IO.elevator.UpdateSmartdash();
   IO.wrist.UpdateSmartdash();
-  IO.cargoIntake.UpdateSmartdash();
   IO.cargoManip.UpdateSmartdash();
   IO.hatchManip.UpdateSmartdash();
   IO.frontClimber.UpdateSmartdash();
-  autoPrograms.SmartDash();
-  IO.ds.SmartDash();
 }
 
 bool Robot::AutoTarget(bool Go)

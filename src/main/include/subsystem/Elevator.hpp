@@ -14,8 +14,8 @@ class Elevator
     WPI_TalonSRX motor1 {6};
     WPI_VictorSPX motor2 {7};
 
-    DigitalInput LimitElvSwitchLower {0};
-		DigitalInput LimitElvSwitchUpper {1};
+    DigitalInput LimitSwitchElvLeft {0};
+		DigitalInput LimitSwitchElvRight {1};
     DigitalInput LimitSwitchGanLeft {2};
     DigitalInput LimitSwitchGanRight {3};
 
@@ -48,7 +48,8 @@ class Elevator
     void Set(double speed);
     void Stop();
 
-    bool GetElvSwitchUpper();
+    bool GetElvSwitchLeft();
+    bool GetElvSwitchRight();
     bool GetElvSwitchLower();
     bool GetGanSwitchLeft();
     bool GetGanSwitchRight();

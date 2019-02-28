@@ -64,13 +64,13 @@ void Elevator::Set(double speed)
         // Gantry Control
         if (speed < 0.0)
         {
-            if (GetGanSwitchLeft() && GetGanSwitchRight())
+            if (GetGanSwitchLeft() || GetGanSwitchRight())
             {
-                motor1.Set(ControlMode::PercentOutput, speed);
+                Stop();
             }
             else
             {
-                Stop();
+                motor1.Set(ControlMode::PercentOutput, speed);
             }
         }
         else
@@ -126,23 +126,31 @@ void Elevator::Set(double speed)
 }
 
 // Limit Switches
-bool Elevator::GetElvSwitchUpper()
+
+// Returns true if pressed
+bool Elevator::GetElvSwitchLeft()
 {
-    return !LimitElvSwitchUpper.Get();
+    return !LimitSwitchElvLeft.Get();
+}
+
+bool Elevator::GetElvSwitchRight()
+{
+    return !LimitSwitchElvRight.Get();
 }
 
 bool Elevator::GetElvSwitchLower()
 {
-    return !LimitElvSwitchLower.Get();
+    return GetElvSwitchLeft() || GetElvSwitchRight();
 }
 
 bool Elevator::GetGanSwitchLeft()
 {
-    return LimitSwitchGanLeft.Get();
+    return !LimitSwitchGanLeft.Get();
 }
+
 bool Elevator::GetGanSwitchRight()
 {
-    return LimitSwitchGanRight.Get();
+    return !LimitSwitchGanRight.Get();
 }
 
 // Encoder Reset
@@ -208,10 +216,10 @@ void Elevator::UpdateSmartdash()
     SmartDashboard::PutNumber("Elevator Pos", GetDistance());
     SmartDashboard::PutNumber("Elevator Pos Target", targetPos);
 
-    //SmartDashboard::PutBoolean("Limit Switch Upper", GetElvSwitchUpper());
-    SmartDashboard::PutBoolean("Limit Switch Elv Lower", GetElvSwitchLower());
-    SmartDashboard::PutBoolean("Limit Switch Gan Left", GetGanSwitchLeft());
-    SmartDashboard::PutBoolean("Limit Switch Gan Right", GetGanSwitchRight());
+    SmartDashboard::PutBoolean("Limit Sw Elv Left", GetElvSwitchLeft());
+    SmartDashboard::PutBoolean("Limit Sw Elv Right", GetElvSwitchRight());
+    SmartDashboard::PutBoolean("Limit Sw Gan Left", GetGanSwitchLeft());
+    SmartDashboard::PutBoolean("Limit Sw Gan Right", GetGanSwitchRight());
 
     SmartDashboard::PutBoolean("PTO Solenoid", solenoidPTO.Get());
 }

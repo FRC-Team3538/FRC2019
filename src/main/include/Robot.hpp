@@ -39,6 +39,9 @@ private:
   bool hatchPresets = false;
   bool stopAuton;
 
+  // Dont update smart dash every loop
+  int smartDashSkip = 0;
+
   double Deadband(double input, double deadband);
   void UpdateSD();
 
