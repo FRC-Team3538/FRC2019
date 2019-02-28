@@ -16,6 +16,7 @@ void Robot::RobotInit()
   IO.drivebase.ResetEncoders();
   IO.drivebase.ResetGyro();
   IO.vision.Init();
+  IO.wrist.ResetEnc();
 }
 
 /**
@@ -40,41 +41,38 @@ void Robot::RobotPeriodic()
     btnStartOp = IO.ds.OperatorXB.GetStartButton();
   }
 
-  
-
   // Limits
   if (IO.ds.chooseDriveLimit.GetSelected() == IO.ds.sUnlimitted)
   {
-      IO.drivebase.ActivateSensorOverride();
-  } 
+    IO.drivebase.ActivateSensorOverride();
+  }
   else
   {
-      IO.drivebase.DeactivateSensorOverride();
+    IO.drivebase.DeactivateSensorOverride();
   }
 
   if (IO.ds.chooseElevatorLimit.GetSelected() == IO.ds.sUnlimitted)
   {
-      IO.elevator.ActivateSensorOverride();
-  } 
+    IO.elevator.ActivateSensorOverride();
+  }
   else
   {
-      IO.elevator.DeactivateSensorOverride();
+    IO.elevator.DeactivateSensorOverride();
   }
 
   if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sUnlimitted)
   {
-      IO.wrist.ActivateSensorOverride();
+    IO.wrist.ActivateSensorOverride();
 
-      if(IO.ds.DriverPS.GetPSButton())
-      {
-        IO.wrist.ResetEnc();
-      }
-  } 
+    if (IO.ds.DriverPS.GetPSButton())
+    {
+      IO.wrist.ResetEnc();
+    }
+  }
   else
   {
-      IO.wrist.DeactivateSensorOverride();
+    IO.wrist.DeactivateSensorOverride();
   }
-  
 
   // Update Smart Dash
   UpdateSD();
@@ -107,6 +105,12 @@ void Robot::AutonomousPeriodic()
 }
 
 void Robot::TeleopInit()
+{
+  IO.wrist.SetAngle(IO.wrist.GetAngle());
+  IO.elevator.SetPosition(IO.elevator.GetDistance());
+}
+
+void Robot::DisabledInit()
 {
 }
 
@@ -197,8 +201,16 @@ void Robot::TeleopPeriodic()
 
   //Scaling
   leftOpY *= -1;
+  if (leftOpY >= 0)
+  {
+    leftOpY *= 0.6;
+  }
+  else
+  {
+    leftOpY *= 0.4;
+  }
+  // rightOpY *= -1;
   //rotate *= 0.8;
-
 
   //
   // Driver
@@ -229,7 +241,6 @@ void Robot::TeleopPeriodic()
     IO.cargoManip.Set(0.0);
   }
 
-
   //
   //Operator
   //
@@ -238,7 +249,16 @@ void Robot::TeleopPeriodic()
     IO.elevator.ToggleGantry();
   }
 
-  IO.frontClimber.Set(rightTrigOp - leftTrigOp);
+  double frontDeployCMD = rightTrigOp - leftTrigOp;
+  if (frontDeployCMD < 0.0)
+  {
+    IO.elevator.SetPosition(10.0);
+    IO.frontClimber.Set(frontDeployCMD * 0.5);
+  }
+  else
+  {
+    IO.frontClimber.Set(frontDeployCMD);
+  }
 
   // Hatch Clamp
   if (btnBCircleOp)
@@ -267,7 +287,7 @@ void Robot::TeleopPeriodic()
   IO.elevator.Set(leftOpY);
 
   //Wrist
-  IO.wrist.SetSpeed(-rightOpY);
+  IO.wrist.SetSpeed(rightOpY);
   hatchPresets = IO.hatchManip.Deployed();
 
   //Presets
@@ -277,26 +297,26 @@ void Robot::TeleopPeriodic()
     if (btnUpOp)
     {
       // High rocket
-      IO.elevator.SetPosition(74);
-      IO.wrist.SetAngle(0);
+      IO.elevator.SetPosition(66);
+      IO.wrist.SetAngle(-10);
     }
     if (btnLeftOp)
     {
       // Mid Rocket
       IO.elevator.SetPosition(44);
-      IO.wrist.SetAngle(0);
+      IO.wrist.SetAngle(-10);
     }
     if (btnRightOp)
     {
       // Cargo Ship
       IO.elevator.SetPosition(15);
-      IO.wrist.SetAngle(0);
+      IO.wrist.SetAngle(-10);
     }
     if (btnDownOp)
     {
       // Low rocket
       IO.elevator.SetPosition(15);
-      IO.wrist.SetAngle(0);
+      IO.wrist.SetAngle(-10);
     }
   }
   else
@@ -305,27 +325,26 @@ void Robot::TeleopPeriodic()
     if (btnUpOp)
     {
       // High rocket
-      IO.elevator.SetPosition(71);
-      IO.wrist.SetAngle(0);
+      IO.elevator.SetPosition(66);
+      IO.wrist.SetAngle(-10);
     }
     if (btnLeftOp)
     {
       // Mid Rocket
       IO.elevator.SetPosition(41);
-      IO.wrist.SetAngle(0);
+      IO.wrist.SetAngle(-10);
     }
     if (btnRightOp)
     {
-
       // CargoShip
       IO.elevator.SetPosition(35);
-      IO.wrist.SetAngle(-30);
+      IO.wrist.SetAngle(-40);
     }
     if (btnDownOp)
     {
       // Low rocket
       IO.elevator.SetPosition(16);
-      IO.wrist.SetAngle(0);
+      IO.wrist.SetAngle(-10);
     }
   }
 }

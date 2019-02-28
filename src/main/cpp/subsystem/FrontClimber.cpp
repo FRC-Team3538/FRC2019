@@ -6,6 +6,10 @@
 FrontClimber::FrontClimber()
 {
     motor1.SetInverted(true);
+    motor1.ConfigNominalOutputForward(0);
+    motor1.ConfigNominalOutputReverse(0);
+    motor1.ConfigPeakOutputForward(1);
+    motor1.ConfigPeakOutputReverse(-0.5);
 }
 
 // Solenoid

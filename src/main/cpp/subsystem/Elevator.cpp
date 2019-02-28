@@ -41,7 +41,7 @@ Elevator::Elevator()
     motor1.Config_kF(kPIDLoopIdx, 0.0);
     motor1.Config_kP(kPIDLoopIdx, 0.15);
     motor1.Config_kI(kPIDLoopIdx, 0.0);
-    motor1.Config_kD(kPIDLoopIdx, 0.0);
+    motor1.Config_kD(kPIDLoopIdx, -0.1);
 }
 
 // Stop all motors
@@ -62,9 +62,9 @@ void Elevator::Set(double speed)
     if (solenoidPTO.Get())
     {
         // Gantry Control
-        if(speed < 0.0)
+        if (speed < 0.0)
         {
-            if(GetGanSwitchLeft() && GetGanSwitchRight())
+            if (GetGanSwitchLeft() && GetGanSwitchRight())
             {
                 motor1.Set(ControlMode::PercentOutput, speed);
             }
@@ -81,17 +81,18 @@ void Elevator::Set(double speed)
     else
     {
         // Elevator Control
-        if(speed != 0.0)
+        if (speed != 0.0)
         {
             double pos = GetDistance();
 
             //     motor1.Set(ControlMode::PercentOutput, 0.0);
             // if ((/*pos > kMax ||*/ GetElvSwitchUpper() ) && speed > 0.0) {
             // }
-            if ((/*pos < kMin ||*/ GetElvSwitchLower() ) && speed < 0.0) {
+            if ((/*pos < kMin ||*/ GetElvSwitchLower()) && speed < 0.0)
+            {
                 motor1.Set(ControlMode::PercentOutput, 0.0);
                 ResetEnc();
-            } 
+            }
             // else if (pos < 15)
             // {
             //     motor1.Set(ControlMode::PercentOutput, speed * 0.3);
@@ -104,12 +105,21 @@ void Elevator::Set(double speed)
             {
                 motor1.Set(ControlMode::PercentOutput, speed);
             }
+            prevElevSpd = speed;
 
             oneShot = false;
         }
         else if (!oneShot)
         {
-            SetPosition(GetDistance() + 3.0);
+            if (prevElevSpd > 0)
+            {
+                SetPosition(GetDistance() + 3.0);
+            }
+            else
+            {
+                SetPosition(GetDistance() - 1.5);
+            }
+
             oneShot = true;
         }
     }
@@ -159,19 +169,22 @@ void Elevator::SetPosition(double pos)
     targetPos = pos;
 }
 
-void Elevator::ActivateGantry() 
+void Elevator::ActivateGantry()
 {
     solenoidPTO.Set(true);
+    motor1.ConfigPeakOutputReverse(-1);
 }
 
-void Elevator::DeactivateGantry() 
+void Elevator::DeactivateGantry()
 {
     solenoidPTO.Set(false);
+    motor1.ConfigPeakOutputReverse(-0.5);
 }
 
-void Elevator::ToggleGantry() 
+void Elevator::ToggleGantry()
 {
     solenoidPTO.Set(!solenoidPTO.Get());
+    motor1.ConfigPeakOutputReverse(solenoidPTO.Get() ? -1.0 : -0.5);
 }
 
 void Elevator::ActivateSensorOverride()
@@ -191,7 +204,7 @@ void Elevator::UpdateSmartdash()
     SmartDashboard::PutNumber("Elevator Raw", motor1.GetSelectedSensorPosition());
 
     SmartDashboard::PutBoolean("Elevator Sensor Disabled", sensorOverride);
-    
+
     SmartDashboard::PutNumber("Elevator Pos", GetDistance());
     SmartDashboard::PutNumber("Elevator Pos Target", targetPos);
 
@@ -201,5 +214,4 @@ void Elevator::UpdateSmartdash()
     SmartDashboard::PutBoolean("Limit Switch Gan Right", GetGanSwitchRight());
 
     SmartDashboard::PutBoolean("PTO Solenoid", solenoidPTO.Get());
-    
 }

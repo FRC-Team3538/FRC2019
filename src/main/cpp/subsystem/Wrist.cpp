@@ -13,8 +13,8 @@ Wrist::Wrist()
     motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Absolute);
     motor1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_2_Feedback0, 18);
 
-    //int absolutePosition = motor1.GetSelectedSensorPosition(0) & 0xFFF;
-    //motor1.SetSelectedSensorPosition(absolutePosition);
+    // int absolutePosition = motor1.GetSelectedSensorPosition(0) & 0xFFF;
+    // motor1.SetSelectedSensorPosition(absolutePosition);
 
     motor1.Config_kF(0, 0.0, 0);
 	motor1.Config_kP(0, 1.0, 0);
@@ -25,7 +25,7 @@ Wrist::Wrist()
     motor1.ConfigNominalOutputReverse(0);
 
     motor1.ConfigPeakOutputForward(0.4);
-    motor1.ConfigPeakOutputReverse(-0.4); 
+    motor1.ConfigPeakOutputReverse(-0.75); 
 
     motor1.ConfigReverseSoftLimitThreshold(kMin / kScale);
     motor1.ConfigForwardSoftLimitThreshold(kMax / kScale);
@@ -102,8 +102,8 @@ void Wrist::SetAngle(double angle)
         return;
     }
 
-    wristPosTarget = angle / kScale;
-    motor1.Set(ControlMode::Position, wristPosTarget);
+    wristPosTarget = angle;
+    motor1.Set(ControlMode::Position, (wristPosTarget / kScale));
 }
                                                                  
 double Wrist::GetAngle()

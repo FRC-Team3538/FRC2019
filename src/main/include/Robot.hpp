@@ -27,6 +27,7 @@ public:
   void TeleopInit() override;
   void TeleopPeriodic() override;
   void TestPeriodic() override;
+  void DisabledInit() override;
 
 private:
   robotmap IO;

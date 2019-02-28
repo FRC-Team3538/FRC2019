@@ -38,6 +38,8 @@ class Elevator
     bool sensorOverride = false;
     bool oneShot = false;
 
+    double prevElevSpd = 0;
+
   public:
     // Default Constructor
     Elevator();
