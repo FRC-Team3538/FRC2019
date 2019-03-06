@@ -17,15 +17,15 @@ Wrist::Wrist()
     // motor1.SetSelectedSensorPosition(absolutePosition);
 
     motor1.Config_kF(0, 0.0, 0);
-	motor1.Config_kP(0, 1.0, 0);
-	motor1.Config_kI(0, 0.0, 0);
-	motor1.Config_kD(0, 0.0, 0);
+    motor1.Config_kP(0, 1.0, 0);
+    motor1.Config_kI(0, 0.0, 0);
+    motor1.Config_kD(0, 0.0, 0);
 
     motor1.ConfigNominalOutputForward(0);
     motor1.ConfigNominalOutputReverse(0);
 
     motor1.ConfigPeakOutputForward(0.4);
-    motor1.ConfigPeakOutputReverse(-0.75); 
+    motor1.ConfigPeakOutputReverse(-0.75);
 
     motor1.ConfigReverseSoftLimitThreshold(kMin / kScale);
     motor1.ConfigForwardSoftLimitThreshold(kMax / kScale);
@@ -49,17 +49,26 @@ void Wrist::SetSpeed(double speed)
         return;
     }
 
-    if(speed != 0.0)
+    if (speed != 0.0)
     {
         double pos = GetAngle();
-
-        if ((/*pos > kMax ||*/ GetSwitchUpper() ) && speed > 0.0) {
-            motor1.Set(0.0);
+        if (!sensorOverride)
+        {
+            if ((/*pos > kMax ||*/ GetSwitchUpper()) && speed > 0.0)
+            {
+                motor1.Set(0.0);
+            }
+            else if ((/*pos < kMin ||*/ GetSwitchLower()) && speed < 0.0)
+            {
+                motor1.Set(0.0);
+                ResetEnc();
+            }
+            else
+            {
+                motor1.Set(speed);
+            }
+            return;
         }
-        else if ((/*pos < kMin ||*/ GetSwitchLower() ) && speed < 0.0) {
-            motor1.Set(0.0);
-            ResetEnc();
-        } 
         // else if (pos < 15)
         // {
         //     motor1.Set(speed * 0.3);
@@ -72,7 +81,6 @@ void Wrist::SetSpeed(double speed)
         {
             motor1.Set(speed);
         }
-
         oneShot = false;
     }
     else if (!oneShot)
@@ -80,7 +88,6 @@ void Wrist::SetSpeed(double speed)
         SetAngle(GetAngle());
         oneShot = true;
     }
-    
 }
 
 // Limit Switches
@@ -101,11 +108,15 @@ void Wrist::SetAngle(double angle)
     {
         return;
     }
-
-    wristPosTarget = angle;
-    motor1.Set(ControlMode::Position, (wristPosTarget / kScale));
+    // if((motor1.GetSelectedSensorPosition(0) * kScale) > 180){
+    //     int numJumps = ceil((motor1.GetSelectedSensorPosition(0) * kScale) / 180);
+    //     double correctAngle = (motor1.GetSelectedSensorPosition(0) * kScale) - ((numJumps) * 180);
+    //     motor1.SetSelectedSensorPosition(0);
+    // }
+    // wristPosTarget = angle;
+    // motor1.Set(ControlMode::Position, (wristPosTarget / kScale));
 }
-                                                                 
+
 double Wrist::GetAngle()
 {
     return motor1.GetSelectedSensorPosition(0) * kScale;
@@ -129,7 +140,7 @@ void Wrist::DeactivateSensorOverride()
 {
     motor1.ConfigReverseSoftLimitEnable(true);
     motor1.ConfigForwardSoftLimitEnable(true);
-    
+
     sensorOverride = false;
 }
 

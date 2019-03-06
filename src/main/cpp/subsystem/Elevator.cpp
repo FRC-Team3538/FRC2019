@@ -42,6 +42,8 @@ Elevator::Elevator()
     motor1.Config_kP(kPIDLoopIdx, 0.15);
     motor1.Config_kI(kPIDLoopIdx, 0.0);
     motor1.Config_kD(kPIDLoopIdx, -0.1);
+
+    motor1.ConfigClosedloopRamp(0.2);
 }
 
 // Stop all motors
@@ -192,7 +194,14 @@ void Elevator::DeactivateGantry()
 void Elevator::ToggleGantry()
 {
     solenoidPTO.Set(!solenoidPTO.Get());
-    motor1.ConfigPeakOutputReverse(solenoidPTO.Get() ? -1.0 : -0.5);
+    motor1.ConfigNominalOutputForward(0);
+    motor1.ConfigNominalOutputReverse(0);
+    motor1.ConfigPeakOutputForward(1);
+    motor1.ConfigPeakOutputReverse((solenoidPTO.Get() ? -1.0 : -0.5));
+}
+
+bool Elevator::GetGantryActivated(){
+    return solenoidPTO.Get();
 }
 
 void Elevator::ActivateSensorOverride()
@@ -203,6 +212,15 @@ void Elevator::ActivateSensorOverride()
 void Elevator::DeactivateSensorOverride()
 {
     sensorOverride = false;
+}
+
+void Elevator::SetServo(double setPoint){
+    if(setPoint != 118){
+        armRetention.SetAngle(setPoint);
+    }
+    else{
+        solenoidPTO.Get() ? armRetention.SetAngle(servoSetPoints::max) : armRetention.SetAngle(servoSetPoints::min);
+    }
 }
 
 void Elevator::UpdateSmartdash()

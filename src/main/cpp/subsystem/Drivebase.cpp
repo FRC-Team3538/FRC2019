@@ -28,6 +28,9 @@ Drivebase::Drivebase()
     motorRight2.SetInverted(false);
     motorRight3.SetInverted(false);
 
+    motorRev1.SetInverted(true);
+    motorRev2.SetInverted(true);
+
     DeactivateSensorOverride();
 
     // master > slaves
@@ -36,6 +39,9 @@ Drivebase::Drivebase()
 
     motorRight2.Follow(motorRight1);
     motorRight3.Follow(motorRight1);
+
+    motorRev2.Follow(motorRev1);
+    motorRev2R.Follow(motorRev1R);
 
     // Encoder Feedback
     motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, PIDind::primary);
@@ -116,8 +122,8 @@ Drivebase::Drivebase()
 // Arcade Drive
 void Drivebase::Arcade(double forward, double turn)
 {
-    motorLeft1.Set(forward - turn);
-    motorRight1.Set(forward + turn);
+    // motorRev1.Set(forward - turn);
+    // motorRev1R.Set(forward + turn);
 }
 
 // Stop!

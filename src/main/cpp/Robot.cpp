@@ -17,6 +17,7 @@ void Robot::RobotInit()
   IO.drivebase.ResetGyro();
   IO.vision.Init();
   IO.wrist.ResetEnc();
+  IO.elevator.SetServo(IO.elevator.servoSetPoints::min);
 }
 
 /**
@@ -30,7 +31,7 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   // Zero Switches
-  if(IO.elevator.GetElvSwitchLower())
+  if (IO.elevator.GetElvSwitchLower())
   {
     IO.elevator.ResetEnc();
   }
@@ -207,13 +208,20 @@ void Robot::TeleopPeriodic()
 
   //Scaling
   leftOpY *= -1;
-  if (leftOpY >= 0)
+  if (IO.elevator.GetGantryActivated())
   {
-    leftOpY *= 0.6;
+    leftOpY *= 1.0;
   }
   else
   {
-    leftOpY *= 0.4;
+    if (leftOpY >= 0)
+    {
+      leftOpY *= 0.6;
+    }
+    else
+    {
+      leftOpY *= 0.4;
+    }
   }
   // rightOpY *= -1;
   //rotate *= 0.8;
@@ -226,20 +234,21 @@ void Robot::TeleopPeriodic()
   if (!btnUpDr)
   {
     IO.drivebase.Arcade(forward, rotate);
+    // IO.drivebase.testRev.Set(forward);
   }
 
   // Manip Intake / Eject
-  if (leftBumpDr || leftBumpOp)
+  if ((rightTrigDr > 0.05) || leftBumpOp)
   {
     IO.cargoManip.Set(-0.7);
   }
-  else if (rightBumpDr || rightBumpOp)
+  else if ((leftTrigDr > 0.05) || rightBumpOp)
   {
     IO.cargoManip.Set(0.5);
     IO.wrist.SetAngle(-85);
-    IO.elevator.SetPosition(5);
+    //IO.elevator.SetPosition(2);
 
-    IO.hatchManip.FloorIntakeUp();
+    IO.hatchManip.FloorIntakeUp(); 
     IO.hatchManip.Retract();
   }
   else
@@ -254,6 +263,8 @@ void Robot::TeleopPeriodic()
   {
     IO.elevator.ToggleGantry();
   }
+
+  IO.elevator.SetServo(IO.elevator.servoSetPoints::autoSet);
 
   double frontDeployCMD = rightTrigOp - leftTrigOp;
   if (frontDeployCMD < 0.0)
@@ -303,7 +314,7 @@ void Robot::TeleopPeriodic()
     if (btnUpOp)
     {
       // High rocket
-      IO.elevator.SetPosition(66);
+      IO.elevator.SetPosition(62);
       IO.wrist.SetAngle(-10);
     }
     if (btnLeftOp)
@@ -321,7 +332,7 @@ void Robot::TeleopPeriodic()
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(15);
+      IO.elevator.SetPosition(14);
       IO.wrist.SetAngle(-10);
     }
   }
@@ -331,7 +342,7 @@ void Robot::TeleopPeriodic()
     if (btnUpOp)
     {
       // High rocket
-      IO.elevator.SetPosition(66);
+      IO.elevator.SetPosition(62);
       IO.wrist.SetAngle(-10);
     }
     if (btnLeftOp)
@@ -380,7 +391,7 @@ void Robot::UpdateSD()
 {
   // Don't update smart dash every loop,
   // it causes watchdog warnings
-  if((smartDashSkip++ < 10))
+  if ((smartDashSkip++ < 10))
   {
     return;
   }

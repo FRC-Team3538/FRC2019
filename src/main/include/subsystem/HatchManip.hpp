@@ -10,8 +10,8 @@ class HatchManip
   
     // Hardware setup
     Solenoid deploy {5};
-    Solenoid clamp {4};
-    Solenoid floorIntake {6};
+    Solenoid clamp {6};
+    Solenoid floorIntake {7};
 
   public:
     // Default Constructor

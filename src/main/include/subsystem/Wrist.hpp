@@ -12,11 +12,11 @@ class Wrist
     // Hardware setup
     WPI_TalonSRX motor1 {8};
 
-    DigitalInput LimitSwitchLower {2};
-		DigitalInput LimitSwitchUpper {3};
+    DigitalInput LimitSwitchLower {4};
+		DigitalInput LimitSwitchUpper {5};
 
     // Soft Limits
-    const double kMin = -110;
+    const double kMin = -120;
     const double kMax = -15;
 
     // Scale Factor (Degrees) / (Pulses)

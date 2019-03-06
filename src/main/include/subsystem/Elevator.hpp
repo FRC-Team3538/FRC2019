@@ -3,67 +3,80 @@
 #include <frc/DigitalInput.h>
 #include <frc/Solenoid.h>
 #include <ctre/Phoenix.h>
+#include <frc/Servo.h>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;
 
 class Elevator
 {
-  private:
-    // Hardware setup
-    WPI_TalonSRX motor1 {6};
-    WPI_VictorSPX motor2 {7};
+private:
+  // Hardware setup
+  WPI_TalonSRX motor1{6};
+  WPI_VictorSPX motor2{7};
 
-    DigitalInput LimitSwitchElvLeft {0};
-		DigitalInput LimitSwitchElvRight {1};
-    DigitalInput LimitSwitchGanLeft {2};
-    DigitalInput LimitSwitchGanRight {3};
+  Servo armRetention{0};
 
-    Solenoid solenoidPTO{1};
+  DigitalInput LimitSwitchElvLeft{0};
+  DigitalInput LimitSwitchElvRight{1};
+  DigitalInput LimitSwitchGanLeft{2};
+  DigitalInput LimitSwitchGanRight{3};
 
-    // Scale Factor (Inches) / (Pulses)
-    const double kScaleFactor = (54.0 - 7.0) / (17344.0);
-    /*
+  Solenoid solenoidPTO{1};
+
+  // Scale Factor (Inches) / (Pulses)
+  const double kScaleFactor = (54.0 - 7.0) / (17344.0);
+
+  /*
         Inches     Pulses
           7              0
           54        17,344
 
     */
 
-    // Soft Limits
-    const double kMin = 5.0;
-    const double kMax = 50.0;
+  // Soft Limits
+  const double kMin = 5.0;
+  const double kMax = 50.0;
 
-    double targetPos = 0;
-    bool sensorOverride = false;
-    bool oneShot = false;
+  double targetPos = 0;
+  bool sensorOverride = false;
+  bool oneShot = false;
 
-    double prevElevSpd = 0;
+  double prevElevSpd = 0;
 
-  public:
-    // Default Constructor
-    Elevator();
+public:
+  enum servoSetPoints
+  {
+    min = 0,
+    max = 180,
+    autoSet = 118
+  };
+  // Default Constructor
+  Elevator();
 
-    // Actions
-    void Set(double speed);
-    void Stop();
+  // Actions
+  void Set(double speed);
+  void Stop();
 
-    bool GetElvSwitchLeft();
-    bool GetElvSwitchRight();
-    bool GetElvSwitchLower();
-    bool GetGanSwitchLeft();
-    bool GetGanSwitchRight();
+  bool GetElvSwitchLeft();
+  bool GetElvSwitchRight();
+  bool GetElvSwitchLower();
+  bool GetGanSwitchLeft();
+  bool GetGanSwitchRight();
 
-    void ActivateSensorOverride();
-    void DeactivateSensorOverride();
+  void ActivateSensorOverride();
+  void DeactivateSensorOverride();
 
-    void ActivateGantry();
-    void DeactivateGantry();
-    void ToggleGantry();
+  void ActivateGantry();
+  void DeactivateGantry();
+  void ToggleGantry();
+  bool GetGantryActivated();
 
-    void ResetEnc();
-    double GetDistance();
-    void SetPosition(double pos);
+  void SetServo(double setPoint);
 
-    void UpdateSmartdash();
+  void ResetEnc();
+  double GetDistance();
+  void SetPosition(double pos);
+
+  void UpdateSmartdash();
 };
