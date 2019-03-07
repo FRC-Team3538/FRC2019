@@ -8,7 +8,7 @@ Vision::Vision()
 void Vision::Init()
 {
 	cam0.SetFPS(20);
-	cam0.SetResolution(160, 120);
+	cam0.SetResolution(320, 240);
 
 	cam1.SetFPS(20);
 	cam1.SetResolution(160, 120);

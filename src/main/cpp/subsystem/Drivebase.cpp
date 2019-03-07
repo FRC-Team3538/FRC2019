@@ -28,8 +28,8 @@ Drivebase::Drivebase()
     motorRight2.SetInverted(false);
     motorRight3.SetInverted(false);
 
-    motorRev1.SetInverted(true);
-    motorRev2.SetInverted(true);
+    // motorRev1.SetInverted(true);
+    // motorRev2.SetInverted(true);
 
     DeactivateSensorOverride();
 
@@ -40,8 +40,8 @@ Drivebase::Drivebase()
     motorRight2.Follow(motorRight1);
     motorRight3.Follow(motorRight1);
 
-    motorRev2.Follow(motorRev1);
-    motorRev2R.Follow(motorRev1R);
+    // motorRev2.Follow(motorRev1);
+    // motorRev2R.Follow(motorRev1R);
 
     // Encoder Feedback
     motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, PIDind::primary);
@@ -108,7 +108,6 @@ Drivebase::Drivebase()
 
     motorRight1.SelectProfileSlot(slots::Forward, PIDind::primary);
     motorRight1.SelectProfileSlot(slots::Turning, PIDind::aux);
-
     motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_2_Feedback0, 5);
     motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_2_Feedback0, 5);
 
@@ -122,8 +121,8 @@ Drivebase::Drivebase()
 // Arcade Drive
 void Drivebase::Arcade(double forward, double turn)
 {
-    // motorRev1.Set(forward - turn);
-    // motorRev1R.Set(forward + turn);
+    motorLeft1.Set(forward - turn);
+    motorRight1.Set(forward + turn);
 }
 
 // Stop!
