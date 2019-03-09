@@ -45,5 +45,5 @@ private:
   double Deadband(double input, double deadband);
   void UpdateSD();
 
-  bool AutoTarget(bool Go); 
+  bool AutoTarget(bool Go, double forward); 
 };

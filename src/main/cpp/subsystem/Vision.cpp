@@ -8,11 +8,10 @@ Vision::Vision()
 void Vision::Init()
 {
 	cam0.SetFPS(20);
-	cam0.SetResolution(320, 240);
+	cam0.SetResolution(160, 120);
 
 	cam1.SetFPS(20);
 	cam1.SetResolution(160, 120);
-	
 
 	outputStreamStd = CameraServer::GetInstance()->PutVideo("Vision", 160, 120);
 
@@ -20,6 +19,26 @@ void Vision::Init()
 	chooseCam.AddOption(camera0, camera0);
 	chooseCam.AddOption(camera1, camera1);
 	frc::SmartDashboard::PutData("Selected Camera", &chooseCam);
+	HumanVisionToggle();
+}
+
+void Vision::HumanVisionToggle()
+{
+	currentCam++;
+	currentCam %= camCount;
+	switch (currentCam)
+	{
+	case 0:
+	{
+		frc::SmartDashboard::PutString("CameraSelection", cam0.GetName());
+		break;
+	}
+	case 1:
+	{
+		frc::SmartDashboard::PutString("CameraSelection", cam1.GetName());
+		break;
+	}
+	}
 }
 
 Vision::returnData Vision::Run()
@@ -85,6 +104,11 @@ Vision::returnData Vision::Run()
 				putText(source, to_string(contourNum), cvPoint((centers[contourNum].x + 10), (centers[contourNum].y + 5)), FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(255, 255, 255), 1, CV_AA);
 			}
 			contourNum++;
+		}
+		if (contourNum == 0 || contourNum == 1)
+		{
+			data.cmd = -3.14;
+			return data;
 		}
 		// for(auto hull : hulls){
 		// 	cout << "------->HULL SIZE<------- :" << hull.size() << endl;
@@ -186,11 +210,24 @@ Vision::returnData Vision::Run()
 			// const double kD = 0.0001;
 			// const double kP = 0.007;
 			const double kP = 0.005;
-			const double kD = 0.0002;
+			const double kI = 0.00001;
+			const double kD = 0.000; //0.0002
 			double error = (position.x - 80.0);
+
+			if (abs(error) < 20)
+			{
+				sumError += error /  0.02;
+			}
+			else
+			{
+				sumError = 0;
+			}
+			frc::SmartDashboard::PutNumber("Eye", sumError);
+			frc::SmartDashboard::PutNumber("Arror", error);
 			double deltaError = (error - prevError) / 0.02;
 			prevError = error;
-			double cmd = error * kP + deltaError * kD;
+			double cmd = error * kP + sumError * kI + deltaError * kD;
+			frc::SmartDashboard::PutNumber("Command", cmd);
 			cout << "F: " << time.Get() << endl;
 			data.distance = distance;
 			data.cmd = cmd;

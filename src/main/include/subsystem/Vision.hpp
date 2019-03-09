@@ -36,6 +36,7 @@ public:
   cs::CvSink cvSink;
 
   cs::CvSource outputStreamStd;
+  cs::CvSource cameraToggleStream;
   std::string path = "/u/vision" + std::to_string(imNum) + ".jpg";
   bool CVT = false;
 
@@ -60,6 +61,7 @@ public:
   //double contourAngle(std::vector<cv::Point> contour); //Degrees
 
   double prevError = 0;
+  double sumError = 0;
 
   struct contourData
   {
@@ -72,4 +74,8 @@ public:
   Vision();
 
   void UpdateSmartdash();
+
+  int currentCam = 0;
+  const int camCount = 2;
+  void HumanVisionToggle();
 };

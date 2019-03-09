@@ -83,6 +83,15 @@ void Robot::RobotPeriodic()
 
   // Update Smart Dash
   UpdateSD();
+  bool btnACrossDrPrsd = IO.ds.DriverPS.GetCrossButtonPressed();
+  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
+  {
+    btnACrossDrPrsd = IO.ds.DriverXB.GetAButtonPressed();
+  }
+  if (btnACrossDrPrsd)
+  {
+    IO.vision.HumanVisionToggle();
+  }
 }
 
 void Robot::AutonomousInit()
@@ -229,9 +238,9 @@ void Robot::TeleopPeriodic()
   //
   // Driver
   //
-  IO.vision.CVMode(btnUpDr);
-  AutoTarget(btnUpDr);
-  if (!btnUpDr)
+  IO.vision.CVMode(btnBCircleDr);
+  AutoTarget(btnBCircleDr, forward);
+  if (!btnBCircleDr)
   {
     IO.drivebase.Arcade(forward, rotate);
     // IO.drivebase.testRev.Set(forward);
@@ -248,7 +257,7 @@ void Robot::TeleopPeriodic()
     IO.wrist.SetAngle(-85);
     //IO.elevator.SetPosition(2);
 
-    IO.hatchManip.FloorIntakeUp(); 
+    IO.hatchManip.FloorIntakeUp();
     IO.hatchManip.Retract();
   }
   else
@@ -410,23 +419,20 @@ void Robot::UpdateSD()
   IO.frontClimber.UpdateSmartdash();
 }
 
-bool Robot::AutoTarget(bool Go)
+bool Robot::AutoTarget(bool Go, double forward)
 {
   Vision::returnData dataDrop = IO.vision.Run();
   double error = dataDrop.cmd;
 
   if (Go)
   {
-    if (dataDrop.distance >= 70 || error == -3.14)
+    if (error == -3.14)
     {
-      IO.drivebase.Arcade(0, 0);
+      error = 0;
     }
-    else
-    {
-      IO.drivebase.Arcade(0.15, -error);
-    }
+    IO.drivebase.Arcade(forward, -error);
   }
-  if (abs(error) < 0.05 && dataDrop.distance >= 70)
+  if (abs(error) < 0.05)
   {
     return true;
   }
