@@ -310,7 +310,12 @@ void Robot::TeleopPeriodic()
   }
 
   //Elevator
+  if((!(leftOpY) > 0) && IO.elevator.GetGantryActivated()){
+    IO.elevator.LevelRobot(IO.drivebase.GetPitch());
+  }
+  else{
   IO.elevator.Set(leftOpY);
+  }
 
   //Wrist
   IO.wrist.SetSpeed(rightOpY);

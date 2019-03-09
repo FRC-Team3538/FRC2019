@@ -102,6 +102,7 @@ public:
 
   void ResetGyro();
   double GetGyroHeading();
+  double GetPitch();
   void GlobalReset();
 
   void UpdateSmartdash();

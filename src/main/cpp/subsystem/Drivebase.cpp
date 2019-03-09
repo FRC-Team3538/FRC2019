@@ -168,7 +168,6 @@ void Drivebase::ResetGyro()
     Hoothoot->SetFusedHeading(0.0);
     //navx.ResetDisplacement();
     //navx.Reset();
-    std::cout << "reset" << std::endl;
 }
 
 double Drivebase::GetGyroHeading()
@@ -223,10 +222,6 @@ void Drivebase::DriveForward(double distance, double currentLimit)
 
     double driveCommandRotation = errorRot * KP_ROTATION + KI_ROTATION * sumError_rotation + KD_ROTATION * deltaErrorRot;
 
-    SmartDashboard::PutNumber("Forward!!!", driveCommandForward);
-    SmartDashboard::PutNumber("NOTFORWARD!!!", driveCommandRotation);
-    SmartDashboard::PutNumber("AlsoNotForward", forwardHeading);
-
     Arcade(driveCommandForward, driveCommandRotation);
 }
 
@@ -271,9 +266,20 @@ void Drivebase::DeactivateSensorOverride()
     motorLeft1.ConfigOpenloopRamp(0.2);
 }
 
+double Drivebase::GetPitch(){
+    double ypr[3] = {0, 0, 0};
+    int error = Hoothoot->GetAccelerometerAngles(ypr);
+    return ypr[0];
+}  
 // SmartDash updater
 void Drivebase::UpdateSmartdash()
 {
+    double test[3];
+    int test2 = Hoothoot->GetAccelerometerAngles(test);
+    SmartDashboard::PutNumber("X", test[0]);
+    SmartDashboard::PutNumber("Y", test[1]);
+    SmartDashboard::PutNumber("Z", test[2]);
+
     SmartDashboard::PutNumber("DriveL", motorLeft1.Get());
     SmartDashboard::PutNumber("DriveR", motorRight1.Get());
 
@@ -283,6 +289,9 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutBoolean("Drive Limits Disabled", sensorOverride);
 
     SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
+
+    SmartDashboard::PutNumber("Pitch", GetPitch());
+
 
 /*
     SmartDashboard::PutNumber("TARGETrAUX", motorRight1.GetClosedLoopTarget(PIDind::aux));

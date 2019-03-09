@@ -44,6 +44,7 @@ private:
 
   double prevElevSpd = 0;
 
+  const double kPGan = 0.1;
 public:
   enum servoSetPoints
   {
@@ -71,6 +72,7 @@ public:
   void DeactivateGantry();
   void ToggleGantry();
   bool GetGantryActivated();
+  void LevelRobot(double pitch);
 
   void SetServo(double setPoint);
 

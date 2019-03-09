@@ -194,9 +194,6 @@ void Elevator::DeactivateGantry()
 void Elevator::ToggleGantry()
 {
     solenoidPTO.Set(!solenoidPTO.Get());
-    motor1.ConfigNominalOutputForward(0);
-    motor1.ConfigNominalOutputReverse(0);
-    motor1.ConfigPeakOutputForward(1);
     motor1.ConfigPeakOutputReverse((solenoidPTO.Get() ? -1.0 : -0.5));
 }
 
@@ -220,6 +217,17 @@ void Elevator::SetServo(double setPoint){
     }
     else{
         solenoidPTO.Get() ? armRetention.SetAngle(servoSetPoints::max) : armRetention.SetAngle(servoSetPoints::min);
+    }
+}
+
+void Elevator::LevelRobot(double pitch){
+    double error = pitch;
+    double cmd = error * kPGan;
+    if((GetGanSwitchLeft() || GetGanSwitchRight()) && cmd < 0){
+        motor1.Set(0.0);
+    }
+    else{
+      motor1.Set(cmd);
     }
 }
 
