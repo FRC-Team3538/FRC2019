@@ -105,10 +105,10 @@ void Robot::AutonomousPeriodic()
 {
   bool btnPSDr = IO.ds.DriverPS.GetPSButtonPressed();
 
-  if (btnPSDr)
-  {
+  // if (btnPSDr)
+  // {
     stopAuton = true;
-  }
+  //}
 
   if (stopAuton)
   {
@@ -123,11 +123,12 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   IO.wrist.SetAngle(IO.wrist.GetAngle());
-  IO.elevator.SetPosition(IO.elevator.GetDistance());
+  IO.elevator.SetPosition(1.0); //IO.elevator.AGetDistance()
 }
 
 void Robot::DisabledInit()
 {
+
 }
 
 void Robot::TeleopPeriodic()
@@ -238,8 +239,8 @@ void Robot::TeleopPeriodic()
   //
   // Driver
   //
-  IO.vision.CVMode(btnBCircleDr);
-  AutoTarget(btnBCircleDr, forward);
+  // IO.vision.CVMode(btnBCircleDr); ******************
+  // AutoTarget(btnBCircleDr, forward); ******************
   if (!btnBCircleDr)
   {
     IO.drivebase.Arcade(forward, rotate);
@@ -249,11 +250,11 @@ void Robot::TeleopPeriodic()
   // Manip Intake / Eject
   if ((rightTrigDr > 0.05) || leftBumpOp)
   {
-    IO.cargoManip.Set(-0.7);
+    IO.cargoManip.Set(-1.0);
   }
   else if ((leftTrigDr > 0.05) || rightBumpOp)
   {
-    IO.cargoManip.Set(0.5);
+    IO.cargoManip.Set(1.0);
     IO.wrist.SetAngle(-85);
     //IO.elevator.SetPosition(2);
 
@@ -310,12 +311,12 @@ void Robot::TeleopPeriodic()
   }
 
   //Elevator
-  if((!(leftOpY) > 0) && IO.elevator.GetGantryActivated()){
-    IO.elevator.LevelRobot(IO.drivebase.GetPitch());
-  }
-  else{
+  // if((!(leftOpY) > 0) && IO.elevator.GetGantryActivated()){
+  //   IO.elevator.LevelRobot(IO.drivebase.GetPitch());
+  // }
+  //else{
   IO.elevator.Set(leftOpY);
-  }
+  //}
 
   //Wrist
   IO.wrist.SetSpeed(rightOpY);
