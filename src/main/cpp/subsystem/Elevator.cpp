@@ -107,7 +107,7 @@ void Elevator::Set(double speed)
             {
                 motor1.Set(ControlMode::PercentOutput, speed);
             }
-            prevElevSpd = speed;
+            prevElevSpd = motor1.GetSelectedSensorVelocity() * kScaleFactor * 10.0;
 
             oneShot = false;
         }
@@ -115,11 +115,11 @@ void Elevator::Set(double speed)
         {
             if (prevElevSpd > 0)
             {
-                SetPosition(GetDistance() + 3.0);
+                SetPosition(GetDistance() + ((prevElevSpd / 20) + 2));
             }
             else
             {
-                SetPosition(GetDistance() - 1.5);
+                SetPosition(GetDistance() + ((prevElevSpd / 10) + 1.5));
             }
 
             oneShot = true;
