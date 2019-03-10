@@ -38,6 +38,7 @@ private:
 
   bool hatchPresets = false;
   bool stopAuton;
+  double elevCmd = 0;
 
   // Dont update smart dash every loop
   int smartDashSkip = 0;
@@ -45,5 +46,5 @@ private:
   double Deadband(double input, double deadband);
   void UpdateSD();
 
-  bool AutoTarget(bool Go, double forward); 
+  bool AutoTarget(bool Go, double forward);
 };
