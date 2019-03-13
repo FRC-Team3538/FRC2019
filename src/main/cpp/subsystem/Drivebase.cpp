@@ -274,12 +274,6 @@ double Drivebase::GetPitch(){
 // SmartDash updater
 void Drivebase::UpdateSmartdash()
 {
-    double test[3];
-    int test2 = Hoothoot->GetAccelerometerAngles(test);
-    SmartDashboard::PutNumber("X", test[0]);
-    SmartDashboard::PutNumber("Y", test[1]);
-    SmartDashboard::PutNumber("Z", test[2]);
-
     SmartDashboard::PutNumber("DriveL", motorLeft1.Get());
     SmartDashboard::PutNumber("DriveR", motorRight1.Get());
 
@@ -288,9 +282,7 @@ void Drivebase::UpdateSmartdash()
 
     SmartDashboard::PutBoolean("Drive Limits Disabled", sensorOverride);
 
-    SmartDashboard::PutNumber("GyroFused", GetGyroHeading());
-
-    SmartDashboard::PutNumber("Pitch", GetPitch());
+    SmartDashboard::PutNumber("GyroFused", GetGyroHeading()); 
 
 
 /*

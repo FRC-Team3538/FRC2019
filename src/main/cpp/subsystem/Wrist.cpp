@@ -10,14 +10,14 @@ Wrist::Wrist()
     motor1.SetInverted(false);
     motor1.SetSensorPhase(false);
     motor1.ConfigPeakCurrentLimit(5);
-    motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Absolute);
+    motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
     motor1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_2_Feedback0, 18);
 
     // int absolutePosition = motor1.GetSelectedSensorPosition(0) & 0xFFF;
     // motor1.SetSelectedSensorPosition(absolutePosition);
 
     motor1.Config_kF(0, 0.0, 0);
-    motor1.Config_kP(0, 1.0, 0);
+    motor1.Config_kP(0, 0.5, 0); //0.5
     motor1.Config_kI(0, 0.0, 0);
     motor1.Config_kD(0, 0.0, 0);
 
@@ -26,6 +26,8 @@ Wrist::Wrist()
 
     motor1.ConfigPeakOutputForward(0.4);
     motor1.ConfigPeakOutputReverse(-0.75);
+    // motor1.ConfigPeakOutputForward(0.2);
+    // motor1.ConfigPeakOutputReverse(-0.2);
 
     motor1.ConfigReverseSoftLimitThreshold(kMin / kScale);
     motor1.ConfigForwardSoftLimitThreshold(kMax / kScale);
@@ -93,12 +95,12 @@ void Wrist::SetSpeed(double speed)
 // Limit Switches
 bool Wrist::GetSwitchUpper()
 {
-    return LimitSwitchUpper.Get();
+    return motor1.GetSensorCollection().IsFwdLimitSwitchClosed();
 }
 
 bool Wrist::GetSwitchLower()
 {
-    return LimitSwitchLower.Get();
+    return motor1.GetSensorCollection().IsRevLimitSwitchClosed();
 }
 
 // Closed loop control
@@ -108,13 +110,7 @@ void Wrist::SetAngle(double angle)
     {
         return;
     }
-    // if((motor1.GetSelectedSensorPosition(0) * kScale) > 180){
-    //     int numJumps = ceil((motor1.GetSelectedSensorPosition(0) * kScale) / 180);
-    //     double correctAngle = (motor1.GetSelectedSensorPosition(0) * kScale) - ((numJumps) * 180);
-    //     motor1.SetSelectedSensorPosition(0);
-    // }
-    // wristPosTarget = angle;
-    // motor1.Set(ControlMode::Position, (wristPosTarget / kScale));
+    //motor1.Set(ControlMode::Position, (angle / kScale));
 }
 
 double Wrist::GetAngle()
@@ -152,4 +148,5 @@ void Wrist::UpdateSmartdash()
     SmartDashboard::PutNumber("Wrist Angle Target", wristPosTarget);
     SmartDashboard::PutBoolean("Wrist Sensor Disabled", sensorOverride);
     SmartDashboard::PutBoolean("Wrist Limit Switch Lower", GetSwitchLower());
+    SmartDashboard::PutBoolean("Wrist Limit Switch Upper", GetSwitchUpper());
 }
