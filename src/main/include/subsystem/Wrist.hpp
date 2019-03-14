@@ -16,20 +16,22 @@ class Wrist
 		DigitalInput LimitSwitchUpper {5};
 
     // Soft Limits
-    const double kMin = -120;
-    const double kMax = -15;
+    const double kMin = -180;
+    const double kMax = 10;
 
     // Scale Factor (Degrees) / (Pulses)
-    const double kScale = (360 / 4096.0);
+    const double kScale = (90 / 5140.0);
 
      //3790 90
 
     double prevError = 0;
     bool sensorOverride = false;
     bool oneShot = false;
+    
+    double wristManualCommand = 0.0;
+    double wristPosTarget = 0.0;
 
   public:
-    double wristPosTarget;
     // Default Constructor
     Wrist();
 

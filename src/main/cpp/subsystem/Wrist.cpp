@@ -8,7 +8,7 @@ Wrist::Wrist()
     motor1.ConfigFactoryDefault();
 
     motor1.SetInverted(false);
-    motor1.SetSensorPhase(false);
+    motor1.SetSensorPhase(true);
     motor1.ConfigPeakCurrentLimit(5);
     motor1.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
     motor1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_2_Feedback0, 18);
@@ -24,16 +24,13 @@ Wrist::Wrist()
     motor1.ConfigNominalOutputForward(0);
     motor1.ConfigNominalOutputReverse(0);
 
-    motor1.ConfigPeakOutputForward(0.4);
-    motor1.ConfigPeakOutputReverse(-0.75);
-    // motor1.ConfigPeakOutputForward(0.2);
-    // motor1.ConfigPeakOutputReverse(-0.2);
+    motor1.ConfigPeakOutputForward(1.0);
+    motor1.ConfigPeakOutputReverse(-1.0);
 
     motor1.ConfigReverseSoftLimitThreshold(kMin / kScale);
     motor1.ConfigForwardSoftLimitThreshold(kMax / kScale);
 
-    motor1.ConfigReverseSoftLimitEnable(true);
-    motor1.ConfigForwardSoftLimitEnable(true);
+    DeactivateSensorOverride();
 }
 
 // Stop all motors
@@ -54,36 +51,23 @@ void Wrist::SetSpeed(double speed)
     if (speed != 0.0)
     {
         double pos = GetAngle();
-        if (!sensorOverride)
+
+        if (GetSwitchUpper() && speed > 0.0)
         {
-            if ((/*pos > kMax ||*/ GetSwitchUpper()) && speed > 0.0)
-            {
-                motor1.Set(0.0);
-            }
-            else if ((/*pos < kMin ||*/ GetSwitchLower()) && speed < 0.0)
-            {
-                motor1.Set(0.0);
-                ResetEnc();
-            }
-            else
-            {
-                motor1.Set(speed);
-            }
-            return;
+            motor1.Set(0.0);
         }
-        // else if (pos < 15)
-        // {
-        //     motor1.Set(speed * 0.3);
-        // }
-        // else if (pos > 110)
-        // {
-        //     motor1.Set(speed * 0.3);
-        // }
+        else if (GetSwitchLower() && speed < 0.0)
+        {
+            motor1.Set(0.0);
+            ResetEnc();
+        }
         else
         {
             motor1.Set(speed);
         }
+
         oneShot = false;
+        return;
     }
     else if (!oneShot)
     {
@@ -110,7 +94,11 @@ void Wrist::SetAngle(double angle)
     {
         return;
     }
-    //motor1.Set(ControlMode::Position, (angle / kScale));
+
+    motor1.Set(ControlMode::Position, (angle / kScale));
+
+    // For smartdash
+    wristPosTarget = angle;
 }
 
 double Wrist::GetAngle()
@@ -134,8 +122,8 @@ void Wrist::ActivateSensorOverride()
 
 void Wrist::DeactivateSensorOverride()
 {
-    motor1.ConfigReverseSoftLimitEnable(true);
-    motor1.ConfigForwardSoftLimitEnable(true);
+    motor1.ConfigReverseSoftLimitEnable(false); // true
+    motor1.ConfigForwardSoftLimitEnable(false); // true
 
     sensorOverride = false;
 }

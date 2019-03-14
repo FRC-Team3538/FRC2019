@@ -237,18 +237,7 @@ void Robot::TeleopPeriodic()
     {
       leftOpY = (0.2342 * (leftOpY * leftOpY * leftOpY)) + (-0.0689 * (leftOpY * leftOpY)) + (0.4658 * leftOpY) + 0.125;
     }
-
-    // if (leftOpY >= 0)
-    // {
-    //   leftOpY = (0.3125 * (leftOpY * leftOpY * leftOpY)) + (0.4875 * leftOpY);
-    // }
-    // else
-    // {
-    //   leftOpY = (0.4167 * (leftOpY * leftOpY * leftOpY)) + (0.1833 * leftOpY); //0.4
-    // }
   }
-  // rightOpY *= -1;
-  //rotate *= 0.8;
 
   //
   // Driver
@@ -384,7 +373,11 @@ void Robot::TeleopPeriodic()
     {
       // CargoShip
       IO.elevator.SetPosition(23);
-      IO.wrist.SetAngle(-40);
+      
+      if(IO.elevator.GetDistance() > 18)
+      {
+        IO.wrist.SetAngle(-40);
+      }
     }
     if (btnDownOp)
     {
