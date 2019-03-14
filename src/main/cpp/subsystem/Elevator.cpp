@@ -35,7 +35,9 @@ Elevator::Elevator()
     motor1.ConfigNominalOutputForward(0);
     motor1.ConfigNominalOutputReverse(0);
     motor1.ConfigPeakOutputForward(1);
-    motor1.ConfigPeakOutputReverse(-0.5);
+    //motor1.ConfigPeakOutputReverse(-0.5);
+
+    DeactivateGantry();
 
     /* set closed loop gains in slot0 */
     motor1.Config_kF(kPIDLoopIdx, 0.0);
