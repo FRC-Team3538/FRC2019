@@ -13,6 +13,7 @@ DS::DS()
 	chooseElevatorLimit.AddOption(sUnlimitted, sUnlimitted);
 
 	chooseWristLimit.AddOption(sLimit, sLimit);
+	chooseWristLimit.AddOption(sMoreUnlimitted, sMoreUnlimitted);
 	chooseWristLimit.SetDefaultOption(sUnlimitted, sUnlimitted);
 
 }

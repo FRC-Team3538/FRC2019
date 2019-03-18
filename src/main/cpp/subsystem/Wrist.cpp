@@ -128,6 +128,14 @@ void Wrist::DeactivateSensorOverride()
     sensorOverride = false;
 }
 
+void Wrist::ActivateLimitSwitchOverride()
+{
+    motor1.ConfigReverseSoftLimitEnable(true);
+    motor1.ConfigForwardSoftLimitEnable(true);
+    
+    sensorOverride = true;
+}
+
 void Wrist::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("Wrist Motor CMD", motor1.Get());

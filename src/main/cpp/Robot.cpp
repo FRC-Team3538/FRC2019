@@ -81,6 +81,16 @@ void Robot::RobotPeriodic()
       IO.wrist.ResetEnc();
     }
   }
+  else if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sMoreUnlimitted)
+  {
+    IO.wrist.ActivateLimitSwitchOverride();
+    
+
+    if (IO.ds.DriverPS.GetPSButton())
+    {
+      IO.wrist.ResetEnc();
+    }
+  }
   else
   {
     IO.wrist.DeactivateSensorOverride();
@@ -98,7 +108,8 @@ void Robot::RobotPeriodic()
     IO.vision.HumanVisionToggle();
   }
 
-  if(IO.elevator.GetDistance() < 0){
+  if (IO.elevator.GetDistance() < 0)
+  {
     IO.elevator.ResetEnc();
   }
 }
@@ -133,7 +144,7 @@ void Robot::TeleopInit()
 {
   IO.wrist.SetAngle(IO.wrist.GetAngle());
   IO.elevator.SetPosition(IO.elevator.GetDistance()); //IO.elevator.AGetDistance()
-} 
+}
 
 void Robot::DisabledInit()
 {
@@ -373,8 +384,8 @@ void Robot::TeleopPeriodic()
     {
       // CargoShip
       IO.elevator.SetPosition(23);
-      
-      if(IO.elevator.GetDistance() > 18)
+
+      if (IO.elevator.GetDistance() > 18)
       {
         IO.wrist.SetAngle(-40);
       }

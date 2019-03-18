@@ -30,6 +30,7 @@ class DS
     SendableChooser<std::string> chooseWristLimit;
 		const std::string sLimit = "Limited";
 		const std::string sUnlimitted = "Unlimited";
+    const std::string sMoreUnlimitted = "Disable Limit Switches";
 
 
     DS();

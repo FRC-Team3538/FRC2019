@@ -41,6 +41,8 @@ private:
   double targetPos = 0;
   bool sensorOverride = false;
   bool oneShot = false;
+  bool oneShotOutput = false;
+  bool oneShotPID = false;
 
   double prevElevSpd = 0;
 

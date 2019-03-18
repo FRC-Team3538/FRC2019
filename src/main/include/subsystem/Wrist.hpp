@@ -43,6 +43,7 @@ class Wrist
 
     void ActivateSensorOverride();
     void DeactivateSensorOverride();
+    void ActivateLimitSwitchOverride();
 
     double GetAngle();
     void ResetEnc();

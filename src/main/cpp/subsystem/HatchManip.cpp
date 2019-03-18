@@ -37,12 +37,12 @@ void HatchManip::FloorIntakeUp()
 
 void HatchManip::Clamp()
 {
-    clamp.Set(true);
+    clamp.Set(false);
 }
 
 void HatchManip::Unclamp()
 {
-    clamp.Set(false);
+    clamp.Set(true); //Mechanical Problems Require Software Solutions
 }
 
 
