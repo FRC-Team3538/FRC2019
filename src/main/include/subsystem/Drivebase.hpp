@@ -42,8 +42,6 @@ private:
 
   Solenoid solenoidShifter{0};
 
-  AHRS navx{SPI::Port::kMXP, 200};
-
   // Encoder Scale Factor (Inches)/(Pulse)
   const double kScaleFactor = (1.0 / 4096.0) * 6 * 3.1415;
 
@@ -73,20 +71,20 @@ private:
 
   bool oneShotAngle = false;
 
-#define KP_ROTATION (0.012)  //0.012   0.05
-#define KI_ROTATION (0.0000) //0.0001
+#define KP_ROTATION (0.035)  //0.012   0.05
+#define KI_ROTATION (0.00005) //0.0001
 #define KD_ROTATION (0.0001) //0.0001  0.0005
 
-#define KP_FORWARD (0.012)
+#define KP_FORWARD (0.015)
 #define KI_FORWARD (0.0)
-#define KD_FORWARD (0.0)
+#define KD_FORWARD (0.001)
 
 public:
   // Default Constructor
   Drivebase();
 
   bool sensorOverride = false;
-  double forwardHeading;
+  double forwardHeading = 0;
   // Actions
   void Arcade(double forward, double rotate);
   void Stop();
@@ -99,6 +97,7 @@ public:
   void ResetEncoders();
   double GetEncoderPositionLeft();
   double GetEncoderPositionRight();
+  double GetEncoderPosition();
 
   void ResetGyro();
   double GetGyroHeading();
@@ -111,4 +110,5 @@ public:
   void Turn(double degrees);
 
   PigeonIMU *Hoothoot = new PigeonIMU(0);
+  AHRS navx{SPI::Port::kMXP, 200};
 };

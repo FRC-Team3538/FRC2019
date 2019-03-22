@@ -4,15 +4,17 @@
 #include "auto/AutoLineCross.hpp"
 #include "auto/AutoMachine.hpp"
 #include "auto/AutoCargo.hpp"
-
+#include "auto/HybridLeftNear.hpp"
 
 // Constructor requires a reference to the robot map
-AutoPrograms::AutoPrograms(robotmap &IO) : IO(IO) {
+AutoPrograms::AutoPrograms(robotmap &IO) : IO(IO)
+{
 
     // SmartDash Chooser [List 2 of 3]
     m_chooser.AddOption(AutoMachine::GetName(), AutoMachine::GetName());
     m_chooser.AddOption(AutoLineCross::GetName(), AutoLineCross::GetName());
     m_chooser.AddOption(AutoCargo::GetName(), AutoCargo::GetName());
+    m_chooser.AddOption("Left Hybrid", "Left Hybrid");
     m_chooser.SetDefaultOption("0 - None", "0 - None");
 }
 
@@ -31,13 +33,17 @@ void AutoPrograms::Init()
     {
         m_autoProgram = new AutoLineCross(IO);
     }
-    else if (name == AutoMachine::GetName()) 
+    else if (name == AutoMachine::GetName())
     {
         m_autoProgram = new AutoMachine(IO);
     }
     else if (name == AutoCargo::GetName())
     {
         m_autoProgram = new AutoCargo(IO);
+    }
+    else if (name == "Left Hybrid")
+    {
+        m_autoProgram = new HybridLeftNear(IO);
     }
 }
 
@@ -50,7 +56,7 @@ void AutoPrograms::Run()
     }
 }
 
-void AutoPrograms::SmartDash() 
+void AutoPrograms::SmartDash()
 {
     SmartDashboard::PutData("Choose Auto", &m_chooser);
     std::string name = m_chooser.GetSelected();

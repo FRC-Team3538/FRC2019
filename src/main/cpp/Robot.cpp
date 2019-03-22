@@ -30,6 +30,14 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+
+  bool btnPSDr = IO.ds.DriverPS.GetPSButton();
+  if(btnPSDr){
+    IO.drivebase.ResetEncoders();
+    IO.drivebase.ResetGyro();
+    autoPrograms.Init();
+  }
+
   // Zero Switches
   if (IO.elevator.GetElvSwitchLower())
   {
@@ -76,20 +84,19 @@ void Robot::RobotPeriodic()
   {
     IO.wrist.ActivateSensorOverride();
 
-    if (IO.ds.DriverPS.GetPSButton())
-    {
-      IO.wrist.ResetEnc();
-    }
+    // if (IO.ds.DriverPS.GetPSButton())
+    // {
+    //   IO.wrist.ResetEnc();
+    // }
   }
   else if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sMoreUnlimitted)
   {
     IO.wrist.ActivateLimitSwitchOverride();
-    
 
-    if (IO.ds.DriverPS.GetPSButton())
-    {
-      IO.wrist.ResetEnc();
-    }
+    // if (IO.ds.DriverPS.GetPSButton())
+    // {
+    //   IO.wrist.ResetEnc();
+    // }
   }
   else
   {
@@ -116,27 +123,32 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+  hatchDeploy.Reset();
+  hatchDeploy.Start();
   IO.drivebase.ResetEncoders();
   IO.drivebase.ResetGyro();
   autoPrograms.Init();
+  //IO.elevator.SetPosition(20); 
+  initOneShot = false;
 }
 
 void Robot::AutonomousPeriodic()
 {
-  bool btnPSDr = IO.ds.DriverPS.GetPSButtonPressed();
+  if((hatchDeploy.Get() > 1) && !initOneShot){
+    //IO.hatchManip.Deploy();
+    initOneShot = true;
+  }
 
   // if (btnPSDr)
   // {
-  stopAuton = true;
   //}
-
-  if (stopAuton)
+  if (IO.ds.DriverPS.GetRightButton() || IO.ds.DriverPS.GetDownButton())
   {
-    TeleopPeriodic();
+    autoPrograms.Run();
   }
   else
   {
-    autoPrograms.Run();
+    TeleopPeriodic();
   }
 }
 

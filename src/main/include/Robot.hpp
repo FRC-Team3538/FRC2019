@@ -39,6 +39,8 @@ private:
   bool hatchPresets = false;
   bool stopAuton;
   double elevCmd = 0;
+  Timer hatchDeploy;
+  bool initOneShot = false;
 
   // Dont update smart dash every loop
   int smartDashSkip = 0;

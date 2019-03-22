@@ -119,36 +119,13 @@ void AutoCargo::Run()
         }
         break;
     }
-    // case 3:
-    // {
-    //     IO.vision.CVMode(true);
-    //     Vision::returnData dataDrop = IO.vision.Run();
-    //     double error = dataDrop.cmd;
-
-    //     if (dataDrop.distance >= 70 || error == -3.14)
-    //     {
-    //         IO.drivebase.Arcade(0, 0);
-    //     }
-    //     else
-    //     {
-    //         IO.drivebase.Arcade(0.3, -error);
-    //     }
-    //     if((std::abs(error) < 0.05) && dataDrop.distance >=70)
-    //     {
-    //         IO.vision.CVMode(false);
-    //         NextState();
-    //     }
-    //     break;
-    // }
     default:
         std::cout << "Ye" << std::endl;
-        //IO.drivebase.Stop();
     }
 }
 
 // SmartDash updater
 void AutoCargo::UpdateSmartdash()
 {
-    SmartDashboard::PutNumber("ENCODERR", IO.drivebase.GetEncoderPositionRight());
     SmartDashboard::PutNumber("auto state", m_state);
 }

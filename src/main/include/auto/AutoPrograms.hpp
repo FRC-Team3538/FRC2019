@@ -6,6 +6,7 @@
 
 #include "robotmap.hpp"
 #include "auto/AutoInterface.hpp"
+#include <iostream>
 
 class AutoPrograms
 {
