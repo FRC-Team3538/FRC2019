@@ -125,7 +125,9 @@ void HybridLeftNear::ToLoader()
         {
             const int gangle = -90;
             IO.drivebase.Turn(gangle);
-
+            
+            IO.hatchManip.Deploy();
+            IO.elevator.SetPosition(13);
             break;
         }
     }
@@ -196,6 +198,8 @@ void HybridLeftNear::ToCargoShip()
         {
             const int gangle = 90;
             IO.drivebase.Turn(gangle);
+            
+            IO.elevator.SetPosition(13);
 
             break;
         }

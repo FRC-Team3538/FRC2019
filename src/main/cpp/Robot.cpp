@@ -132,12 +132,23 @@ void Robot::AutonomousInit()
   IO.drivebase.ResetEncoders();
   IO.drivebase.ResetGyro();
   autoPrograms.Init();
-  //IO.elevator.SetPosition(20); 
+
+  // Grab hatch at startup
+  IO.hatchManip.Clamp();
+  IO.elevator.Set(0.0);
+  IO.elevator.SetPosition(13); 
   initOneShot = false;
 }
 
 void Robot::AutonomousPeriodic()
 {
+    // grab hatch at starup
+    if(IO.elevator.GetDistance() > 10 && !initOneShot)
+    {
+      IO.hatchManip.Deploy();
+      initOneShot = true;
+    }
+
 
     TeleopPeriodic();
 
