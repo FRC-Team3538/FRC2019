@@ -5,7 +5,7 @@
 // Name for Smart Dash Chooser
 std::string HybridRightNear::GetName()
 {
-    return "5 - HybridRightNear";
+    return "4 - HybridRightNear";
 }
 
 // Initialization
@@ -22,7 +22,7 @@ HybridRightNear::HybridRightNear(robotmap &IO) : IO(IO)
 //State Machine
 void HybridRightNear::NextState()
 {
-    if(m_autoTimer.Get() > 0.2)
+    if(m_autoTimer.Get() > 0.15)
     {
         m_state++;
         m_autoTimer.Reset();
@@ -35,7 +35,8 @@ void HybridRightNear::NextState()
 
 // Execute the program
 void HybridRightNear::Run()
-{
+{    
+
     if (IO.ds.DriverPS.GetUpButton())
     {
         ToCargoShip();
@@ -72,7 +73,8 @@ void HybridRightNear::ToLoader()
         }
         case 1:
         {
-            const double encdist = -44.0;
+            const double encdist = -38.0;
+            IO.drivebase.forwardHeading = -90.0;
             IO.drivebase.DriveForward(encdist, 0.95);
 
             if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
@@ -88,7 +90,7 @@ void HybridRightNear::ToLoader()
         }
         case 2:
         {
-            const int gangle = 101;
+            const int gangle = -165;
             IO.drivebase.Turn(gangle);
 
             if ((std::abs(IO.drivebase.GetGyroHeading() - gangle) < ROT_TARGET) 
@@ -106,7 +108,7 @@ void HybridRightNear::ToLoader()
         }
         case 3:
         {
-            const double encdist = 215.0;
+            const double encdist = 200.0;
             IO.drivebase.DriveForward(encdist, 0.95);
 
             if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
@@ -121,9 +123,11 @@ void HybridRightNear::ToLoader()
         }
         case 4:
         {
-            const int gangle = 90;
+            const int gangle = 180;
             IO.drivebase.Turn(gangle);
-
+            
+            IO.hatchManip.Deploy();
+            IO.elevator.SetPosition(13);
             break;
         }
     }
@@ -138,12 +142,13 @@ void HybridRightNear::ToCargoShip()
         case 0:
         {
             IO.drivebase.ResetEncoders();
+            IO.drivebase.forwardHeading = 175;
             NextState();
             break;
         }
         case 1:
         {
-            const double encdist = -76.0;
+            const double encdist = -48.0;
             IO.drivebase.DriveForward(encdist, 0.95);
 
             if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
@@ -159,7 +164,7 @@ void HybridRightNear::ToCargoShip()
         }
         case 2:
         {
-            const int gangle = 15;
+            const int gangle = 16;
             IO.drivebase.Turn(gangle);
 
             if ((std::abs(IO.drivebase.GetGyroHeading() - gangle) < ROT_TARGET) 
@@ -176,7 +181,7 @@ void HybridRightNear::ToCargoShip()
         }
         case 3:
         {
-            const double encdist = -200.0;
+            const double encdist = 210.0;
             IO.drivebase.DriveForward(encdist, 0.95);
 
             if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
@@ -191,8 +196,10 @@ void HybridRightNear::ToCargoShip()
         }
         case 4:
         {
-            const int gangle = -90;
+            const int gangle = 90;
             IO.drivebase.Turn(gangle);
+
+            IO.elevator.SetPosition(13);
 
             break;
         }
