@@ -18,6 +18,8 @@ void Robot::RobotInit()
   //IO.vision.Init();
   IO.wrist.ResetEnc();
   IO.elevator.SetServo(IO.elevator.servoSetPoints::min);
+  
+  IO.hatchManip.Clamp();
 }
 
 /**
@@ -34,7 +36,6 @@ void Robot::RobotPeriodic()
   bool btnPSDr = IO.ds.DriverPS.GetPSButton();
   if(btnPSDr){
     IO.drivebase.ResetEncoders();
-    IO.drivebase.ResetGyro();
     autoPrograms.Init();
   }
 
@@ -170,9 +171,23 @@ void Robot::TeleopPeriodic()
   // TeleAuto
   if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton())
   {
-    autoPrograms.Run();
+    if(!drivePresetOneshot)
+    {
+      autoPrograms.Init();
+      drivePresetOneshot = true;
+    }
+    else
+    {
+      autoPrograms.Run();
+    }
+    
     return;
   }
+  else
+  {
+    drivePresetOneshot = false;
+  }
+  
 
 
 

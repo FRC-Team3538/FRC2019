@@ -222,8 +222,15 @@ void Drivebase::DriveForward(double distance, double currentLimit)
 
     double driveCommandForward = error * KP_FORWARD + sumError_forward * KI_FORWARD + KD_FORWARD * deltaError;
 
-    double gyroAngle = GetGyroHeading();
+    double gyroAngle = GetGyroHeading(); // -180 ~ 180  // Heading  -180 ~ 180
+
     double errorRot = forwardHeading - gyroAngle;
+
+    if (errorRot > 180.0)
+        errorRot -= 360.0;
+    if (errorRot < -180.0)
+        errorRot += 360.0;
+
     if (errorRot < 10)
     {
         sumError_rotation += errorRot / 0.02;
@@ -237,7 +244,6 @@ void Drivebase::DriveForward(double distance, double currentLimit)
 
     double driveCommandRotation = errorRot * KP_ROTATION + KI_ROTATION * sumError_rotation + KD_ROTATION * deltaErrorRot;
 
-    
     Arcade(driveCommandForward, driveCommandRotation);
 }
 
@@ -245,6 +251,10 @@ void Drivebase::Turn(double heading)
 {
     forwardHeading = heading;
     double errorRot = forwardHeading - GetGyroHeading();
+    if (errorRot > 180.0)
+        errorRot -= 360.0;
+    if (errorRot < -180.0)
+        errorRot += 360.0;
     double deltaErrorRot = errorRot - prevError_rot;
     prevError_rot = errorRot;
 

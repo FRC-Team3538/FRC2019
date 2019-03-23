@@ -16,7 +16,6 @@ HybridRightNear::HybridRightNear(robotmap &IO) : IO(IO)
     m_autoTimer.Reset();
     m_autoTimer.Start();
     IO.drivebase.Stop();
-    IO.drivebase.ResetGyro();
     IO.drivebase.GlobalReset();
 }
 
@@ -68,7 +67,6 @@ void HybridRightNear::ToLoader()
         case 0:
         {
             IO.drivebase.ResetEncoders();
-            IO.drivebase.ResetGyro();
             NextState();
             break;
         }
@@ -140,7 +138,6 @@ void HybridRightNear::ToCargoShip()
         case 0:
         {
             IO.drivebase.ResetEncoders();
-            IO.drivebase.ResetGyro();
             NextState();
             break;
         }

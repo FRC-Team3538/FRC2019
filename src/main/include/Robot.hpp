@@ -41,6 +41,7 @@ private:
   double elevCmd = 0;
   Timer hatchDeploy;
   bool initOneShot = false;
+  bool drivePresetOneshot = false;
 
   // Dont update smart dash every loop
   int smartDashSkip = 0;
