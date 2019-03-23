@@ -8,7 +8,7 @@
 #include <iostream>
 #include "robotmap.hpp"
 
-class HybridLeftNear : public AutoInterface
+class HybridRightNear : public AutoInterface
 {
   public:
     // Name of this program, used by SmartDash
@@ -32,8 +32,8 @@ class HybridLeftNear : public AutoInterface
 
   public:
     // Constructor requires a reference to the RobotMap
-    HybridLeftNear() = delete;
-    HybridLeftNear(robotmap &);
+    HybridRightNear() = delete;
+    HybridRightNear(robotmap &);
 
     // Auto Program Logic
     void Run(); 
