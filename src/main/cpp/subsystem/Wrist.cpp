@@ -79,11 +79,21 @@ void Wrist::SetSpeed(double speed)
 // Limit Switches
 bool Wrist::GetSwitchUpper()
 {
+    //Sees if Talon "Exists"
+    if (motor1.GetFirmwareVersion() == -1)
+    {
+        return false;
+    }   
     return motor1.GetSensorCollection().IsFwdLimitSwitchClosed();
 }
 
 bool Wrist::GetSwitchLower()
 {
+    //Sees if Talon "Exists"
+    if (motor1.GetFirmwareVersion() == -1)
+    {
+        return false;
+    } 
     return motor1.GetSensorCollection().IsRevLimitSwitchClosed();
 }
 
@@ -132,7 +142,7 @@ void Wrist::ActivateLimitSwitchOverride()
 {
     motor1.ConfigReverseSoftLimitEnable(true);
     motor1.ConfigForwardSoftLimitEnable(true);
-    
+
     sensorOverride = true;
 }
 

@@ -2,6 +2,7 @@
 
 #include <frc/DigitalInput.h>
 #include <ctre/Phoenix.h>
+#include <iostream>
 
 using namespace frc;
 using namespace ctre::phoenix::motorcontrol::can;

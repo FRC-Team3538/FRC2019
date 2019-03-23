@@ -18,7 +18,7 @@ void Robot::RobotInit()
   //IO.vision.Init();
   IO.wrist.ResetEnc();
   IO.elevator.SetServo(IO.elevator.servoSetPoints::min);
-  
+
   IO.hatchManip.Clamp();
 }
 
@@ -32,88 +32,15 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-
-  bool btnPSDr = IO.ds.DriverPS.GetPSButton();
-  if(btnPSDr){
-    IO.drivebase.ResetEncoders();
-    autoPrograms.Init();
-  }
-
   // Zero Switches
-  if (IO.elevator.GetElvSwitchLower())
-  {
-    IO.elevator.ResetEnc();
-  }
-
   if (IO.wrist.GetSwitchUpper())
   {
     IO.wrist.ResetEnc();
   }
 
-  
-  //
-  // Sensor Override
-  //
-  bool btnBackOp = IO.ds.OperatorPS.GetScreenShotButton();
-  bool btnStartOp = IO.ds.OperatorPS.GetOptionsButton();
-
-  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
+  if (IO.elevator.GetElvSwitchLower())
   {
-    btnBackOp = IO.ds.OperatorXB.GetBackButton();
-    btnStartOp = IO.ds.OperatorXB.GetStartButton();
-  }
-
-  // Limits
-  if (IO.ds.chooseDriveLimit.GetSelected() == IO.ds.sUnlimitted)
-  {
-    IO.drivebase.ActivateSensorOverride();
-  }
-  else
-  {
-    IO.drivebase.DeactivateSensorOverride();
-  }
-
-  if (IO.ds.chooseElevatorLimit.GetSelected() == IO.ds.sUnlimitted)
-  {
-    IO.elevator.ActivateSensorOverride();
-  }
-  else
-  {
-    IO.elevator.DeactivateSensorOverride();
-  }
-
-  if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sUnlimitted)
-  {
-    IO.wrist.ActivateSensorOverride();
-
-    // if (IO.ds.DriverPS.GetPSButton())
-    // {
-    //   IO.wrist.ResetEnc();
-    // }
-  }
-  else if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sMoreUnlimitted)
-  {
-    IO.wrist.ActivateLimitSwitchOverride();
-
-    // if (IO.ds.DriverPS.GetPSButton())
-    // {
-    //   IO.wrist.ResetEnc();
-    // }
-  }
-  else
-  {
-    IO.wrist.DeactivateSensorOverride();
-  }
-
-  bool btnACrossDrPrsd = IO.ds.DriverPS.GetCrossButtonPressed();
-  if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
-  {
-    btnACrossDrPrsd = IO.ds.DriverXB.GetAButtonPressed();
-  }
-
-  if (btnACrossDrPrsd)
-  {
-    //IO.vision.HumanVisionToggle();
+    IO.elevator.ResetEnc();
   }
 
   if (IO.elevator.GetDistance() < 0)
@@ -121,9 +48,15 @@ void Robot::RobotPeriodic()
     IO.elevator.ResetEnc();
   }
 
+  bool btnPSDr = IO.ds.DriverPS.GetPSButton();
+  if (btnPSDr)
+  {
+    IO.drivebase.ResetEncoders();
+    autoPrograms.Init();
+  }
+
   // Update Smart Dash
   UpdateSD();
-  
 }
 
 void Robot::AutonomousInit()
@@ -137,22 +70,20 @@ void Robot::AutonomousInit()
   // Grab hatch at startup
   IO.hatchManip.Clamp();
   IO.elevator.Set(0.0);
-  IO.elevator.SetPosition(13); 
+  IO.elevator.SetPosition(13);
   initOneShot = false;
 }
 
 void Robot::AutonomousPeriodic()
 {
-    // grab hatch at starup
-    if(IO.elevator.GetDistance() > 10 && !initOneShot)
-    {
-      IO.hatchManip.Deploy();
-      initOneShot = true;
-    }
+  // grab hatch at starup
+  if (IO.elevator.GetDistance() > 10 && !initOneShot)
+  {
+    IO.hatchManip.Deploy();
+    initOneShot = true;
+  }
 
-
-    TeleopPeriodic();
-
+  TeleopPeriodic();
 }
 
 void Robot::TeleopInit()
@@ -171,7 +102,7 @@ void Robot::TeleopPeriodic()
   // TeleAuto
   if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton())
   {
-    if(!drivePresetOneshot)
+    if (!drivePresetOneshot)
     {
       autoPrograms.Init();
       drivePresetOneshot = true;
@@ -180,16 +111,13 @@ void Robot::TeleopPeriodic()
     {
       autoPrograms.Run();
     }
-    
+
     return;
   }
   else
   {
     drivePresetOneshot = false;
   }
-  
-
-
 
   double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand) * -1;
   double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand) * -1;
@@ -299,7 +227,6 @@ void Robot::TeleopPeriodic()
     IO.drivebase.Arcade(forward, rotate);
     // IO.drivebase.testRev.Set(forward);
   }
-
 
   // Manip Intake / Eject
   if ((rightTrigDr > 0.05) || leftBumpOp)
@@ -464,23 +391,103 @@ void Robot::UpdateSD()
 {
   // Don't update smart dash every loop,
   // it causes watchdog warnings
-  if ((smartDashSkip++ < 10))
+  if (smartDashSkip > 30)
   {
-    return;
+    smartDashSkip = 0;
   }
-  smartDashSkip = 0;
+
+  //
+  // Sensor Override
+  //
+  switch (smartDashSkip)
+  {
+  case 0:
+  {
+    if (IO.ds.chooseDriveLimit.GetSelected() == IO.ds.sUnlimitted)
+    {
+      IO.drivebase.ActivateSensorOverride();
+    }
+    else
+    {
+      IO.drivebase.DeactivateSensorOverride();
+    }
+
+    break;
+  }
+
+  case 2:
+  {
+    IO.drivebase.UpdateSmartdash();
+    break;
+  }
+
+  case 5:
+  {
+    if (IO.ds.chooseElevatorLimit.GetSelected() == IO.ds.sUnlimitted)
+    {
+      IO.elevator.ActivateSensorOverride();
+    }
+    else
+    {
+      IO.elevator.DeactivateSensorOverride();
+    }
+    break;
+  }
+
+  case 7:
+  {
+    IO.elevator.UpdateSmartdash();
+    break;
+  }
+
+  case 10:
+  {
+    if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sUnlimitted)
+    {
+      IO.wrist.ActivateSensorOverride();
+    }
+    else if (IO.ds.chooseWristLimit.GetSelected() == IO.ds.sMoreUnlimitted)
+    {
+      IO.wrist.ActivateLimitSwitchOverride();
+    }
+    else
+    {
+      IO.wrist.DeactivateSensorOverride();
+    }
+    break;
+  }
+
+  case 12:
+  {
+    IO.wrist.UpdateSmartdash();
+    break;
+  }
+
+  case 15:
+  {
+    IO.cargoManip.UpdateSmartdash();
+    break;
+  }
+  case 20:
+  {
+    IO.hatchManip.UpdateSmartdash();
+    break;
+  }
+  case 25:
+  {
+    IO.frontClimber.UpdateSmartdash();
+    break;
+  }
+
+  default:
+  {
+    break;
+  }
+  }
 
   // Critical
   autoPrograms.SmartDash();
   IO.ds.SmartDash();
-
-  // Optional
-  IO.drivebase.UpdateSmartdash();
-  IO.elevator.UpdateSmartdash();
-  IO.wrist.UpdateSmartdash();
-  IO.cargoManip.UpdateSmartdash();
-  IO.hatchManip.UpdateSmartdash();
-  IO.frontClimber.UpdateSmartdash();
 }
 
 bool Robot::AutoTarget(bool Go, double forward)
