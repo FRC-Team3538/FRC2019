@@ -23,19 +23,21 @@ HybridLeftNear::HybridLeftNear(robotmap &IO) : IO(IO)
 //State Machine
 void HybridLeftNear::NextState()
 {
-    m_state++;
-    m_autoTimer.Reset();
-    m_autoTimer.Start();
-    IO.drivebase.ResetEncoders();
-    IO.drivebase.GlobalReset();
-    timer = false;
+    if(m_autoTimer.Get() > 0.2)
+    {
+        m_state++;
+        m_autoTimer.Reset();
+        m_autoTimer.Start();
+        IO.drivebase.ResetEncoders();
+        IO.drivebase.GlobalReset();
+        timer = false;
+    }
 }
 
 // Execute the program
 void HybridLeftNear::Run()
 {
-    UpdateSmartdash();
-    if (IO.ds.DriverPS.GetRightButton())
+    if (IO.ds.DriverPS.GetUpButton())
     {
         ToCargoShip();
     }
@@ -43,10 +45,8 @@ void HybridLeftNear::Run()
     {
         ToLoader();
     }
-    else
-    {
-        m_state = 0;
-    }
+
+    UpdateSmartdash();
 }
 
 // SmartDash updater
@@ -60,114 +60,145 @@ void HybridLeftNear::ResetState()
     m_state = 0;
 }
 
-void HybridLeftNear::ToCargoShip()
-{
-    switch (m_state)
-    {
-    case 0:
-    {
-        IO.drivebase.forwardHeading = 0;
-        IO.drivebase.ResetEncoders();
-        NextState();
-        break;
-    }
-    case 1:
-    {
-        const double encdist = 100.0;
-        IO.drivebase.DriveForward(encdist, 0.95);
-
-        if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < 3) && !timer)
-        {
-            m_autoTimer.Reset();
-            m_autoTimer.Start();
-            timer = true;
-        }
-        if ((m_autoTimer.Get() > 0.5) && (std::abs(IO.drivebase.GetEncoderPosition() - encdist) < 3))
-        {
-            NextState();
-        }
-        std::cout << IO.drivebase.GetEncoderPositionLeft() << std::endl;
-        break;
-    }
-    case 2:
-    {
-        const int gangle = -90;
-        IO.drivebase.Turn(gangle);
-        if (std::abs(IO.drivebase.GetGyroHeading() - gangle) < 2)
-        {
-            IO.drivebase.ResetEncoders();
-            NextState();
-        }
-        break;
-    }
-
-    default:
-    {
-    }
-    }
-}
 
 void HybridLeftNear::ToLoader()
 {
     switch (m_state)
     {
-    case 0:
-    {
-        IO.drivebase.forwardHeading = 0;
-        IO.drivebase.ResetEncoders();
-        NextState();
-        break;
-    }
-    case 1:
-    {
-        const double encdist = -30.0;
-        IO.drivebase.DriveForward(encdist, 0.95);
-
-        double encoderPosition = IO.drivebase.GetEncoderPosition();
-        if ((std::abs(encoderPosition - encdist) < 3))
-        {
-            NextState();
-        }
-
-        std::cout << IO.drivebase.GetEncoderPositionLeft() << std::endl;
-        break;
-    }
-    case 2:
-    {
-        const int gangle = -104;
-        IO.drivebase.Turn(gangle);
-        if ((std::abs(IO.drivebase.GetGyroHeading() - gangle) < 2) && (std::abs(IO.drivebase.navx.GetRate()) < 2))
+        case 0:
         {
             IO.drivebase.ResetEncoders();
+            IO.drivebase.ResetGyro();
             NextState();
+            break;
         }
-        break;
-    }
-    case 3:
-    {
-        const double encdist = 225.0;
-        IO.drivebase.DriveForward(encdist, 0.95);
-
-        if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < 3))
+        case 1:
         {
-            NextState();
+            const double encdist = -44.0;
+            IO.drivebase.DriveForward(encdist, 0.95);
+
+            if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
+            {
+                NextState();
+            }
+            else
+            {
+                m_autoTimer.Reset();
+            }
+
+            break;
         }
-        std::cout << IO.drivebase.GetEncoderPositionLeft() << std::endl;
-        break;
+        case 2:
+        {
+            const int gangle = -101;
+            IO.drivebase.Turn(gangle);
+
+            if ((std::abs(IO.drivebase.GetGyroHeading() - gangle) < ROT_TARGET) 
+                && (std::abs(IO.drivebase.navx.GetRate()) < 2))
+            {
+                IO.drivebase.ResetEncoders();
+                NextState();
+            }
+            else
+            {
+                m_autoTimer.Reset();
+            }
+            
+            break;
+        }
+        case 3:
+        {
+            const double encdist = 215.0;
+            IO.drivebase.DriveForward(encdist, 0.95);
+
+            if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
+            {
+                NextState();
+            }
+            else
+            {
+                m_autoTimer.Reset();
+            }
+            break;
+        }
+        case 4:
+        {
+            const int gangle = -90;
+            IO.drivebase.Turn(gangle);
+
+            break;
+        }
     }
-    case 4:
+
+}
+
+void HybridLeftNear::ToCargoShip()
+{
+    
+    switch (m_state)
     {
-        const int gangle = -90;
-        IO.drivebase.Turn(gangle);
-        if (std::abs(IO.drivebase.GetGyroHeading() - gangle) < 5)
+        case 0:
         {
             IO.drivebase.ResetEncoders();
+            IO.drivebase.ResetGyro();
+            NextState();
+            break;
         }
-        break;
+        case 1:
+        {
+            const double encdist = -76.0;
+            IO.drivebase.DriveForward(encdist, 0.95);
+
+            if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
+            {
+                NextState();
+            }
+            else
+            {
+                m_autoTimer.Reset();
+            }
+
+            break;
+        }
+        case 2:
+        {
+            const int gangle = -15;
+            IO.drivebase.Turn(gangle);
+
+            if ((std::abs(IO.drivebase.GetGyroHeading() - gangle) < ROT_TARGET) 
+                && (std::abs(IO.drivebase.navx.GetRate()) < 2))
+            {
+                IO.drivebase.ResetEncoders();
+                NextState();
+            }
+            else
+            {
+                m_autoTimer.Reset();
+            }
+            break;
+        }
+        case 3:
+        {
+            const double encdist = -200.0;
+            IO.drivebase.DriveForward(encdist, 0.95);
+
+            if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
+            {
+                NextState();
+            }
+            else
+            {
+                m_autoTimer.Reset();
+            }
+           break;
+        }
+        case 4:
+        {
+            const int gangle = 90;
+            IO.drivebase.Turn(gangle);
+
+            break;
+        }
     }
 
-    default:
-    {
-    }
-    }
 }

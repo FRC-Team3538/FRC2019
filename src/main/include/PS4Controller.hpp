@@ -71,7 +71,7 @@ class PS4Controller : public GenericHID {
   bool GetTouchPadButtonPressed();
   bool GetTouchPadButtonReleased();
 
-  bool GetUPButton() const;
+  bool GetUpButton() const;
 
   bool GetRightButton() const;
 

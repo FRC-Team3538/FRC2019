@@ -27,6 +27,9 @@ class HybridLeftNear : public AutoInterface
     double heading;
     bool timer = false;
 
+    const double ROT_TARGET = 4.0;
+    const double LIN_TARGET = 4.0;
+
   public:
     // Constructor requires a reference to the RobotMap
     HybridLeftNear() = delete;

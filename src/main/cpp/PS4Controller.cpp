@@ -389,7 +389,7 @@ int GenericHID::GetPOV(int pov) const { return m_ds.GetStickPOV(m_port, pov); }
  * @param hand Side of controller whose value should be returned.
  * @return The state of the button.
  */
-bool PS4Controller::GetUPButton() const {
+bool PS4Controller::GetUpButton() const {
   return (GetPOV() == 315 || GetPOV() == 0 || GetPOV() == 45 );
 }
 

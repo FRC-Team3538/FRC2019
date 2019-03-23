@@ -21,5 +21,5 @@ class robotmap
     HatchManip hatchManip;
     CargoIntake cargoIntake;
     FrontClimber frontClimber;
-    Vision vision;
+    //Vision vision;
 };

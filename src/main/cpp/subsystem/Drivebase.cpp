@@ -180,6 +180,7 @@ void Drivebase::ResetGyro()
     //Hoothoot->SetFusedHeading(0.0);
     //navx.ResetDisplacement();
     //navx.Reset();
+    forwardHeading = 0;
 }
 
 double Drivebase::GetGyroHeading()

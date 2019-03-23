@@ -15,7 +15,7 @@ void Robot::RobotInit()
   IO.elevator.ResetEnc();
   IO.drivebase.ResetEncoders();
   IO.drivebase.ResetGyro();
-  IO.vision.Init();
+  //IO.vision.Init();
   IO.wrist.ResetEnc();
   IO.elevator.SetServo(IO.elevator.servoSetPoints::min);
 }
@@ -49,6 +49,7 @@ void Robot::RobotPeriodic()
     IO.wrist.ResetEnc();
   }
 
+  
   //
   // Sensor Override
   //
@@ -103,22 +104,25 @@ void Robot::RobotPeriodic()
     IO.wrist.DeactivateSensorOverride();
   }
 
-  // Update Smart Dash
-  UpdateSD();
   bool btnACrossDrPrsd = IO.ds.DriverPS.GetCrossButtonPressed();
   if (IO.ds.chooseController.GetSelected() == IO.ds.sXBX)
   {
     btnACrossDrPrsd = IO.ds.DriverXB.GetAButtonPressed();
   }
+
   if (btnACrossDrPrsd)
   {
-    IO.vision.HumanVisionToggle();
+    //IO.vision.HumanVisionToggle();
   }
 
   if (IO.elevator.GetDistance() < 0)
   {
     IO.elevator.ResetEnc();
   }
+
+  // Update Smart Dash
+  UpdateSD();
+  
 }
 
 void Robot::AutonomousInit()
@@ -134,22 +138,9 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-  if((hatchDeploy.Get() > 1) && !initOneShot){
-    //IO.hatchManip.Deploy();
-    initOneShot = true;
-  }
 
-  // if (btnPSDr)
-  // {
-  //}
-  if (IO.ds.DriverPS.GetRightButton() || IO.ds.DriverPS.GetDownButton())
-  {
-    autoPrograms.Run();
-  }
-  else
-  {
     TeleopPeriodic();
-  }
+
 }
 
 void Robot::TeleopInit()
@@ -164,6 +155,16 @@ void Robot::DisabledInit()
 
 void Robot::TeleopPeriodic()
 {
+
+  // TeleAuto
+  if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton())
+  {
+    autoPrograms.Run();
+    return;
+  }
+
+
+
   double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand) * -1;
   double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand) * -1;
   double strafe = IO.ds.DriverPS.GetX(GenericHID::kLeftHand);
@@ -176,7 +177,7 @@ void Robot::TeleopPeriodic()
   bool btnYTriangleDr = IO.ds.DriverPS.GetTriangleButton();
   bool btnBCircleDr = IO.ds.DriverPS.GetCircleButton();
   bool btnXSquareDr = IO.ds.DriverPS.GetSquareButton();
-  bool btnUpDr = IO.ds.DriverPS.GetUPButton();
+  bool btnUpDr = IO.ds.DriverPS.GetUpButton();
   bool btnRightDr = IO.ds.DriverPS.GetRightButton();
   bool btnLeftDr = IO.ds.DriverPS.GetLeftButton();
   bool btnDownDr = IO.ds.DriverPS.GetDownButton();
@@ -194,7 +195,7 @@ void Robot::TeleopPeriodic()
   bool btnBCircleOp = IO.ds.OperatorPS.GetCircleButton();
   bool btnYTriangleOp = IO.ds.OperatorPS.GetTriangleButton();
   bool btnXSquareOp = IO.ds.OperatorPS.GetSquareButton();
-  bool btnUpOp = IO.ds.OperatorPS.GetUPButton();
+  bool btnUpOp = IO.ds.OperatorPS.GetUpButton();
   bool btnRightOp = IO.ds.OperatorPS.GetRightButton();
   bool btnLeftOp = IO.ds.OperatorPS.GetLeftButton();
   bool btnDownOp = IO.ds.OperatorPS.GetDownButton();
@@ -272,6 +273,7 @@ void Robot::TeleopPeriodic()
     IO.drivebase.Arcade(forward, rotate);
     // IO.drivebase.testRev.Set(forward);
   }
+
 
   // Manip Intake / Eject
   if ((rightTrigDr > 0.05) || leftBumpOp)
@@ -457,7 +459,7 @@ void Robot::UpdateSD()
 
 bool Robot::AutoTarget(bool Go, double forward)
 {
-  Vision::returnData dataDrop = IO.vision.Run();
+  /*Vision::returnData dataDrop = IO.vision.Run();
   double error = dataDrop.cmd;
 
   if (Go)
@@ -473,6 +475,7 @@ bool Robot::AutoTarget(bool Go, double forward)
     return true;
   }
   //std::cout << error << endl;
+  */
 }
 
 #ifndef RUNNING_FRC_TESTS
