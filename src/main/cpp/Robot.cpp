@@ -240,6 +240,10 @@ void Robot::TeleopPeriodic()
   if (!btnBCircleDr)
   {
     IO.drivebase.Arcade(forward, rotate);
+    if (IO.elevator.GetGantryActivated())
+    {
+      IO.frontClimber.Set(forward);
+    }
     // IO.drivebase.testRev.Set(forward);
   }
 
@@ -274,17 +278,6 @@ void Robot::TeleopPeriodic()
   double frontWinchCMD = rightTrigOp - leftTrigOp;
   IO.frontClimber.SetWinch(frontWinchCMD);
 
-  if (btnACrossDr)
-  {
-    IO.frontClimber.Set(1.0);
-  }
-  else if (btnBCircleDr)
-  {
-    IO.frontClimber.Set(-1.0);
-  }
-  else{
-    IO.frontClimber.Set(0);
-  }
   // if (frontDeployCMD < 0.0)
   // {
   //   //IO.elevator.SetPosition(10.0);
@@ -346,10 +339,17 @@ void Robot::TeleopPeriodic()
   //}
 
   //Wrist
-  IO.wrist.SetSpeed(rightOpY);
-  if (std::abs(rightOpY) > 0)
+  if (IO.elevator.GetGantryActivated())
   {
-    cargoWristPreset = false;
+    IO.frontClimber.SetWinch(rightOpY);
+  }
+  else
+  {
+    IO.wrist.SetSpeed(rightOpY);
+    if (std::abs(rightOpY) > 0)
+    {
+      cargoWristPreset = false;
+    }
   }
   hatchPresets = IO.hatchManip.Deployed();
 
