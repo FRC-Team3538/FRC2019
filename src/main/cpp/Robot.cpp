@@ -276,7 +276,7 @@ void Robot::TeleopPeriodic()
   IO.elevator.SetServo(IO.elevator.servoSetPoints::autoSet);
 
   double frontWinchCMD = rightTrigOp - leftTrigOp;
-  IO.frontClimber.SetWinch(frontWinchCMD);
+  IO.frontClimber.Set(frontWinchCMD);
 
   // if (frontDeployCMD < 0.0)
   // {

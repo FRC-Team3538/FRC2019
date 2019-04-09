@@ -160,7 +160,7 @@ void Drivebase::ResetEncoders()
 
 double Drivebase::GetEncoderPositionLeft()
 {
-    return motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;
+    return motorLeft1.GetSelectedSensorPosition(0) * kScaleFactor;
 }
 
 double Drivebase::GetEncoderPositionRight()
@@ -170,7 +170,7 @@ double Drivebase::GetEncoderPositionRight()
 
 double Drivebase::GetEncoderPosition()
 {
-    return GetEncoderPositionRight();//(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
+    return (GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
 }
 
 // Gyro
@@ -207,7 +207,7 @@ void Drivebase::DriveForward(double distance, double currentLimit)
     //     oneShotAngle = true;
     // }
 
-    double averageEncCnt = GetEncoderPositionRight();//(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
+    double averageEncCnt = GetEncoderPosition();//(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
     double error = distance - averageEncCnt;
     if (error < 24)
     {

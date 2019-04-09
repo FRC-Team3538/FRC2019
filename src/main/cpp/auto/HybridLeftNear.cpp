@@ -43,7 +43,7 @@ void HybridLeftNear::Run()
     }
     else if (IO.ds.DriverPS.GetDownButton())
     {
-        ToLoader();
+        BackRocket();
     }
     else if (IO.ds.DriverPS.GetRightButton())
     {
@@ -219,12 +219,17 @@ void HybridLeftNear::BackRocket()
     }
     case 1:
     {
-        const double encdist = -230.0;
-        IO.drivebase.DriveForward(encdist, 0.3);
+        const double encdist = -270.0;
+        IO.drivebase.DriveForward(encdist, 1);
+        IO.hatchManip.hatchIntake.Set(0.2);
 
-        if (IO.drivebase.GetEncoderPosition() < -153.0)
+        if (IO.drivebase.GetEncoderPosition() < -155.0)
         {
-            IO.drivebase.forwardHeading = 30;
+            IO.drivebase.forwardHeading = 40;
+        }
+        else if (IO.drivebase.GetEncoderPosition() < -77.5)
+        {
+            IO.drivebase.forwardHeading = 15;
         }
 
         if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
@@ -240,12 +245,23 @@ void HybridLeftNear::BackRocket()
     }
     case 2:
     {
+        IO.hatchManip.hatchIntake.Set(0.2);
         const int gangle = -30;
         IO.drivebase.Turn(gangle);
-
-        IO.elevator.SetPosition(13);
-
+        if ((std::abs(IO.drivebase.GetGyroHeading() - gangle) < 6) && (std::abs(IO.drivebase.navx.GetRate()) < 2))
+        {
+            IO.drivebase.ResetEncoders();
+            NextState();
+        }
         break;
+    }
+    case 3:
+    {
+        IO.elevator.SetPosition(12);
+        if (IO.elevator.GetDistance() > 10)
+        {
+            IO.hatchManip.Deploy();
+        }
     }
     }
 }
