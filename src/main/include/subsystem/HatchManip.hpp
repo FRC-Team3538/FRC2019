@@ -1,6 +1,7 @@
 #pragma once
 
 #include <frc/Solenoid.h>
+#include <ctre/Phoenix.h>
 
 using namespace frc;
 
@@ -30,4 +31,6 @@ class HatchManip
     bool Deployed();
 
     void UpdateSmartdash();
+
+    WPI_VictorSPX hatchIntake {35};
 };

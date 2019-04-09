@@ -43,7 +43,12 @@ void HybridRightNear::Run()
     }
     else if (IO.ds.DriverPS.GetDownButton())
     {
-        ToLoader();
+        BackRocket();
+        //ToLoader();
+    }
+    else if (IO.ds.DriverPS.GetRightButton())
+    {
+        BackRocket();
     }
 
     UpdateSmartdash();
@@ -266,6 +271,52 @@ void HybridRightNear::StartToCargoShip()
         IO.drivebase.Turn(gangle);
 
         IO.elevator.SetPosition(13);
+
+        break;
+    }
+    }
+}
+
+void HybridRightNear::BackRocket()
+{
+    switch (m_state)
+    {
+    case 0:
+    {
+        IO.drivebase.ResetEncoders();
+        IO.drivebase.forwardHeading = 0;
+        NextState();
+        break;
+    }
+    case 1:
+    {
+        const double encdist = -270.0;
+        IO.drivebase.DriveForward(encdist, 0.85);
+        IO.hatchManip.hatchIntake.Set(0.2);
+
+        if(IO.drivebase.GetEncoderPosition() < -155.0){
+            IO.drivebase.forwardHeading = -40;
+        }
+        else if(IO.drivebase.GetEncoderPosition() < -77.5){
+            IO.drivebase.forwardHeading = -15;
+        }
+
+        if ((std::abs(IO.drivebase.GetEncoderPosition() - encdist) < LIN_TARGET))
+        {
+            NextState();
+        }
+        else
+        {
+            m_autoTimer.Reset();
+        }
+
+        break;
+    }
+    case 2:
+    {
+        IO.hatchManip.hatchIntake.Set(0.2);
+        const int gangle = 30;
+        IO.drivebase.Turn(gangle);
 
         break;
     }

@@ -71,7 +71,8 @@ void Wrist::SetSpeed(double speed)
     }
     else if (!oneShot)
     {
-        SetAngle(GetAngle());
+        // SetAngle(GetAngle());
+        // No need to hold angle. Backdrive is off the chains
         oneShot = true;
     }
 }
@@ -155,4 +156,8 @@ void Wrist::UpdateSmartdash()
     SmartDashboard::PutBoolean("Wrist Sensor Disabled", sensorOverride);
     SmartDashboard::PutBoolean("Wrist Limit Switch Lower", GetSwitchLower());
     SmartDashboard::PutBoolean("Wrist Limit Switch Upper", GetSwitchUpper());
+}
+
+double Wrist::GetTargetAngle(){
+    return motor1.GetClosedLoopTarget(0);
 }

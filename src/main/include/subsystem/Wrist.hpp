@@ -49,6 +49,7 @@ class Wrist
     double GetAngle();
     void ResetEnc();
     void SetAngle(double angle);
+    double GetTargetAngle();
 
     void UpdateSmartdash();
 };

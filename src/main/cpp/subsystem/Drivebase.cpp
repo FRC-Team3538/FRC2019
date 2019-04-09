@@ -160,17 +160,17 @@ void Drivebase::ResetEncoders()
 
 double Drivebase::GetEncoderPositionLeft()
 {
-    return motorLeft1.GetSelectedSensorPosition(0) * kScaleFactor;
+    return motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;
 }
 
 double Drivebase::GetEncoderPositionRight()
 {
-    return motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;
+    return motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;//motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;
 }
 
 double Drivebase::GetEncoderPosition()
 {
-    return (GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
+    return GetEncoderPositionRight();//(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
 }
 
 // Gyro
@@ -207,7 +207,7 @@ void Drivebase::DriveForward(double distance, double currentLimit)
     //     oneShotAngle = true;
     // }
 
-    double averageEncCnt = (GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
+    double averageEncCnt = GetEncoderPositionRight();//(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
     double error = distance - averageEncCnt;
     if (error < 24)
     {
@@ -329,4 +329,16 @@ void Drivebase::UpdateSmartdash()
     SmartDashboard::PutNumber("POSlAUX", motorLeft1.GetSelectedSensorPosition(PIDind::aux));
     SmartDashboard::PutNumber("POSlPRIM", motorLeft1.GetSelectedSensorPosition(PIDind::primary));
 */
+}
+void Drivebase::SetMaxSpeed()
+{
+    motorLeft1.ConfigNominalOutputForward(0);
+    motorLeft1.ConfigNominalOutputReverse(0);
+    motorLeft1.ConfigPeakOutputForward(1);
+    motorLeft1.ConfigPeakOutputReverse(-1);
+
+    motorRight1.ConfigNominalOutputForward(0);
+    motorRight1.ConfigNominalOutputReverse(0);
+    motorRight1.ConfigPeakOutputForward(1);
+    motorRight1.ConfigPeakOutputReverse(-1);
 }

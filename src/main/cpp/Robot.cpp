@@ -212,6 +212,11 @@ void Robot::TeleopPeriodic()
   leftOpY = Deadband(leftOpY, deadband);
   rightOpY = Deadband(rightOpY, deadband);
 
+  if ((abs(forward) > 0) || (abs(rotate) > 0))
+  {
+    IO.drivebase.SetMaxSpeed();
+  }
+
   //Scaling
   leftOpY *= -1;
 
@@ -246,7 +251,6 @@ void Robot::TeleopPeriodic()
   else if ((leftTrigDr > 0.05) || rightBumpOp)
   {
     IO.cargoManip.Set(1.0);
-    IO.wrist.SetAngle(-90);
     //IO.elevator.SetPosition(2);
 
     IO.hatchManip.FloorIntakeUp();
@@ -267,26 +271,57 @@ void Robot::TeleopPeriodic()
 
   IO.elevator.SetServo(IO.elevator.servoSetPoints::autoSet);
 
-  double frontDeployCMD = rightTrigOp - leftTrigOp;
-  if (frontDeployCMD < 0.0)
+  double frontWinchCMD = rightTrigOp - leftTrigOp;
+  IO.frontClimber.SetWinch(frontWinchCMD);
+
+  if (btnACrossDr)
   {
-    IO.elevator.SetPosition(10.0);
-    IO.frontClimber.Set(frontDeployCMD * 0.5);
+    IO.frontClimber.Set(1.0);
+  }
+  else if (btnBCircleDr)
+  {
+    IO.frontClimber.Set(-1.0);
+  }
+  else{
+    IO.frontClimber.Set(0);
+  }
+  // if (frontDeployCMD < 0.0)
+  // {
+  //   //IO.elevator.SetPosition(10.0);
+  //   IO.frontClimber.Set(frontDeployCMD * 0.5);
+  // }
+  // else
+  // {
+  //   IO.frontClimber.Set(frontDeployCMD);
+  // }
+
+  // Hatch Clamp
+
+  std::string sDF = "Max Current";
+  double df = frc::SmartDashboard::GetNumber(sDF, 20.0);
+  frc::SmartDashboard::PutNumber(sDF, df);
+
+  double current = pdp->GetCurrent(10);
+
+  if ((btnBCircleOp || leftBumpDr) && (current < df))
+  {
+    IO.hatchManip.hatchIntake.Set(0.7);
+  }
+  else if ((btnBCircleOp || leftBumpDr) && (current > df))
+  {
+    IO.hatchManip.hatchIntake.Set(0.3);
+  }
+  else if ((btnACrossOp || rightBumpDr) && (current < df))
+  {
+    IO.hatchManip.hatchIntake.Set(-0.5);
+  }
+  else if ((btnACrossOp || rightBumpDr) && (current > df))
+  {
+    IO.hatchManip.hatchIntake.Set(-0.2);
   }
   else
   {
-    IO.frontClimber.Set(frontDeployCMD);
-  }
-
-  // Hatch Clamp
-  if (btnBCircleOp || leftBumpDr)
-  {
-    IO.hatchManip.Clamp();
-  }
-
-  if (btnACrossOp || rightBumpDr)
-  {
-    IO.hatchManip.Unclamp();
+    IO.hatchManip.hatchIntake.Set(0.0);
   }
 
   // Hatch Deploy
@@ -294,6 +329,7 @@ void Robot::TeleopPeriodic()
   {
     IO.wrist.SetAngle(0);
     IO.hatchManip.Deploy();
+    controlModeOneShot = false;
   }
 
   if (btnXSquareOp)
@@ -311,6 +347,10 @@ void Robot::TeleopPeriodic()
 
   //Wrist
   IO.wrist.SetSpeed(rightOpY);
+  if (std::abs(rightOpY) > 0)
+  {
+    cargoWristPreset = false;
+  }
   hatchPresets = IO.hatchManip.Deployed();
 
   //Presets
@@ -322,24 +362,32 @@ void Robot::TeleopPeriodic()
       // High rocket
       IO.elevator.SetPosition(64);
       IO.wrist.SetAngle(0);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
     }
     if (btnLeftOp)
     {
       // Mid Rocket
       IO.elevator.SetPosition(42);
       IO.wrist.SetAngle(0);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
     }
     if (btnRightOp)
     {
       // Cargo Ship
-      IO.elevator.SetPosition(13);
+      IO.elevator.SetPosition(12);
       IO.wrist.SetAngle(0);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
     }
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(13);
+      IO.elevator.SetPosition(12);
       IO.wrist.SetAngle(0);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
     }
   }
   else
@@ -350,29 +398,49 @@ void Robot::TeleopPeriodic()
       // High rocket
       IO.elevator.SetPosition(64);
       IO.wrist.SetAngle(0);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
     }
     if (btnLeftOp)
     {
       // Mid Rocket
       IO.elevator.SetPosition(36);
       IO.wrist.SetAngle(0);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
     }
     if (btnRightOp)
     {
       // CargoShip
       IO.elevator.SetPosition(23);
-
-      if (IO.elevator.GetDistance() > 18)
-      {
-        IO.wrist.SetAngle(-40);
-      }
+      cargoWristPreset = true;
     }
     if (btnDownOp)
     {
       // Low rocket
       IO.elevator.SetPosition(8);
       IO.wrist.SetAngle(0);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
     }
+    if (btnStartOp)
+    {
+      // Intake
+      IO.elevator.SetPosition(1);
+      IO.wrist.SetAngle(-90);
+      cargoWristPreset = false;
+      controlModeOneShot = false;
+    }
+  }
+  if ((IO.elevator.GetDistance() > 18) && cargoWristPreset)
+  {
+    IO.wrist.SetAngle(-40);
+    controlModeOneShot = false;
+  }
+  if (!controlModeOneShot && std::abs(IO.wrist.GetTargetAngle() - IO.wrist.GetAngle()) < 2)
+  {
+    IO.wrist.SetSpeed(0);
+    controlModeOneShot = true;
   }
 }
 void Robot::TestPeriodic() {}

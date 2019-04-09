@@ -41,11 +41,12 @@ Elevator::Elevator()
 
     /* set closed loop gains in slot0 */
     motor1.Config_kF(kPIDLoopIdx, 0.0);
-    motor1.Config_kP(kPIDLoopIdx, 0.15);  //0.15  0.125
-    motor1.Config_kI(kPIDLoopIdx, 0.000); // 0.0005
-    motor1.Config_kD(kPIDLoopIdx, -1.0);  //-1.0
+    motor1.Config_kP(kPIDLoopIdx, 0.18);  //0.15  0.125
+    motor1.Config_kI(kPIDLoopIdx, 0.00075); // 0.0005
+    motor1.Config_kD(kPIDLoopIdx, 4.9);  //-1.0
 
-    motor1.Config_IntegralZone(kPIDLoopIdx, (5 / kScaleFactor));
+    motor1.ConfigAllowableClosedloopError(kPIDLoopIdx, 91.375);
+    motor1.Config_IntegralZone(kPIDLoopIdx, 548.25);
 
     motor1.ConfigClosedloopRamp(0.2);
 }
@@ -137,12 +138,12 @@ void Elevator::Set(double speed)
                 oneShot = true;
             }
 
-            if (abs(targetPos - GetDistance()) < 0.5)
-            {
-                motor1.Set(ControlMode::PercentOutput, 0.11);
-                oneShotPID = false;
-            }
-            else if(!oneShotPID)
+            // if (abs(targetPos - GetDistance()) < 0.5)
+            // {
+            //     motor1.Set(ControlMode::PercentOutput, 0.11);
+            //     oneShotPID = false;
+            // }
+            if(!oneShotPID)
             {
                 SetPosition(targetPos);
                 oneShotPID = true;
@@ -199,7 +200,7 @@ void Elevator::SetPosition(double pos)
         return;
     }
 
-    motor1.Set(ControlMode::Position, pos / kScaleFactor);
+    motor1.Set(ControlMode::Position, pos / kScaleFactor, DemandType::DemandType_ArbitraryFeedForward, 0.175);
     targetPos = pos;
 }
 

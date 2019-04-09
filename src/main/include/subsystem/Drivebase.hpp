@@ -73,7 +73,7 @@ private:
 
 #define KP_ROTATION (0.05) 
 #define KI_ROTATION (0.00005) 
-#define KD_ROTATION (0.0001)
+#define KD_ROTATION (0.0005)
 
 #define KP_FORWARD (0.02)
 #define KI_FORWARD (0.0)
@@ -108,6 +108,7 @@ public:
 
   void DriveForward(double distance, double currentLimit = 1.0);
   void Turn(double degrees);
+  void SetMaxSpeed();
 
   PigeonIMU *Hoothoot = new PigeonIMU(0);
   AHRS navx{SPI::Port::kMXP, 200};

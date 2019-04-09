@@ -44,4 +44,5 @@ class HybridLeftNear : public AutoInterface
 
     void ToCargoShip();
     void ToLoader();
+    void BackRocket();
 };

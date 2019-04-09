@@ -5,11 +5,19 @@
 // Configure Hardware Settings
 FrontClimber::FrontClimber()
 {
-    motor1.SetInverted(true);
+    motor1.SetInverted(true); 
+    motor2.SetInverted(false);
     motor1.ConfigNominalOutputForward(0);
     motor1.ConfigNominalOutputReverse(0);
     motor1.ConfigPeakOutputForward(1);
     motor1.ConfigPeakOutputReverse(-0.5);
+
+    motor2.Follow(motor1);
+
+    winch1.SetInverted(true); 
+    winch2.SetInverted(false);
+
+    winch2.Follow(winch1);
 }
 
 // Solenoid
@@ -38,6 +46,11 @@ void FrontClimber::Stop()
 void FrontClimber::Set(double speed)
 {
     motor1.Set(speed);
+}
+
+void FrontClimber::SetWinch(double speed)
+{
+    winch1.Set(speed);
 }
 
 void FrontClimber::UpdateSmartdash()

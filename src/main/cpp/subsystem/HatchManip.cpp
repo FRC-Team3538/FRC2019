@@ -9,6 +9,7 @@ HatchManip::HatchManip()
     clamp.Set(false);
     deploy.Set(false);
     floorIntake.Set(false);
+
 }
 
 void HatchManip::Deploy()

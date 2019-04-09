@@ -15,6 +15,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <opencv2/videoio.hpp>
+#include <frc/PowerDistributionPanel.h>
 using namespace cv;
 
 class Robot : public frc::TimedRobot
@@ -42,6 +43,8 @@ private:
   Timer hatchDeploy;
   bool initOneShot = false;
   bool drivePresetOneshot = false;
+  bool cargoWristPreset = false;
+  bool controlModeOneShot = true;
 
   // Dont update smart dash every loop
   int smartDashSkip = 0;
@@ -50,4 +53,6 @@ private:
   void UpdateSD();
 
   bool AutoTarget(bool Go, double forward);
+
+  PowerDistributionPanel *pdp = new PowerDistributionPanel();
 };
