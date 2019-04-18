@@ -43,7 +43,7 @@ void HybridLeftNear::Run()
     }
     else if (IO.ds.DriverPS.GetDownButton())
     {
-        BackRocket();
+        ToLoader();
     }
     else if (IO.ds.DriverPS.GetRightButton())
     {
@@ -219,6 +219,11 @@ void HybridLeftNear::BackRocket()
     }
     case 1:
     {
+        IO.elevator.SetPosition(12);
+        if(IO.elevator.GetDistance() > 10){
+            IO.hatchManip.Deploy();
+        }
+
         const double encdist = -270.0;
         IO.drivebase.DriveForward(encdist, 1);
         IO.hatchManip.hatchIntake.Set(0.2);
@@ -262,6 +267,7 @@ void HybridLeftNear::BackRocket()
         {
             IO.hatchManip.Deploy();
         }
+        break;
     }
     }
 }

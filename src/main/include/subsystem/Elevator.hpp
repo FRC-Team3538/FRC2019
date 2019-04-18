@@ -50,8 +50,8 @@ private:
 public:
   enum servoSetPoints
   {
-    min = 0,
-    max = 180,
+    min = 150,
+    max = 100,
     autoSet = 118
   };
   // Default Constructor

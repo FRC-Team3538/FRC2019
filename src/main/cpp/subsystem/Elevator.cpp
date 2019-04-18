@@ -35,7 +35,7 @@ Elevator::Elevator()
     motor1.ConfigNominalOutputForward(0);
     motor1.ConfigNominalOutputReverse(0);
     motor1.ConfigPeakOutputForward(1);
-    motor1.ConfigPeakOutputReverse(-0.25);
+    motor1.ConfigPeakOutputReverse(-0.3);
 
     DeactivateGantry();
 
@@ -69,7 +69,7 @@ void Elevator::Set(double speed)
     if (solenoidPTO.Get())
     {
         // Gantry Control
-        if (speed < 0.0) //Currently blocking going down
+        if (speed > 0.0) //Currently blocking going up
         {
             if (GetGanSwitchLeft() || GetGanSwitchRight())
             {
@@ -195,7 +195,7 @@ double Elevator::GetDistance()
 // Closed loop control, inches from bottom
 void Elevator::SetPosition(double pos)
 {
-    if (sensorOverride)
+    if (sensorOverride || GetGantryActivated())
     {
         return;
     }

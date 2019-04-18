@@ -71,6 +71,7 @@ void Wrist::SetSpeed(double speed)
     }
     else if (!oneShot)
     {
+        motor1.Set(0);
         // SetAngle(GetAngle());
         // No need to hold angle. Backdrive is off the chains
         oneShot = true;

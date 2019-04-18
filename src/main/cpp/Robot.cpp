@@ -110,7 +110,7 @@ void Robot::TeleopPeriodic()
 {
 
   // TeleAuto
-  if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton())
+  if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton() || IO.ds.DriverPS.GetRightButton())
   {
     if (!drivePresetOneshot)
     {
@@ -240,25 +240,28 @@ void Robot::TeleopPeriodic()
   if (!btnBCircleDr)
   {
     IO.drivebase.Arcade(forward, rotate);
-    if (IO.elevator.GetGantryActivated())
-    {
-      IO.frontClimber.Set(forward);
-    }
+    // if (IO.elevator.GetGantryActivated())
+    // {
+    //   IO.frontClimber.Set(forward);
+    // }
     // IO.drivebase.testRev.Set(forward);
   }
 
   // Manip Intake / Eject
-  if ((rightTrigDr > 0.05) || leftBumpOp)
+
+  double frontWinchCMD = rightTrigOp - leftTrigOp;
+
+  if (std::abs(frontWinchCMD) > 0.0)
+  {
+    IO.cargoManip.Set(frontWinchCMD);
+  }
+  else if ((rightTrigDr > 0.05) || leftBumpOp)
   {
     IO.cargoManip.Set(-1.0);
   }
   else if ((leftTrigDr > 0.05) || rightBumpOp)
   {
     IO.cargoManip.Set(1.0);
-    //IO.elevator.SetPosition(2);
-
-    IO.hatchManip.FloorIntakeUp();
-    IO.hatchManip.Retract();
   }
   else
   {
@@ -274,9 +277,6 @@ void Robot::TeleopPeriodic()
   }
 
   IO.elevator.SetServo(IO.elevator.servoSetPoints::autoSet);
-
-  double frontWinchCMD = rightTrigOp - leftTrigOp;
-  IO.frontClimber.Set(frontWinchCMD);
 
   // if (frontDeployCMD < 0.0)
   // {
@@ -294,9 +294,8 @@ void Robot::TeleopPeriodic()
   double df = frc::SmartDashboard::GetNumber(sDF, 20.0);
   frc::SmartDashboard::PutNumber(sDF, df);
 
-  double current = pdp->GetCurrent(10);
-
-  if ((btnBCircleOp || leftBumpDr) && (current < df))
+  double current = pdp->GetCurrent(8);
+  if ((btnBCircleOp || leftBumpDr) && (current <= df))
   {
     IO.hatchManip.hatchIntake.Set(0.7);
   }
@@ -304,7 +303,7 @@ void Robot::TeleopPeriodic()
   {
     IO.hatchManip.hatchIntake.Set(0.3);
   }
-  else if ((btnACrossOp || rightBumpDr) && (current < df))
+  else if ((btnACrossOp || rightBumpDr) && (current <= df))
   {
     IO.hatchManip.hatchIntake.Set(-0.5);
   }
@@ -312,9 +311,13 @@ void Robot::TeleopPeriodic()
   {
     IO.hatchManip.hatchIntake.Set(-0.2);
   }
-  else
+  else if (IO.elevator.GetGantryActivated())
   {
     IO.hatchManip.hatchIntake.Set(0.0);
+  }
+  else
+  {
+    IO.hatchManip.hatchIntake.Set(0.25);
   }
 
   // Hatch Deploy
@@ -339,18 +342,18 @@ void Robot::TeleopPeriodic()
   //}
 
   //Wrist
-  if (IO.elevator.GetGantryActivated())
+  // if (IO.elevator.GetGantryActivated())
+  // {
+  //   IO.frontClimber.SetWinch(rightOpY);
+  // }
+  // else
+  // {
+  IO.wrist.SetSpeed(rightOpY);
+  if (std::abs(rightOpY) > 0)
   {
-    IO.frontClimber.SetWinch(rightOpY);
+    cargoWristPreset = false;
   }
-  else
-  {
-    IO.wrist.SetSpeed(rightOpY);
-    if (std::abs(rightOpY) > 0)
-    {
-      cargoWristPreset = false;
-    }
-  }
+  // }
   hatchPresets = IO.hatchManip.Deployed();
 
   //Presets
@@ -427,7 +430,7 @@ void Robot::TeleopPeriodic()
     {
       // Intake
       IO.elevator.SetPosition(1);
-      IO.wrist.SetAngle(-90);
+      IO.wrist.SetAngle(-100);
       cargoWristPreset = false;
       controlModeOneShot = false;
     }
@@ -467,7 +470,7 @@ double Robot::Deadband(double input, double deadband)
 
 void Robot::UpdateSD()
 {
-  // Don't update smart dash every loop,
+  //  Don't update smart dash every loop,
   // it causes watchdog warnings
   if (smartDashSkip > 30)
   {
