@@ -71,13 +71,13 @@ private:
 
   bool oneShotAngle = false;
 
-#define KP_ROTATION (0.03) 
-#define KI_ROTATION (0.00005) 
-#define KD_ROTATION (0.0005)
+#define KP_ROTATION (0.06) 
+#define KI_ROTATION (0.0000) //0.00005
+#define KD_ROTATION (-0.000) //0.004
 
 #define KP_FORWARD (0.02)
 #define KI_FORWARD (0.00)
-#define KD_FORWARD (0.002)
+#define KD_FORWARD (0.003)
 
 public:
   // Default Constructor

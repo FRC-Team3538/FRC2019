@@ -165,7 +165,7 @@ double Drivebase::GetEncoderPositionLeft()
 
 double Drivebase::GetEncoderPositionRight()
 {
-    return motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;//motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;
+    return motorRight1.GetSelectedSensorPosition(0) * kScaleFactor; //motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;
 }
 
 double Drivebase::GetEncoderPosition()
@@ -207,7 +207,7 @@ void Drivebase::DriveForward(double distance, double currentLimit)
     //     oneShotAngle = true;
     // }
 
-    double averageEncCnt = GetEncoderPosition();//(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
+    double averageEncCnt = GetEncoderPosition(); //(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
     double error = distance - averageEncCnt;
     if (error < 24)
     {
@@ -243,6 +243,18 @@ void Drivebase::DriveForward(double distance, double currentLimit)
     prevError_rot = error;
 
     double driveCommandRotation = errorRot * KP_ROTATION + KI_ROTATION * sumError_rotation + KD_ROTATION * deltaErrorRot;
+
+    if (abs(driveCommandRotation) > 0.5)
+    {
+        if (driveCommandRotation > 0)
+        {
+            driveCommandRotation = 0.5;
+        }
+        else
+        {
+            driveCommandRotation = -0.5;
+        }
+    }
 
     Arcade(driveCommandForward, driveCommandRotation);
 }

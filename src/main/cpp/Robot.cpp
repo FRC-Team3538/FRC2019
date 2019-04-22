@@ -110,7 +110,7 @@ void Robot::TeleopPeriodic()
 {
 
   // TeleAuto
-  if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton() || IO.ds.DriverPS.GetRightButton())
+  if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton() || IO.ds.DriverPS.GetRightButton() || IO.ds.DriverPS.GetLeftButton())
   {
     if (!drivePresetOneshot)
     {
