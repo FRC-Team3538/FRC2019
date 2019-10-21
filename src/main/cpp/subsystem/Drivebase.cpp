@@ -31,6 +31,11 @@ Drivebase::Drivebase()
     // motorRev1.SetInverted(true);
     // motorRev2.SetInverted(true);
 
+    // motorRev1.SetSmartCurrentLimit(40);
+    // motorRev2.SetSmartCurrentLimit(40);
+    // motorRev1R.SetSmartCurrentLimit(40);
+    // motorRev2R.SetSmartCurrentLimit(40);
+
     DeactivateSensorOverride();
 
     // master > slaves
@@ -52,6 +57,8 @@ Drivebase::Drivebase()
 
     // motorLeft1.ConfigSelectedFeedbackCoefficient(-1.0);
     // motorRight1.ConfigSelectedFeedbackCoefficient(1.0);
+
+
 
     motorLeft1.SetSensorPhase(false);
     motorRight1.SetSensorPhase(false);
@@ -115,6 +122,14 @@ Drivebase::Drivebase()
     motorLeft1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::primary);
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::aux);
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::primary);
+
+    motorLeft1.ConfigMotionProfileTrajectoryPeriod(10, 30); //Our profile uses 10 ms timing
+    /* status 10 provides the trajectory target for motion profile AND motion magic */
+    motorLeft1.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10, 30);
+
+    motorRight1.ConfigMotionProfileTrajectoryPeriod(10, 30); //Our profile uses 10 ms timing
+    /* status 10 provides the trajectory target for motion profile AND motion magic */
+    motorRight1.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10, 30);
 }
 
 // Arcade Drive
@@ -130,6 +145,8 @@ void Drivebase::Arcade(double forward, double turn)
     }
     motorLeft1.Set(forward - turn);
     motorRight1.Set(forward + turn);
+    motorLeft3.Set(forward - turn);
+    motorRight3.Set(forward + turn);
 }
 
 // Stop!
@@ -201,15 +218,15 @@ void Drivebase::DriveForward(double distance, double currentLimit)
     motorRight1.ConfigPeakOutputForward(currentLimit);
     motorRight1.ConfigPeakOutputReverse(-currentLimit);
 
-    // if (!oneShotAngle)
-    // {
-    //     forwardHeading = GetGyroHeading();
-    //     oneShotAngle = true;
-    // }
+    if (!oneShotAngle)
+    {
+        forwardHeading = GetGyroHeading();
+        oneShotAngle = true;
+    }
 
     double averageEncCnt = GetEncoderPosition(); //(GetEncoderPositionLeft() + GetEncoderPositionRight()) / 2;
     double error = distance - averageEncCnt;
-    if (error < 24)
+    if (error < 10)
     {
         sumError_forward += error / 0.02;
     }
@@ -327,6 +344,8 @@ void Drivebase::UpdateSmartdash()
 
     SmartDashboard::PutNumber("ForwardHeading", forwardHeading);
 
+    //SmartDashboard::PutNumber("Neo Temp", motorRev1.GetMotorTemperature());
+    //SmartDashboard::PutNumber("Neo Temp R", motorRev1R.GetMotorTemperature());
     /*
     SmartDashboard::PutNumber("TARGETrAUX", motorRight1.GetClosedLoopTarget(PIDind::aux));
     SmartDashboard::PutNumber("TARGETrPRIM", motorRight1.GetClosedLoopTarget(PIDind::primary));

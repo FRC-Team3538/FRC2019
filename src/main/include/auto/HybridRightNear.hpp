@@ -10,40 +10,41 @@
 
 class HybridRightNear : public AutoInterface
 {
-  public:
-    // Name of this program, used by SmartDash
-    static std::string GetName();
+public:
+  // Name of this program, used by SmartDash
+  static std::string GetName();
 
-  private:
-    // Get a referance to the robotmap
-    robotmap &IO;
+private:
+  // Get a referance to the robotmap
+  robotmap &IO;
 
-    // State Variables
-    int m_state;
-    Timer m_autoTimer;
+  // State Variables
+  int m_state;
+  Timer m_autoTimer;
 
-    void NextState();
+  void NextState();
 
-    double heading;
-    bool timer = false;
+  double heading;
+  bool timer = false;
 
-    const double ROT_TARGET = 4.0;
-    const double LIN_TARGET = 4.0;
+  const double ROT_TARGET = 4.0;
+  const double LIN_TARGET = 4.0;
 
-  public:
-    // Constructor requires a reference to the RobotMap
-    HybridRightNear() = delete;
-    HybridRightNear(robotmap &);
+public:
+  // Constructor requires a reference to the RobotMap
+  HybridRightNear() = delete;
+  HybridRightNear(robotmap &);
 
-    // Auto Program Logic
-    void Run(); 
+  // Auto Program Logic
+  void Run();
 
-    void ResetState();
+  void ResetState();
 
-    void UpdateSmartdash();
+  void UpdateSmartdash();
 
-    void ToCargoShip();
-    void ToLoader();
-    void StartToCargoShip();
-    void BackRocket();
+  void ToCargoShip();
+  void ToLoader();
+  void StartToCargoShip();
+  void BackRocket();
+  void LoaderToRocket();
 };

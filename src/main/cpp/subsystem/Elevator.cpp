@@ -41,9 +41,9 @@ Elevator::Elevator()
 
     /* set closed loop gains in slot0 */
     motor1.Config_kF(kPIDLoopIdx, 0.0);
-    motor1.Config_kP(kPIDLoopIdx, 0.18);  //0.15  0.125
+    motor1.Config_kP(kPIDLoopIdx, 0.16);  //0.15  0.125
     motor1.Config_kI(kPIDLoopIdx, 0.00075); // 0.0005
-    motor1.Config_kD(kPIDLoopIdx, 4.9);  //-1.0
+    motor1.Config_kD(kPIDLoopIdx, 5.0);  //-1.0
 
     motor1.ConfigAllowableClosedloopError(kPIDLoopIdx, 91.375);
     motor1.Config_IntegralZone(kPIDLoopIdx, 548.25);
@@ -200,7 +200,7 @@ void Elevator::SetPosition(double pos)
         return;
     }
 
-    motor1.Set(ControlMode::Position, pos / kScaleFactor, DemandType::DemandType_ArbitraryFeedForward, 0.175);
+    motor1.Set(ControlMode::Position, pos / kScaleFactor, DemandType::DemandType_ArbitraryFeedForward, 0.15);
     targetPos = pos;
 }
 

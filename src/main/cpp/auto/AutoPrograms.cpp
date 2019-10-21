@@ -6,6 +6,7 @@
 #include "auto/AutoCargo.hpp"
 #include "auto/HybridLeftNear.hpp"
 #include "auto/HybridRightNear.hpp"
+#include "auto/MotionMagiskTest.hpp"
 
 // Constructor requires a reference to the robot map
 AutoPrograms::AutoPrograms(robotmap &IO) : IO(IO)
@@ -15,6 +16,7 @@ AutoPrograms::AutoPrograms(robotmap &IO) : IO(IO)
     m_chooser.AddOption(AutoMachine::GetName(), AutoMachine::GetName());
     m_chooser.AddOption(AutoLineCross::GetName(), AutoLineCross::GetName());
     m_chooser.AddOption(AutoCargo::GetName(), AutoCargo::GetName());
+    m_chooser.AddOption(MotionMagiskTest::GetName(), MotionMagiskTest::GetName());
     m_chooser.AddOption("Left Hybrid", "Left Hybrid");
     m_chooser.AddOption("Right Hybrid", "Right Hybrid");
     m_chooser.SetDefaultOption("0 - None", "0 - None");
@@ -50,6 +52,10 @@ void AutoPrograms::Init()
     else if (name == "Right Hybrid")
     {
         m_autoProgram = new HybridRightNear(IO);
+    }
+    else if (name == MotionMagiskTest::GetName())
+    {
+        m_autoProgram = new MotionMagiskTest(IO);
     }
 }
 

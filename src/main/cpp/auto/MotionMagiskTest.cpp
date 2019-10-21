@@ -1,16 +1,16 @@
-#include "auto/AutoCargo.hpp"
+#include "auto/MotionMagiskTest.hpp"
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
 // Name for Smart Dash Chooser
-std::string AutoCargo::GetName()
+std::string MotionMagiskTest::GetName()
 {
-    return "3 - AutoCargo";
+    return "8 - MotionMagiskTest";
 }
 
 // Initialization
 // Constructor requires a reference to the robot map
-AutoCargo::AutoCargo(robotmap &IO) : IO(IO)
+MotionMagiskTest::MotionMagiskTest(robotmap &IO) : IO(IO)
 {
     m_state = 0;
     m_autoTimer.Reset();
@@ -21,7 +21,7 @@ AutoCargo::AutoCargo(robotmap &IO) : IO(IO)
 }
 
 //State Machine
-void AutoCargo::NextState()
+void MotionMagiskTest::NextState()
 {
     m_state++;
     m_autoTimer.Reset();
@@ -31,34 +31,46 @@ void AutoCargo::NextState()
 }
 
 // Execute the program
-void AutoCargo::Run()
+void MotionMagiskTest::Run()
 {
     UpdateSmartdash();
     switch (m_state)
     {
     case 0:
     {
-        IO.drivebase.ResetEncoders();
-        NextState();
+
+        IO.drivebase.DriveForward(0);
+        if (m_autoTimer.Get() > 0.0)
+        {
+            NextState();
+        }
         break;
     }
     case 1:
     {
-        const double encdist = 144.0;
-        IO.drivebase.DriveForward(encdist, 0.95);
-        if (abs(((IO.drivebase.GetEncoderPositionRight() + IO.drivebase.GetEncoderPositionLeft()) / 2) - encdist) < 2)
-        {
-            //NextState();
+
+        IO.drivebase.setProfileSpd();
+        if(!oneShot){
+            
+            IO.drivebase.magisk->start();
+            oneShot = true;
         }
+        if(IO.drivebase.magisk->isDone()){
+            NextState();
+        }
+
         break;
     }
     default:
+        IO.drivebase.magisk->reset();
+        IO.drivebase.magisk->reset();
         IO.drivebase.Stop();
+        oneShot = false;
     }
 }
 
 // SmartDash updater
-void AutoCargo::UpdateSmartdash()
+void MotionMagiskTest::UpdateSmartdash()
 {
     SmartDashboard::PutNumber("auto state", m_state);
 }

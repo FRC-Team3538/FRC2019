@@ -49,6 +49,8 @@ private:
   // Dont update smart dash every loop
   int smartDashSkip = 0;
 
+  Timer autoLog;
+
   double Deadband(double input, double deadband);
   void UpdateSD();
 

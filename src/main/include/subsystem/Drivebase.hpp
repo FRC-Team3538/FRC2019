@@ -4,12 +4,12 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include <iostream>
-// #include "rev/CANSparkMax.h"
+//#include "rev/CANSparkMax.h"
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace ctre::phoenix::motorcontrol;
 using namespace frc;
-// using namespace rev;
+//using namespace rev;
 
 class Drivebase
 {
@@ -43,7 +43,7 @@ private:
   Solenoid solenoidShifter{0};
 
   // Encoder Scale Factor (Inches)/(Pulse)
-  const double kScaleFactor = (1.0 / 4096.0) * 6 * 3.1415;
+  const double kScaleFactor = (297.5)/(67461.246);//(1.0 / 4096.0) * 6 * 3.1415;
 
   enum kRemote
   {
@@ -68,16 +68,15 @@ private:
   double sumError_forward = 0;
   double prevError_rot = 0;
   double sumError_rotation = 0;
-
   bool oneShotAngle = false;
 
-#define KP_ROTATION (0.06) 
+#define KP_ROTATION (0.04) 
 #define KI_ROTATION (0.0000) //0.00005
-#define KD_ROTATION (-0.000) //0.004
+#define KD_ROTATION (0.00) //0.004
 
-#define KP_FORWARD (0.02)
-#define KI_FORWARD (0.00)
-#define KD_FORWARD (0.003)
+#define KP_FORWARD (0.06)  //0.03
+#define KI_FORWARD (0.00003)  //0.000015
+#define KD_FORWARD (0.013)  //0.0065
 
 public:
   // Default Constructor

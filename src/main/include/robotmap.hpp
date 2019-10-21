@@ -9,6 +9,7 @@
 #include <subsystem/CargoIntake.hpp>
 #include <subsystem/FrontClimber.hpp>
 #include <subsystem/Vision.hpp>
+#include <subsystem/Logging.hpp>
 
 class robotmap
 {
@@ -21,5 +22,6 @@ class robotmap
     HatchManip hatchManip;
     CargoIntake cargoIntake;
     FrontClimber frontClimber;
+    Logging logging;
     //Vision vision;
 };

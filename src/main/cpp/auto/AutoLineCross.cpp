@@ -30,10 +30,10 @@ void AutoLineCross::Run()
     {
     case 0:
     {
-        double fwd = 0.50;
+        double fwd = 1;
         double rot = 0.00;
         IO.drivebase.Arcade(fwd, rot);
-        if (m_autoTimer.Get() > 2.0)
+        if (m_autoTimer.Get() > .5)
         {
             NextState();
         }
@@ -41,16 +41,17 @@ void AutoLineCross::Run()
     }
     case 1:
     {
-        double fwd = 0.00;
-        double rot = 0.25;
+        double fwd = -0.2;
+        double rot = 0.00;
         IO.drivebase.Arcade(fwd, rot);
-        if (m_autoTimer.Get() > 2.0)
+        if (m_autoTimer.Get() > .5)
         {
             NextState();
         }
         break;
     }
     default:
-        IO.drivebase.Stop();
+        IO.drivebase.Arcade(0, 0);
+        //IO.drivebase.Stop();
     }
 }

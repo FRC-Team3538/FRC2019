@@ -78,11 +78,17 @@ void Robot::AutonomousInit()
   // IO.elevator.Set(0.0);
   // IO.elevator.SetPosition(13);
   initOneShot = false;
+
+  IO.logging.AddKey("Time (ms)");
+  IO.logging.AddKey("EncL in");
+  IO.logging.AddKey("EncR in");
+  IO.logging.Start();
+  autoLog.Start();
 }
 
 void Robot::AutonomousPeriodic()
 {
-  // grab hatch at starup
+  // grab hatch at startup
   // if (IO.elevator.GetDistance() > 10 && !initOneShot)
   // {
   //   // IO.hatchManip.Deploy();
@@ -90,6 +96,11 @@ void Robot::AutonomousPeriodic()
   // }
 
   TeleopPeriodic();
+  // autoPrograms.Run();
+  // IO.logging.Log("Time (ms)", std::to_string(autoLog.Get() * 1000));
+  // IO.logging.Log("EncL in", std::to_string(IO.drivebase.GetEncoderPositionLeft()));
+  // IO.logging.Log("EncR in", std::to_string(IO.drivebase.GetEncoderPositionRight()));
+  // IO.logging.Commit();
 }
 
 void Robot::TeleopInit()
@@ -108,26 +119,6 @@ void Robot::DisabledInit()
 
 void Robot::TeleopPeriodic()
 {
-
-  // TeleAuto
-  if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton() || IO.ds.DriverPS.GetRightButton() || IO.ds.DriverPS.GetLeftButton())
-  {
-    if (!drivePresetOneshot)
-    {
-      autoPrograms.Init();
-      drivePresetOneshot = true;
-    }
-    else
-    {
-      autoPrograms.Run();
-    }
-
-    return;
-  }
-  else
-  {
-    drivePresetOneshot = false;
-  }
 
   double forward = IO.ds.DriverPS.GetY(GenericHID::kLeftHand) * -1;
   double rotate = IO.ds.DriverPS.GetX(GenericHID::kRightHand) * -1;
@@ -232,20 +223,44 @@ void Robot::TeleopPeriodic()
     }
   }
 
+
+  
+
   //
   // Driver
   //
   // IO.vision.CVMode(btnBCircleDr); ******************
   // AutoTarget(btnBCircleDr, forward); ******************
-  if (!btnBCircleDr)
+  // TeleAuto
+  if (IO.ds.DriverPS.GetUpButton() || IO.ds.DriverPS.GetDownButton() || IO.ds.DriverPS.GetRightButton() || IO.ds.DriverPS.GetLeftButton())
   {
-    IO.drivebase.Arcade(forward, rotate);
-    // if (IO.elevator.GetGantryActivated())
-    // {
-    //   IO.frontClimber.Set(forward);
-    // }
-    // IO.drivebase.testRev.Set(forward);
+    if (!drivePresetOneshot)
+    {
+      autoPrograms.Init();
+      drivePresetOneshot = true;
+    }
+    else
+    {
+      autoPrograms.Run();
+    }
+
+    //return;
   }
+  else
+  {
+    drivePresetOneshot = false;
+    IO.drivebase.Arcade(forward, rotate);
+  }
+
+  // if (!btnBCircleDr)
+  // {
+  //   IO.drivebase.Arcade(forward, rotate);
+  //   // if (IO.elevator.GetGantryActivated())
+  //   // {
+  //   //   IO.frontClimber.Set(forward);
+  //   // }
+  //   // IO.drivebase.testRev.Set(forward);
+  // }
 
   // Manip Intake / Eject
 
@@ -387,7 +402,7 @@ void Robot::TeleopPeriodic()
     if (btnDownOp)
     {
       // Low rocket
-      IO.elevator.SetPosition(12);
+      IO.elevator.SetPosition(11);
       IO.wrist.SetAngle(0);
       cargoWristPreset = false;
       controlModeOneShot = false;
