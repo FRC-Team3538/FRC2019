@@ -42,6 +42,7 @@ Drivebase::Drivebase()
     motorLeft2.Follow(motorLeft1);
     motorLeft3.Follow(motorLeft1);
 
+    
     motorRight2.Follow(motorRight1);
     motorRight3.Follow(motorRight1);
 
@@ -63,12 +64,12 @@ Drivebase::Drivebase()
     motorLeft1.SetSensorPhase(false);
     motorRight1.SetSensorPhase(false);
 
-    motorLeft1.Config_kF(slots::Forward, 0.0);
+    motorLeft1.Config_kF(slots::Forward, 0.076);
     motorLeft1.Config_kP(slots::Forward, 0.1); //0.5
     motorLeft1.Config_kI(slots::Forward, 0.0);
     motorLeft1.Config_kD(slots::Forward, 0.04);
 
-    motorRight1.Config_kF(slots::Forward, 0.0);
+    motorRight1.Config_kF(slots::Forward, 0.076);
     motorRight1.Config_kP(slots::Forward, 0.1);
     motorRight1.Config_kI(slots::Forward, 0.0);
     motorRight1.Config_kD(slots::Forward, 0.04);
@@ -123,13 +124,13 @@ Drivebase::Drivebase()
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::aux);
     motorRight1.ConfigSetParameter(ParamEnum::ePIDLoopPeriod, 1, 0x00, PIDind::primary);
 
-    motorLeft1.ConfigMotionProfileTrajectoryPeriod(10, 30); //Our profile uses 10 ms timing
-    /* status 10 provides the trajectory target for motion profile AND motion magic */
-    motorLeft1.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10, 30);
-
     motorRight1.ConfigMotionProfileTrajectoryPeriod(10, 30); //Our profile uses 10 ms timing
     /* status 10 provides the trajectory target for motion profile AND motion magic */
     motorRight1.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10, 30);
+
+    motorLeft1.ConfigMotionProfileTrajectoryPeriod(10, 30); //Our profile uses 10 ms timing
+    /* status 10 provides the trajectory target for motion profile AND motion magic */
+    motorLeft1.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10, 30);
 }
 
 // Arcade Drive
@@ -143,10 +144,22 @@ void Drivebase::Arcade(double forward, double turn)
     {
         turn /= std::abs(turn);
     }
-    motorLeft1.Set(forward - turn);
-    motorRight1.Set(forward + turn);
-    motorLeft3.Set(forward - turn);
-    motorRight3.Set(forward + turn);
+    double l = forward - turn;
+    double r = forward + turn;
+
+    // Power Limit Test
+    double lim = 0.7;
+    l = l>lim?lim:l;
+    l = l<-lim?-lim:l;
+    r = r>lim?lim:r;
+    r = r<-lim?-lim:r;
+    
+
+    motorLeft1.Set(l);
+    motorRight1.Set(r);
+
+    // motorLeft3.Set(forward - turn);
+    // motorRight3.Set(forward + turn);
 }
 
 // Stop!
@@ -316,11 +329,32 @@ void Drivebase::ActivateSensorOverride()
 void Drivebase::DeactivateSensorOverride()
 {
     sensorOverride = false;
-    motorLeft1.ConfigPeakCurrentLimit(60);
-    motorRight1.ConfigPeakCurrentLimit(60);
+    motorLeft1.ConfigPeakCurrentLimit(0);
+    motorRight1.ConfigPeakCurrentLimit(0);
+    motorLeft2.ConfigPeakCurrentLimit(0);
+    motorRight2.ConfigPeakCurrentLimit(0);
+
+    motorLeft1.ConfigContinuousCurrentLimit(40);
+    motorRight1.ConfigContinuousCurrentLimit(40);
+    motorLeft2.ConfigContinuousCurrentLimit(40);
+    motorRight2.ConfigContinuousCurrentLimit(40);
+
+    bool useCL = false;
+    motorLeft1.EnableCurrentLimit(useCL);
+    motorLeft2.EnableCurrentLimit(useCL);
+    motorRight1.EnableCurrentLimit(useCL);
+    motorRight2.EnableCurrentLimit(useCL);
 
     motorRight1.ConfigOpenloopRamp(0.2);
     motorLeft1.ConfigOpenloopRamp(0.2);
+    motorRight2.ConfigOpenloopRamp(0.2);
+    motorLeft2.ConfigOpenloopRamp(0.2);
+
+    motorRight1.SetNeutralMode(motorcontrol::NeutralMode::Brake);
+    motorLeft1.SetNeutralMode(motorcontrol::NeutralMode::Brake);
+    motorRight2.SetNeutralMode(motorcontrol::NeutralMode::Brake);
+    motorLeft2.SetNeutralMode(motorcontrol::NeutralMode::Brake);
+
 }
 
 double Drivebase::GetPitch()
@@ -372,4 +406,22 @@ void Drivebase::SetMaxSpeed()
     motorRight1.ConfigNominalOutputReverse(0);
     motorRight1.ConfigPeakOutputForward(1);
     motorRight1.ConfigPeakOutputReverse(-1);
+}
+
+SetValueMotionProfile Drivebase::RightMotPro()
+{
+    SetValueMotionProfile setOutputR = magiskR1->getSetValue();
+    return setOutputR;
+}
+
+SetValueMotionProfile Drivebase::LeftMotPro()
+{
+    SetValueMotionProfile setOutputL = magiskL1->getSetValue();
+    return setOutputL;
+}
+
+void Drivebase::setProfileSpd()
+{
+    motorLeft1.Set(ControlMode::MotionProfile, LeftMotPro());
+    motorRight1.Set(ControlMode::MotionProfile, RightMotPro());
 }

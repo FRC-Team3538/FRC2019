@@ -55,6 +55,12 @@ void Robot::RobotPeriodic()
     autoPrograms.Init();
   }
 
+  IO.drivebase.magiskR1->control();
+	IO.drivebase.magiskR1->PeriodicTask();
+
+  IO.drivebase.magiskL1->control();
+	IO.drivebase.magiskL1->PeriodicTask();
+
   // Update Smart Dash
   UpdateSD();
 }
@@ -95,8 +101,8 @@ void Robot::AutonomousPeriodic()
   //   initOneShot = true;
   // }
 
-  TeleopPeriodic();
-  // autoPrograms.Run();
+  //TeleopPeriodic();
+  autoPrograms.Run();
   // IO.logging.Log("Time (ms)", std::to_string(autoLog.Get() * 1000));
   // IO.logging.Log("EncL in", std::to_string(IO.drivebase.GetEncoderPositionLeft()));
   // IO.logging.Log("EncR in", std::to_string(IO.drivebase.GetEncoderPositionRight()));

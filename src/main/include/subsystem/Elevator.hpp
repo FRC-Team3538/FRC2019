@@ -25,7 +25,7 @@ private:
   Solenoid solenoidPTO{1};
 
   // Scale Factor (Inches) / (Pulses)
-  const double kScaleFactor = (54.0 - 7.0) / (17344.0);
+  const double kScaleFactor = (54.0 - 7.0) / (69376.0);
 
   /*
         Inches     Pulses

@@ -4,6 +4,7 @@
 #include <ctre/Phoenix.h>
 #include <AHRS.h>
 #include <iostream>
+#include <auto/MotionMagisk.hpp>
 //#include "rev/CANSparkMax.h"
 
 using namespace ctre::phoenix::motorcontrol::can;
@@ -27,11 +28,11 @@ private:
   };
 
   WPI_TalonSRX motorLeft1{motors::L1};
-  WPI_VictorSPX motorLeft2{motors::L2};
+  WPI_TalonSRX motorLeft2{motors::L2};
   WPI_VictorSPX motorLeft3{motors::L3};
 
   WPI_TalonSRX motorRight1{motors::R1};
-  WPI_VictorSPX motorRight2{motors::R2};
+  WPI_TalonSRX motorRight2{motors::R2};
   WPI_VictorSPX motorRight3{motors::R3};
 
   // CANSparkMax motorRev1{20, CANSparkMax::MotorType::kBrushless};
@@ -109,6 +110,15 @@ public:
   void Turn(double degrees);
   void SetMaxSpeed();
 
+  void Reverse(); //Bandaid solutions are the best solutions
+  void ReverseReverse();
+
+  SetValueMotionProfile RightMotPro();
+  SetValueMotionProfile LeftMotPro();
+  void setProfileSpd();
+
   PigeonIMU *Hoothoot = new PigeonIMU(0);
   AHRS navx{SPI::Port::kMXP, 200};
+  MotionMagisk * magiskR1 = new MotionMagisk( motorRight1, MotionMagisk::WaypointFile::backRockR );
+  MotionMagisk * magiskL1 = new MotionMagisk( motorLeft1, MotionMagisk::WaypointFile::backRockL );
 };

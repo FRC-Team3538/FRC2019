@@ -38,7 +38,6 @@ void MotionMagiskTest::Run()
     {
     case 0:
     {
-
         IO.drivebase.DriveForward(0);
         if (m_autoTimer.Get() > 0.0)
         {
@@ -52,20 +51,22 @@ void MotionMagiskTest::Run()
         IO.drivebase.setProfileSpd();
         if(!oneShot){
             
-            IO.drivebase.magisk->start();
+            IO.drivebase.magiskR1->start();
+            IO.drivebase.magiskL1->start();
             oneShot = true;
         }
-        if(IO.drivebase.magisk->isDone()){
+        if(IO.drivebase.magiskR1->isDone() && IO.drivebase.magiskL1->isDone()){
+            IO.drivebase.Arcade( 0.0, 0.0);
             NextState();
         }
 
         break;
     }
     default:
-        IO.drivebase.magisk->reset();
-        IO.drivebase.magisk->reset();
-        IO.drivebase.Stop();
         oneShot = false;
+        IO.drivebase.Arcade( 0.0, 0.0);
+        IO.drivebase.magiskR1->reset();
+        IO.drivebase.magiskL1->reset();   
     }
 }
 
