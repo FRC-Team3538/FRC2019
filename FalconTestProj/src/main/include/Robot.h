@@ -16,6 +16,7 @@
 #include <ctre/Phoenix.h>
 #include <frc/Timer.h>
 #include <frc/PowerDistributionPanel.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace ctre::phoenix::motorcontrol;
@@ -35,30 +36,22 @@ class Robot : public frc::IterativeRobot {
 
  private:
 
-  WPI_TalonSRX motorLeft1{0};
-  WPI_TalonSRX motorLeft2{1};
+  WPI_TalonSRX Elev{6};
 
-  WPI_TalonSRX motorRight1{3};
-  WPI_TalonSRX motorRight2{4};
-
-  void Arcade(double forward, double rotate);
+  void Set(double speed);
+  void SetPosition(double pos);
   double Deadband(double input, double deadband);
 
   PS4Controller DriverPS{0};
+  PS4Controller OperatorPS{1};
 
   Logging logging;
   Timer autoLog;
   PowerDistributionPanel *pdp = new PowerDistributionPanel();
 
-  const double kScaleFactor = ((297.5)/(269844.984));
-  double EncL;
-  double EncR;
-  double PrevEncL = 0;
-  double PrevEncR = 0;
-  double EncL2;
-  double EncR2;
-  double PrevEncL2 = 0;
-  double PrevEncR2 = 0;
-  double PrevTime = 0;
+  const double kScaleFactor = (75.0 - 9.0) / (90378);
+  const double kGravityComp = 0.058;
+  bool oneShot = false;
+
   double logOffset;
 };

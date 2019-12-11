@@ -16,7 +16,7 @@ Logging::Logging(string path, string filename)
     // Get a log serial number from robot Preferences
     auto pref = frc::Preferences::GetInstance();
     auto logNumber = pref->GetInt("LogNumber", 1);
-    pref->PutInt("LogNumber", (logNumber + 1) % 200 ); // Limit to 200 log files
+    pref->PutInt("LogNumber", (logNumber + 1) % 99999 ); // Limit to 200 log files
 
     // pad with zeros
     auto logNumberStr = to_string(logNumber);

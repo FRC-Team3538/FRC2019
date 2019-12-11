@@ -11,15 +11,8 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
-void Robot::RobotInit() {
-  motorLeft1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0);
-  motorLeft1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
-
-  motorRight1.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0);
-  motorRight1.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
-
-  motorLeft1.SetSelectedSensorPosition(0);
-  motorRight1.SetSelectedSensorPosition(0);
+void Robot::RobotInit()
+{
 }
 
 /**
@@ -30,7 +23,11 @@ void Robot::RobotInit() {
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic()
+{
+  SmartDashboard::PutNumber("Elev Enc", Elev.GetSelectedSensorPosition(0) * kScaleFactor);
+  SmartDashboard::PutNumber("Elev Temp", Elev.GetTemperature());
+}
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -43,150 +40,123 @@ void Robot::RobotPeriodic() {}
  * if-else structure below with additional strings. If using the SendableChooser
  * make sure to add them to the chooser code above as well.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit()
+{
 }
 
-void Robot::AutonomousPeriodic() {
+void Robot::AutonomousPeriodic()
+{
 }
 
-void Robot::TeleopInit() {
-    const int currentLim = 20;
+void Robot::TeleopInit()
+{
+  const int currentLim = 20;
 
-    motorLeft1.ConfigFactoryDefault();
-    motorLeft2.ConfigFactoryDefault();
-    motorRight1.ConfigFactoryDefault();
-    motorRight2.ConfigFactoryDefault();
+  Elev.ConfigFactoryDefault();
 
-    motorLeft1.SetInverted(true);
-    motorLeft2.SetInverted(true);
+  Elev.ConfigPeakCurrentLimit(0);
 
-    motorLeft1.ConfigPeakCurrentLimit(0);
-    motorRight1.ConfigPeakCurrentLimit(0);
-    motorLeft2.ConfigPeakCurrentLimit(0);
-    motorRight2.ConfigPeakCurrentLimit(0);
+  Elev.ConfigContinuousCurrentLimit(currentLim);
+  bool useCL = false;
+  Elev.EnableCurrentLimit(useCL);
 
-    motorLeft1.ConfigContinuousCurrentLimit(currentLim);
-    motorRight1.ConfigContinuousCurrentLimit(currentLim);
-    motorLeft2.ConfigContinuousCurrentLimit(currentLim);
-    motorRight2.ConfigContinuousCurrentLimit(currentLim);
+  Elev.SetNeutralMode(motorcontrol::NeutralMode::Brake);
 
-    bool useCL = false;
-    motorLeft1.EnableCurrentLimit(useCL);
-    motorLeft2.EnableCurrentLimit(useCL);
-    motorRight1.EnableCurrentLimit(useCL);
-    motorRight2.EnableCurrentLimit(useCL);
+  Elev.SetInverted(true);
+  Elev.SetSensorPhase(false);
 
-    motorRight1.ConfigOpenloopRamp(0.2);
-    motorLeft1.ConfigOpenloopRamp(0.2);
-    motorRight2.ConfigOpenloopRamp(0.2);
-    motorLeft2.ConfigOpenloopRamp(0.2);
+  Elev.ConfigOpenloopRamp(0.0); //0.3
 
-    motorRight1.SetNeutralMode(motorcontrol::NeutralMode::Brake);
-    motorLeft1.SetNeutralMode(motorcontrol::NeutralMode::Brake);
-    motorRight2.SetNeutralMode(motorcontrol::NeutralMode::Brake);
-    motorLeft2.SetNeutralMode(motorcontrol::NeutralMode::Brake);
+  Elev.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
+  Elev.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
 
-    motorLeft1.SetSensorPhase(false);
-    motorLeft2.SetSensorPhase(false);
-    motorRight1.SetSensorPhase(false);
-    motorRight2.SetSensorPhase(false);
+  int absolutePosition = Elev.GetSelectedSensorPosition(0) & 0xFFF;
 
-    logging.AddKey("Time (s)");
-    logging.AddKey("L1 Temp");
-    logging.AddKey("L2 Temp");
-    logging.AddKey("R1 Temp");
-    logging.AddKey("R2 Temp");
-    logging.AddKey("L1 Current");
-    logging.AddKey("L2 Current");
-    logging.AddKey("R1 Current");
-    logging.AddKey("R2 Current");
-    logging.AddKey("L1 PDPCurrent");
-    logging.AddKey("L2 PDPCurrent");
-    logging.AddKey("R1 PDPCurrent");
-    logging.AddKey("R2 PDPCurrent");
-    logging.AddKey("L1 Velocity");
-    logging.AddKey("R1 Velocity");
-    logging.AddKey("L2 Velocity");
-    logging.AddKey("R2 Velocity");
-    logging.Start();
-    autoLog.Reset();
-    autoLog.Start();
+  Elev.SetSelectedSensorPosition(absolutePosition);
+
+  int kPIDLoopIdx = 0;
+  int kTimeoutMs = 30;
+
+  Elev.Config_kF(kPIDLoopIdx, 0.0);
+  Elev.Config_kP(kPIDLoopIdx, 0.18);  //0.15  0.125
+  Elev.Config_kI(kPIDLoopIdx, 0.000); // 0.0005
+  Elev.Config_kD(kPIDLoopIdx, 14);     //-1.0
+
+  Elev.ConfigNominalOutputForward(0);
+  Elev.ConfigNominalOutputReverse(0);
+  Elev.ConfigPeakOutputForward(1);
+  Elev.ConfigPeakOutputReverse(-0.5);
+
+  // Elev.ConfigAllowableClosedloopError(kPIDLoopIdx, 91.375);
+  // Elev.Config_IntegralZone(kPIDLoopIdx, 548.25);
+
+  Elev.ConfigClearPositionOnLimitR(true);
+
+  logging.AddKey("Time (s)");
+  logging.AddKey("Elev Temp");
+  logging.AddKey("Elev Current");
+  logging.AddKey("Elev PDPCurrent");
+  logging.AddKey("Elev Velocity");
+  logging.Start();
+  autoLog.Reset();
+  autoLog.Start();
+}
+
+void Robot::TeleopPeriodic()
+{
+
+  if(!oneShot){
     logOffset = autoLog.Get();
-}
+    oneShot = true;
+  }
 
-void Robot::TeleopPeriodic() {
-    double forward = DriverPS.GetY(GenericHID::kLeftHand) * -1;
-    double rotate = DriverPS.GetX(GenericHID::kRightHand) * -1;
-    forward = Deadband(forward, 0.05);
-    rotate = Deadband(rotate, 0.05);
-    Arcade(forward, rotate);
+  logging.Log("Time (s)", std::to_string((autoLog.Get()) - logOffset));
+  logging.Log("Elev Temp", std::to_string(Elev.GetTemperature()));
+  logging.Log("Elev Current", std::to_string(Elev.GetOutputCurrent()));
+  logging.Log("Elev PDPCurrent", std::to_string(pdp->GetCurrent(15)));
+  logging.Log("Elev Velocity", std::to_string((((10.0 / 12.0) * Elev.GetSelectedSensorVelocity(0) * kScaleFactor))));
+  logging.Commit();
 
-    EncL = motorLeft1.GetSelectedSensorPosition(0) * kScaleFactor;
-    EncR = motorRight1.GetSelectedSensorPosition(0) * kScaleFactor;
-    EncL2 = motorLeft2.GetSelectedSensorPosition(0) * kScaleFactor;
-    EncR2 = motorRight2.GetSelectedSensorPosition(0) * kScaleFactor;
-
-    logging.Log("Time (s)", std::to_string((autoLog.Get()) - logOffset));
-    logging.Log("L1 Temp", std::to_string(motorLeft1.GetTemperature()));
-    logging.Log("L2 Temp", std::to_string(motorLeft2.GetTemperature()));
-    logging.Log("R1 Temp", std::to_string(motorRight1.GetTemperature()));
-    logging.Log("R2 Temp", std::to_string(motorRight2.GetTemperature()));
-    logging.Log("L1 Current", std::to_string(motorLeft1.GetOutputCurrent()));
-    logging.Log("L2 Current", std::to_string(motorLeft2.GetOutputCurrent()));
-    logging.Log("R1 Current", std::to_string(motorRight1.GetOutputCurrent()));
-    logging.Log("R2 Current", std::to_string(motorRight2.GetOutputCurrent()));
-    logging.Log("L1 PDPCurrent", std::to_string(pdp->GetCurrent(12)));
-    logging.Log("L2 PDPCurrent", std::to_string(pdp->GetCurrent(13)));
-    logging.Log("R1 PDPCurrent", std::to_string(pdp->GetCurrent(0)));
-    logging.Log("R2 PDPCurrent", std::to_string(pdp->GetCurrent(15))); 
-    logging.Log("L1 Velocity", std::to_string((((10.0/12.0)*motorLeft1.GetSelectedSensorVelocity(0)*kScaleFactor))));
-    logging.Log("L2 Velocity", std::to_string((((10.0/12.0)*motorLeft2.GetSelectedSensorVelocity(0)*kScaleFactor))));
-    logging.Log("R1 Velocity", std::to_string((((10.0/12.0)*motorRight1.GetSelectedSensorVelocity(0)*kScaleFactor))));
-    logging.Log("R2 Velocity", std::to_string((((10.0/12.0)*motorRight2.GetSelectedSensorVelocity(0)*kScaleFactor))));
-    logging.Commit();
-
-    PrevEncL = EncL;
-    PrevEncR = EncR;
-    PrevEncL2 = EncL2;
-    PrevEncR2 = EncR2;
-    PrevTime = autoLog.Get();
+  double forward = OperatorPS.GetY(GenericHID::kLeftHand) * -1;
+  bool down = OperatorPS.GetDownButton();
+  bool left = OperatorPS.GetLeftButton();
+  bool up = OperatorPS.GetUpButton();
+  forward = Deadband(forward, 0.05);
+  if (down)
+  {
+    SetPosition(11);
+  }
+  else if(left)
+  {
+    SetPosition(42);
+  }
+  else if(up)
+  {
+    SetPosition(64);
+  }
+  else
+  {
+    Set(forward);
+  }
+  SmartDashboard::PutNumber("Op Joy L Y", forward);
 }
 
 void Robot::TestPeriodic() {}
 
-void Robot::DisabledPeriodic(){
-    motorRight1.SetNeutralMode(motorcontrol::NeutralMode::Coast);
-    motorLeft1.SetNeutralMode(motorcontrol::NeutralMode::Coast);
-    motorRight2.SetNeutralMode(motorcontrol::NeutralMode::Coast);
-    motorLeft2.SetNeutralMode(motorcontrol::NeutralMode::Coast);
+void Robot::DisabledPeriodic()
+{
+  Elev.SetNeutralMode(motorcontrol::NeutralMode::Brake);
 }
 
+void Robot::Set(double speed)
+{
+  Elev.Set(ControlMode::PercentOutput, speed, DemandType::DemandType_ArbitraryFeedForward, kGravityComp);
+}
 
-void Robot::Arcade(double forward, double rotate){
-    if (std::abs(forward) > 1.0)
-    {
-        forward /= std::abs(forward);
-    }
-    if (std::abs(rotate) > 1.0)
-    {
-        rotate /= std::abs(rotate);
-    }
-    double l = forward - rotate;
-    double r = forward + rotate;
-
-    // Power Limit Test
-    double lim = 1;
-    l = l>lim?lim:l;
-    l = l<-lim?-lim:l;
-    r = r>lim?lim:r;
-    r = r<-lim?-lim:r;
-    
-
-    motorLeft1.Set(l);
-    motorRight1.Set(r);
-    motorLeft2.Set(l);
-    motorRight2.Set(r);
-  }
+void Robot::SetPosition(double pos)
+{
+  Elev.Set(ControlMode::Position, pos / kScaleFactor, DemandType::DemandType_ArbitraryFeedForward, kGravityComp);
+}
 
 double Robot::Deadband(double input, double deadband)
 {
@@ -209,5 +179,8 @@ double Robot::Deadband(double input, double deadband)
 }
 
 #ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
+int main()
+{
+  return frc::StartRobot<Robot>();
+}
 #endif
