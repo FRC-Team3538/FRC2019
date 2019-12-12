@@ -65,10 +65,13 @@ void Robot::TeleopInit()
   Elev.SetInverted(true);
   Elev.SetSensorPhase(false);
 
-  Elev.ConfigOpenloopRamp(0.0); //0.3
+  Elev.ConfigOpenloopRamp(0.3); //0.3
+  // Elev.ConfigClosedloopRamp(0.2);
 
   Elev.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder);
   Elev.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrameEnhanced::Status_3_Quadrature, 18);
+  Elev.SetStatusFramePeriod(StatusFrameEnhanced::Status_13_Base_PIDF0, 10);
+  Elev.SetStatusFramePeriod(StatusFrameEnhanced::Status_10_MotionMagic, 10);
 
   int absolutePosition = Elev.GetSelectedSensorPosition(0) & 0xFFF;
 
@@ -77,18 +80,23 @@ void Robot::TeleopInit()
   int kPIDLoopIdx = 0;
   int kTimeoutMs = 30;
 
-  Elev.Config_kF(kPIDLoopIdx, 0.0);
+  Elev.SelectProfileSlot(0, kPIDLoopIdx);
+  Elev.Config_kF(kPIDLoopIdx, 0.0085/*0.000079339*/);
   Elev.Config_kP(kPIDLoopIdx, 0.18);  //0.15  0.125
   Elev.Config_kI(kPIDLoopIdx, 0.000); // 0.0005
-  Elev.Config_kD(kPIDLoopIdx, 14);     //-1.0
+  Elev.Config_kD(kPIDLoopIdx, 16);    //-1.0
 
   Elev.ConfigNominalOutputForward(0);
   Elev.ConfigNominalOutputReverse(0);
-  Elev.ConfigPeakOutputForward(1);
-  Elev.ConfigPeakOutputReverse(-0.5);
+  Elev.ConfigPeakOutputForward(.9);
+  Elev.ConfigPeakOutputReverse(-0.6);
 
   // Elev.ConfigAllowableClosedloopError(kPIDLoopIdx, 91.375);
   // Elev.Config_IntegralZone(kPIDLoopIdx, 548.25);
+
+  Elev.ConfigMotionCruiseVelocity((30.0 / kScaleFactor));
+  Elev.ConfigMotionAcceleration((31.0 / kScaleFactor));
+  // Elev.ConfigMotionSCurveStrength(8 , 0);
 
   Elev.ConfigClearPositionOnLimitR(true);
 
@@ -105,7 +113,8 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 
-  if(!oneShot){
+  if (!oneShot)
+  {
     logOffset = autoLog.Get();
     oneShot = true;
   }
@@ -121,18 +130,29 @@ void Robot::TeleopPeriodic()
   bool down = OperatorPS.GetDownButton();
   bool left = OperatorPS.GetLeftButton();
   bool up = OperatorPS.GetUpButton();
+  bool cross = OperatorPS.GetCrossButton();
   forward = Deadband(forward, 0.05);
+
+  string sDF = "Const";
+  double df = frc::SmartDashboard::GetNumber(sDF, 0.1);
+  frc::SmartDashboard::PutNumber(sDF, df);
+  frc::SmartDashboard::PutNumber("Vel", (((10.0 / 12.0) * Elev.GetSelectedSensorVelocity(0) * kScaleFactor)));
+  frc::SmartDashboard::SetPersistent(sDF);
   if (down)
   {
     SetPosition(11);
   }
-  else if(left)
+  else if (left)
   {
     SetPosition(42);
   }
-  else if(up)
+  else if (up)
   {
     SetPosition(64);
+  }
+  else if (cross)
+  {
+    Set(df);
   }
   else
   {
@@ -155,7 +175,8 @@ void Robot::Set(double speed)
 
 void Robot::SetPosition(double pos)
 {
-  Elev.Set(ControlMode::Position, pos / kScaleFactor, DemandType::DemandType_ArbitraryFeedForward, kGravityComp);
+  //Elev.Set(ControlMode::MotionMagic, pos / kScaleFactor);
+  Elev.Set(ControlMode::MotionMagic, pos / kScaleFactor, DemandType::DemandType_ArbitraryFeedForward, kGravityComp);
 }
 
 double Robot::Deadband(double input, double deadband)
