@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include <frc/smartdashboard/SmartDashboard.h>
+#define troo (true)
 
 void Robot::RobotInit()
 {
@@ -50,14 +51,14 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
-  const int currentLim = 20;
+  const int currentLim = 75;
 
   Elev.ConfigFactoryDefault();
 
   Elev.ConfigPeakCurrentLimit(0);
 
   Elev.ConfigContinuousCurrentLimit(currentLim);
-  bool useCL = false;
+  bool useCL = troo;
   Elev.EnableCurrentLimit(useCL);
 
   Elev.SetNeutralMode(motorcontrol::NeutralMode::Brake);
@@ -91,8 +92,8 @@ void Robot::TeleopInit()
   Elev.ConfigPeakOutputForward(.9);
   Elev.ConfigPeakOutputReverse(-0.6);
 
-  // Elev.ConfigAllowableClosedloopError(kPIDLoopIdx, 91.375);
-  // Elev.Config_IntegralZone(kPIDLoopIdx, 548.25);
+  Elev.ConfigAllowableClosedloopError(kPIDLoopIdx, (0.25 / kScaleFactor));
+  Elev.Config_IntegralZone(kPIDLoopIdx, (4.0 / kScaleFactor));
 
   Elev.ConfigMotionCruiseVelocity((30.0 / kScaleFactor));
   Elev.ConfigMotionAcceleration((31.0 / kScaleFactor));
@@ -150,7 +151,7 @@ void Robot::TeleopPeriodic()
   {
     SetPosition(64);
   }
-  else if (cross)
+  else if (cross || df < 0)
   {
     Set(df);
   }
@@ -158,6 +159,8 @@ void Robot::TeleopPeriodic()
   {
     Set(forward);
   }
+  Elev.ConfigPeakOutputForward(std::abs((((10.0 / 12.0) * Elev.GetSelectedSensorVelocity(0) * kScaleFactor) / 5.5)) + 0.3);
+  SmartDashboard::PutNumber("PeakOutput", abs((((10.0 / 12.0) * Elev.GetSelectedSensorVelocity(0) * kScaleFactor) / 5.5)) + 0.3);
   SmartDashboard::PutNumber("Op Joy L Y", forward);
 }
 
@@ -196,6 +199,18 @@ double Robot::Deadband(double input, double deadband)
   else
   {
     return input;
+  }
+}
+
+void Robot::VelControl(double run)
+{
+  if(run)
+  {
+    Elev.ConfigPeakOutputForward(.9);
+  }
+  else
+  {
+    return;
   }
 }
 

@@ -38,6 +38,7 @@ class Robot : public frc::IterativeRobot {
 
   WPI_TalonSRX Elev{6};
 
+  void VelControl(double run);
   void Set(double speed);
   void SetPosition(double pos);
   double Deadband(double input, double deadband);
